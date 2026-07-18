@@ -1,23 +1,15 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
-const connectDb = async(req , res)=>{
-    try{
-        await mongoose.connect("mongodb://127.0.0.1:27017/cbs")
+// req, res hata dein, yeh normal function hai
+const connectDb = async () => { 
+    try {
+        // Localhost issues se bachne ke liye 0.0.0.0 ka use best hai
+        await mongoose.connect("mongodb://0.0.0.0:27017/cbs"); 
         console.log("mongodb connected Successfully !! ");
+    } catch (err) {
+        // err.message print karein taaki error details dikhein
+        console.log("mongodb connection failed !! Error:", err.message); 
     }
-    catch(err){
-        console.log("mongodb connection failed !!")
-    }
-}
+};
 
 export default connectDb;
-//   res.status(200).json({
-//             status:true,
-//             message:"mongodb connected succesfully !!",
-            
-//         })
-//          res.json({
-//             status:false,
-//             message:"mongodb connection failled !! ",
-//             err:err.message
-//         })
