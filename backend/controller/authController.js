@@ -45,27 +45,37 @@ export const signIn = async (req, res) => {
         })
     }
 }
-// export const updateAuth = async (req, res) => {
-//     try {
-
-//     }
-//     catch (err) {
-//         res.json({
-//             status: false,
-//             message: "user updation failed !!",
-//             err: err.message
-//         })
-//     }
-// }
-// export const delteAuth = async (req, res) => {
-//     try {
-
-//     }
-//     catch (err) {
-//         res.json({
-//             status: false,
-//             message: "user delted failed !!",
-//             err: err.message
-//         })
-//     }
-// }
+export const updateAuth = async (req, res) => {
+    try {
+        const result = Auth.findByIdAndUpdate(req.body._id,req.body)
+        res.json({
+            status:true,
+            message:"manager updation succesfully !!",
+            data:result
+        })
+    }
+    catch (err) {
+        res.json({
+            status: false,
+            message: "user updation failed !!",
+            err: err.message
+        })
+    }
+}
+export const deleteAuth = async (req, res) => {
+    try {
+        const result = Auth.findByIdAndDelete(req.query.id)
+        res.json({
+            status:true,
+            message:"manager deleted succesfully !!",
+            data:result
+        })
+    }
+    catch (err) {
+        res.json({
+            status: false,
+            message: "user delted failed !!",
+            err: err.message
+        })
+    }
+}
