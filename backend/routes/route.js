@@ -7,5 +7,5 @@ Router.post("/signin",Authemiddle,signIn)
 Router.post("/signup",signUp)
 
 Router.put("/update",updateAuth)
-Router.put("/delete",deleteAuth);
+Router.delete("/delete",deleteAuth);
 export default Router ;

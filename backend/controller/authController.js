@@ -24,7 +24,7 @@ export const signUp = async (req, res) => {
 export const signIn = async (req, res) => {
     try {
     //    console.log("===> 5. Controller hit hua! Token ban rha hai...");
-    const token = jwt.sign({email:req.body.email},"!@#$%^&*()",{
+    const token = await jwt.sign({email:req.body.email},"!@#$%^&*()",{
         expiresIn:"1h",
     })
     res.cookie("token",token,{
@@ -47,7 +47,15 @@ export const signIn = async (req, res) => {
 }
 export const updateAuth = async (req, res) => {
     try {
-        const result = Auth.findByIdAndUpdate(req.body._id,req.body)
+        
+        const result = await Auth.findByIdAndUpdate(req.body._id,req.body,{new:true})
+        if(!result){
+            return res.json({
+                status:false,
+                message:"Id nahi milla ye Id data base me nhi hai ",
+                data:null
+            })
+        }
         res.json({
             status:true,
             message:"manager updation succesfully !!",
@@ -64,7 +72,7 @@ export const updateAuth = async (req, res) => {
 }
 export const deleteAuth = async (req, res) => {
     try {
-        const result = Auth.findByIdAndDelete(req.query.id)
+        const result = await Auth.findByIdAndDelete(req.query.id)
         res.json({
             status:true,
             message:"manager deleted succesfully !!",
