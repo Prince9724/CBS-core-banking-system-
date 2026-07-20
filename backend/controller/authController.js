@@ -21,6 +21,7 @@ export const signUp = async (req, res) => {
         })
     }
 }
+//signIn for admin
 export const signIn = async (req, res) => {
     try {
     //    console.log("===> 5. Controller hit hua! Token ban rha hai...");
@@ -42,6 +43,26 @@ export const signIn = async (req, res) => {
             status: false,
             message: "user fetching failed !!",
             err: err.message
+        })
+    }
+}
+//add user for admin 
+export const addManager = async(req ,res)=>{
+    try{
+        const {name,email,contact,role} = req.body
+
+        const result = await Auth.create({name,email,contact,role});
+        res.status(200).json({
+            status: true,
+            message: "user post succesfully !!",
+            data:result
+        })
+    }
+    catch(err){
+        res.json({
+            status:false,
+            message:"manager added failed !!",
+            err:err.message
         })
     }
 }
