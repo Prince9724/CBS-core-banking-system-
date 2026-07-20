@@ -5,7 +5,9 @@ import mongoose from "mongoose";
     email:{type:String,required:true,unique:true},
     role:{type:String,required:true},
     contact:{type:Number,required:true},
-    password:{type:String},
+    password:{type:String,required:true},
+    branchname:{type:String},
+    branchcode:{type:String}
 
 })
 export default mongoose.model("auth",userSchema);

@@ -1,0 +1,7 @@
+aaj maine backend me model bnaya aur aur usko thunder client me test kiya 
+branch add krne ka model bnaya aur branch ko address branchcode branchname ke sath add kiya 
+login me admin aur manager kdono ko login krne ka bnaya 
+admin manager ko add krega 
+
+
+aur frontend me ek test.jsx file bna ke real time apne teeno api ko test kiya 

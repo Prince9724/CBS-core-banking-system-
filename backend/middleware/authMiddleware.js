@@ -4,7 +4,7 @@ export const Authemiddle = async(req, res , next)=>{
     try{
         const {email,password,contact} = req.body
         // console.log("===> 2. Database me user dhoondh rha hu...");
-        const auth = await Auth.find({email:email});
+        const auth = await Auth.findOne({email:email});
             // console.log("===> 3. Database query complete hui! User mila:", auth);
         if (!auth) {//agr user ki email nhi milli to agr mill gyi to ismatch check krega 
             res.status(404).json({
@@ -12,7 +12,7 @@ export const Authemiddle = async(req, res , next)=>{
             })
         }
         //  console.log("===> 3. User mil gaya. Password compare ho rha hai...");
-        const isMatch = bcrypt.compare(password, auth.password);
+        const isMatch =await bcrypt.compare(password, auth.password);
         if(!isMatch){
             res.status(404).json({
                 status: false, message: "password wrong !!"
