@@ -1,10 +1,10 @@
-import nodemailer from "nodemailer"
+import nodemailer from "nodemailer";
 import dotenv from "dotenv";    
 import OTP from "../model/otpModel.js"
 
 dotenv.config();
 
-export const transpoter = nodemailer.transpoter({
+export const transpoter = nodemailer.createTransport({
     service:"gmail",
     auth:{
         user:process.env.USEREMAIL,

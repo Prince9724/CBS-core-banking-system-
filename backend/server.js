@@ -3,6 +3,7 @@ import Router from "./routes/route.js";
 import connectDb from "./config/db.js";
 import cookieParser from "cookie-parser";
 import cors from "cors"
+import dotenv  from "dotenv";
 const app = express();
 connectDb();
 app.use(cors({

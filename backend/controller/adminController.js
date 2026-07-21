@@ -2,7 +2,8 @@ import branch from "../model/branchModel.js"
 import Auth from "../model/authModel.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import { generatorOtp } from "./otpController.js"
+import { generatorOtp, transpoter } from "./otpController.js"
+import OTP from "../model/otpModel.js"
 export const addBranch = async (req , res)=>{
    
     try{
@@ -45,13 +46,49 @@ export const otpSend = async(req , res)=>{
     try{
         const otp = generatorOtp();
         const expiry = new Date(Date.now()+1000 *60*20);//20 minute ka expiry hai otp ka 
-        const Otp = await otp.create()
+        await OTP.create({email:req.body.email,otp,expiry})
+        await transpoter.sendMail({
+            from:`"cbs"<${process.env.USEREMAIL}>`,
+            to:req.body.email,
+            subject:"forget your password do not share Otp",
+            text:`your otp is ${otp} it is expire in 2 minute !`
+        })
+        res.json({
+            status:true,
+            message:"otp send succesfully !!",
+        })
     }   
     catch(err){
         res.json({
             status:false,
             message:"can't otp send",
             err:err.message
+        })
+    }
+}
+export const otpVerify = async(req, res)=>{
+    const {email , otp} = req.body
+    const result = await OTP.findOne({email , otp});
+    if(!result){//agar otp find nhi hua to 
+        res.json({
+            status:false,
+            message:"Otp Invalid !!",
+            err:err.message
+        })
+    }
+    if(result.expiry> new Date(Date.now())){//agar otp expire hone se pahle enter hai to 
+         res.status(200).json({
+            status:true,
+            message:"Otp verification successfully !! ",
+
+        })
+    }
+
+    else{
+        res.json({
+            status:false,
+            message:"otp Expire !! ",
+            
         })
     }
 }
