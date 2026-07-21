@@ -46,26 +46,7 @@ export const signIn = async (req, res) => {
         })
     }
 }
-//add user for admin 
-export const addManager = async(req ,res)=>{
-    try{
-        const {name,email,contact,role,branchcode,branchname,password} = req.body
-        const hash = await bcrypt.hash(password,12);
-        const result = await Auth.create({name,email,contact,role,branchcode,branchname,password:hash});
-        res.status(200).json({
-            status: true,
-            message: "user post succesfully !!",
-            data:result
-        })
-    }
-    catch(err){
-        res.json({
-            status:false,
-            message:"manager added failed !!",
-            err:err.message
-        })
-    }
-}        
+        
        
 export const updateAuth = async (req, res) => {
     try {

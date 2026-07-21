@@ -6,7 +6,7 @@ import cors from "cors"
 const app = express();
 connectDb();
 app.use(cors({
-    origin:"http://localhost:5174",
+    origin:"http://localhost:5173",
     credentials:true
      
 }))
