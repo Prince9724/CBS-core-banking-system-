@@ -2,9 +2,9 @@ import Auth from "../model/authModel.js"
 import bcrypt from "bcrypt";
 export const Authemiddle = async(req, res , next)=>{
     try{
-        const {email,password,contact} = req.body
+        const {email,password,contact,userid} = req.body
         // console.log("===> 2. Database me user dhoondh rha hu...");
-        const auth = await Auth.findOne({email:email});
+        const auth = await Auth.findOne({userid:userid});
             // console.log("===> 3. Database query complete hui! User mila:", auth);
         if (!auth) {//agr user ki email nhi milli to agr mill gyi to ismatch check krega 
             res.status(404).json({

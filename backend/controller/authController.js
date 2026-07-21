@@ -4,9 +4,9 @@ import jwt from "jsonwebtoken"
 // import cookieparser from "cookie"
 export const signUp = async (req, res) => {
     try {
-        const {name,email,contact,password,role} = req.body
+        const {name,email,contact,password,role,userid} = req.body
         const hash = await bcrypt.hash(password,12);
-        const result = await Auth.create({name,email,contact,role,password:hash});
+        const result = await Auth.create({name,userid,email,contact,role,password:hash});
         res.status(200).json({
             status: false,
             message: "user post succesfully !!",
@@ -89,4 +89,8 @@ export const deleteAuth = async (req, res) => {
             err: err.message
         })
     }
+}
+
+export const forgetPassword = async(req ,res)=>{
+
 }
