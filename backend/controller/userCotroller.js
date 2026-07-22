@@ -2,7 +2,7 @@ import Auth from "../model/authModel.js"
 
 export const postAuth = async(req , res)=>{
     try{
-    
+        
     }
     catch(err){
         res.json({
