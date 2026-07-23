@@ -38,7 +38,7 @@ export const updateAuth = async(req , res)=>{
 }
 export const delteAuth = async(req , res)=>{
     try{
-
+        
     }
     catch(err){
         res.json({
