@@ -1,0 +1,24 @@
+{
+  "admins": [
+    {
+      "id": 123,
+      "role": "owner",
+      "email": "admin@123",
+      "password": "admin@#123"
+    },
+    {
+      "id": 8546,
+      "role": "branch manager",
+      "branchId": 1221,
+      "email": "branchmanager01",
+      "password": "brm@#012"
+    },
+    {
+      "id": 4563,
+      "role": "branch manager",
+      "branchId": 1222,
+      "email": "branchmanager02",
+      "password": "brm@#023"
+    }
+  ]
+}

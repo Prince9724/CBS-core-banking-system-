@@ -1,0 +1,44 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    background-color: #212529;
+    color: white;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:#F8FAFC;
+    color:#1E293B;
+}
+h1{
+    font-size:32px;
+    font-weight:700;
+}
+
+h2{
+    font-size:26px;
+    font-weight:600;
+}
+
+h3{
+    font-size:22px;
+    font-weight:600;
+}
+
+p{
+    font-size:15px;
+}
+
+button{
+    font-size:14px;
+    font-weight:600;
+}
+
+table{
+    font-size:14px;
+}
+
+label{
+    font-size:14px;
+}
