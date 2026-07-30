@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+
 //1.fetch all admins and branch manager
 export const fetchUsers = createAsyncThunk("fetch/admin", async () => {
     try {
@@ -19,7 +20,7 @@ export const loginUser = createAsyncThunk("auth/loginUser", async (loginData, th
         return;
     }
     const user = users.find((u) => {
-        return (
+        return ( //if user what he typed === our json if exits and it matched so then return to user
             loginData.role === u.role &&
             loginData.email === u.email &&
             loginData.password === u.password
@@ -32,15 +33,17 @@ export const loginUser = createAsyncThunk("auth/loginUser", async (loginData, th
             branchId: user.branchId,
             role: user.role
         }))
+        localStorage.setItem("isAuthenticated", "true");//now when user is correct fill then this will be store in localstorage.
         alert("login success")
-    } else {
+    }
+    else {
         alert("invalid input!")
     }
 })
 const authSlice = createSlice({
     name: "adminauth",
     initialState: {
-        users: [], // fetch fpr all users
+        users: [], // fetch the all users
         loader: false,
         error: null,
         loggedinUser: null, // current users
@@ -48,7 +51,7 @@ const authSlice = createSlice({
     },
     reducers: {
         setLoggedinUser: (state, action) => {
-            console.log("loggedInuser: " ,action.payload)
+            // console.log("loggedInuser: ", action.payload)
             state.loggedinUser = action.payload
             state.isAuthenticated = true
         }

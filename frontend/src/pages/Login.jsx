@@ -1,16 +1,41 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, fetchUsers } from "../App/features/authSlice";
 
 export default function Login() {
-  const { users } = useSelector((state) => state.auth.users);
+  const navigate = useNavigate();
+  const { users, loggedinUser } = useSelector((state) => state.auth);
+  // console.log(users)
+  // console.log(loggedinUser);
   // console.log(users); //this is still giving me undefined ???
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchUsers());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (!loggedinUser) {
+      return; //is loggedinuser is null so this line never go down this will be return and if not null and then this going down
+    }
+    if (loggedinUser.role === "owner") {
+      navigate("/admin");
+    } else if (loggedinUser.role === "branch manager") {
+      navigate("/branch-manager");
+    }
+
+  }, [loggedinUser, navigate]);
+
+  // const handleLogin = () => { instead of we using in useEffect you can see
+  //   if (loggedinUser.role === "owner") {
+  //     navigate("/admin");
+  //   } else if (loggedinUser.role === "branch manager") {
+  //     navigate("/branch-manager");
+  //   } else {
+  //     alert("not found!");
+  //   }
+  // };
   const roleRef = useRef("");
   const emailRef = useRef("");
   const passwordRef = useRef("");
@@ -48,8 +73,8 @@ export default function Login() {
               >
                 <option value="">Select Role</option>
                 <option value="owner">Owner</option>
-                <option value="branchmanager01">Branch Manager - Vesu</option>
-                <option value="branchmanager02">Branch Manager - Adajan</option>
+                <option value="branch manager">Branch Manager</option>
+                {/* <option value="branchmanager02">Branch Manager - Adajan</option> */}
               </select>
               <label
                 style={{ background: "transparent" }}
