@@ -1,0 +1,30 @@
+.doughnut-card{
+
+    background:#252a31;
+
+    border:1px solid #343a40;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    height:100%;
+}
+
+.chart-title{
+
+    color:#fff;
+
+    font-size:20px;
+
+    font-weight:600;
+
+    margin-bottom:20px;
+}
+
+.doughnut-box{
+
+    position:relative;
+
+    height:340px;
+}

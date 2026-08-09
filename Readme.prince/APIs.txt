@@ -1,0 +1,21 @@
+agar kisi ko register krna hoga to = http://localhost:5003/cbs/signup // lekine hmee kisi ko 
+register krne ki jrurat nhi hai 
+
+user signIn == >http://localhost:5003/cbs/signin, // ye admin aur manager dono ko login krega with role
+
+branch ko add krne ke liye =    http://localhost:5003/cbs/addbranch
+branch ko get krne ke liye =>http://localhost:5003/cbs/getbranch
+
+manager ko add krne ke liye ==>http://localhost:5003/cbs/addrole
+
+manager customer ko add krega => http://localhost:5003/cbs/customer/add,
+customer ko edit krne ke liye = >http://localhost:5003/cbs/customer/put
+customer ko delete krne ke liye = http://localhost:5003/cbs/customer/delete?id=6a6c74217c3b3b1f913ddd25 //last me id hai ? iske baad 
+customer ko get krne ke liye  = http://localhost:5003/cbs/customer/get
+
+customer ka account create krne ke liye = > http://localhost:5003/cbs/customer/openaccount
+
+withrow = > http://localhost:5003/cbs/customer/withdraw
+deposite => http://localhost:5003/cbs/customer/deposite
+ history = > http://localhost:5003/cbs/customer/history/SUR123-2026-000002
+account create krte time customer ki id chahiye aur id ko database ya backend se lena pdega 

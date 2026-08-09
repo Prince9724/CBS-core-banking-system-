@@ -1,0 +1,131 @@
+/* ==========================
+   Chart Card
+========================== */
+
+.chart-card {
+  background: #212529;
+  /* border: 1px solid #343a40; */
+  /* border-radius: 16px; */
+  height: 450px;
+  padding: 24px;
+  animation: fadeUp 0.8s ease-out;
+  transition: all 0.35s ease-out;
+}
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Canvas */
+.chart-card canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Select Box */
+.chart-card .form-select {
+  background: #2b3035;
+  color: #fff;
+  border-color: #495057;
+}
+
+.chart-card .form-select:focus {
+  background: #2b3035;
+  color: #fff;
+  border-color: #0d6efd;
+  box-shadow: none;
+}
+
+.chart-card .form-select option {
+  background: #212529;
+  color: #fff;
+}
+
+/* ==========================
+   Large Tablet
+========================== */
+
+@media (max-width: 992px) {
+
+  .chart-card {
+    height: 420px !important;
+    padding: 20px !important;
+  }
+
+  .chart-card h4,
+  .chart-card h5 {
+    font-size: 1.3rem;
+  }
+
+}
+
+/* ==========================
+   Tablet
+========================== */
+
+@media (max-width: 768px) {
+
+  .chart-card {
+    height: auto !important;
+    min-height: 380px;
+    padding: 18px !important;
+    margin-top: 20px !important;
+  }
+
+  /* Deposit Chart Header */
+  .chart-card .d-flex.justify-content-between {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 15px;
+  }
+
+  .chart-card .form-select {
+    width: 100% !important;
+  }
+
+}
+
+/* ==========================
+   Mobile
+========================== */
+
+@media (max-width: 576px) {
+
+  .chart-card {
+    padding: 16px !important;
+    min-height: 350px;
+  }
+
+  .chart-card h4,
+  .chart-card h5 {
+    font-size: 1.15rem;
+  }
+
+  .chart-card .form-select {
+    width: 100% !important;
+  }
+
+  .chart-card canvas {
+    max-height: 250px !important;
+  }
+
+}
+
+/* ==========================
+   Doughnut Chart
+========================== */
+
+@media (max-width: 992px) {
+
+  .chart-card canvas {
+    max-width: 100%;
+  }
+
+}

@@ -1,0 +1,56 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    background-color: transparent;
+    color: inherit;
+}
+
+html, body {
+    background-color: #F8FAFC;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:#F8FAFC;
+    color:#fcfdff;
+}
+h1{
+    font-size:32px;
+    font-weight:700;
+}
+
+h2{
+    font-size:26px;
+    font-weight:600;
+}
+
+h3{
+    font-size:22px;
+    font-weight:600;
+}
+
+p{
+    font-size:15px;
+}
+
+button{
+    font-size:14px;
+    font-weight:600;
+}
+
+table{
+    font-size:14px;
+}
+
+label{
+    font-size:14px;
+}
+.span-text{
+    font-size: 14px;
+    color: rgb(174, 169, 169);
+}
+.gray-text{
+    color: rgb(147, 145, 145);
+    font-size: 15px;
+}

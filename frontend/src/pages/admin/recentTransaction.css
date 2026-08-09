@@ -1,0 +1,30 @@
+.recent-card {
+  background: #212529;
+  border: 1px solid #343a40;
+  border-radius: 16px;
+  padding: 20px;
+  height: 100%;
+  transition: all 0.35s ease-out;
+}
+
+.recent-card .table {
+  background: transparent;
+  color: #fff;
+  margin-bottom: 0;
+}
+
+.recent-card .table thead th {
+  background: #212529;
+  color: #adb5bd;
+  border-bottom: 1px solid #343a40;
+}
+
+.recent-card .table tbody td {
+  background: #212529;
+  color: #fff;
+  border-color: #343a40;
+}
+
+.recent-card .table tbody tr:hover td {
+  background: #2b3035;
+}

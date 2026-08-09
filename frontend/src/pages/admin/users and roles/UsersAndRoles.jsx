@@ -1,0 +1,613 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import {
+  BsSearch,
+  BsFilter,
+  BsPlusLg,
+  BsEye,
+  BsPencil,
+  BsTrash,
+  BsChevronLeft,
+  BsChevronRight,
+} from "react-icons/bs";
+import { HiOutlineUsers, HiOutlineUserGroup } from "react-icons/hi2";
+import { MdOutlineVerifiedUser } from "react-icons/md";
+import { PiUserSwitchDuotone } from "react-icons/pi";
+import { RiShieldUserLine, RiUserSearchLine } from "react-icons/ri";
+import { FaRegEye } from "react-icons/fa";
+import { TbShieldCog } from "react-icons/tb";
+import "./userroles.css";
+import { Link } from "react-router-dom";
+
+export default function UsersRoles() {
+  const [activePage, setActivePage] = useState(1);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const [branches, setBranches] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [roleFilter, setRoleFilter] = useState("All Roles");
+  const [statusFilter, setStatusFilter] = useState("All Statuses");
+
+  const stats = [
+    {
+      label: "Total Users",
+      value: users.length,
+      sub: "Managers + Tellers",
+      icon: <HiOutlineUsers />,
+      accent: "ur-accent-blue",
+    },
+    {
+      label: "Managers",
+      value: users.filter((u) => u.role === "Manager").length,
+      sub: "Branch managers",
+      icon: <HiOutlineUserGroup />,
+      accent: "ur-accent-green",
+    },
+    {
+      label: "Tellers",
+      value: users.filter((u) => u.role === "Teller").length,
+      sub: "Cash operators",
+      icon: <TbShieldCog />,
+      accent: "ur-accent-amber",
+    },
+    {
+      label: "Branches",
+      value: branches.length,
+      sub: "Available branches",
+      icon: <PiUserSwitchDuotone />,
+      accent: "ur-accent-red",
+    },
+  ];
+
+  const [formData, setFormData] = useState({
+    name: "",
+    userid: "",
+    email: "",
+    contact: "",
+    password: "",
+    role: "Manager",
+    branchname: "",
+    branchcode: "",
+  });
+
+  const roleOverview = [
+    {
+      name: "Super Admin",
+      count: "1 User",
+      icon: <RiShieldUserLine />,
+      accent: "ur-accent-blue",
+    },
+    {
+      name: "Branch Manager",
+      count: "4 Users",
+      icon: <HiOutlineUserGroup />,
+      accent: "ur-accent-blue",
+    },
+    {
+      name: "Teller",
+      count: "6 Users",
+      icon: <HiOutlineUsers />,
+      accent: "ur-accent-green",
+    },
+    {
+      name: "Customer Service",
+      count: "5 Users",
+      icon: <HiOutlineUserGroup />,
+      accent: "ur-accent-amber",
+    },
+    {
+      name: "Auditor",
+      count: "3 Users",
+      icon: <RiUserSearchLine />,
+      accent: "ur-accent-purple",
+    },
+    {
+      name: "Viewer",
+      count: "5 Users",
+      icon: <FaRegEye />,
+      accent: "ur-accent-gray",
+    },
+  ];
+
+  useEffect(() => {
+    fetchUsers();
+    fetchBranches();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(
+        "http://localhost:5003/cbs/getusers",
+        { withCredentials: true }
+      );
+      if (res.data.status) {
+        setUsers(res.data.data || []);
+      }
+    } catch (err) {
+      setError("Failed to fetch users");
+      console.error("Error fetching users:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchBranches = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5003/cbs/getbranch",
+        { withCredentials: true }
+      );
+      if (res.data.status) {
+        setBranches(res.data.data || []);
+      }
+    } catch (err) {
+      console.error("Error fetching branches:", err);
+    }
+  };
+
+  // Filter users based on search and filters
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch =
+      user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.userid?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesRole = roleFilter === "All Roles" || user.role === roleFilter;
+    const matchesStatus = statusFilter === "All Statuses" || user.status === statusFilter;
+
+    return matchesSearch && matchesRole && matchesStatus;
+  });
+
+  const totalPages = Math.ceil(filteredUsers.length / 6);
+  const paginatedUsers = filteredUsers.slice(
+    (activePage - 1) * 6,
+    activePage * 6
+  );
+
+  const handleAddUser = async () => {
+    try {
+      if (editId) {
+        // UPDATE
+        await axios.put(
+          "http://localhost:5003/cbs/update",
+          { ...formData, _id: editId },
+          { withCredentials: true }
+        );
+
+        alert("User updated successfully");
+      } else {
+        // ADD
+        await axios.post(
+          "http://localhost:5003/cbs/addrole",
+          formData,
+          { withCredentials: true }
+        );
+
+        alert("User added successfully");
+      }
+
+      setShowModal(false);
+      setEditId(null);
+
+      setFormData({
+        name: "",
+        userid: "",
+        email: "",
+        contact: "",
+        password: "",
+        role: "Manager",
+        branchname: "",
+        branchcode: "",
+      });
+
+      fetchUsers();
+    } catch (err) {
+      console.log(err.response?.data);
+      alert(err.response?.data?.message || "Failed to save user");
+    }
+  };
+
+  return (
+    <div className="ur-page">
+      {/* Header */}
+      <div className="ur-header">
+        <div className="ur-crumb">
+          <Link to={"/admin"} className="">
+            <span className="ur-crumb-link">Dashboard</span>
+          </Link>
+          <span className="ur-crumb-sep">›</span>
+          <span className="ur-crumb-current">Users & Roles</span>
+        </div>
+      </div>
+
+      <div className="ur-title-row">
+        <div>
+          <h2>Users & Roles</h2>
+          <p>Manage system users and their roles &amp; permissions</p>
+        </div>
+        <button
+          className="btn btn-primary ur-add-btn"
+          onClick={() => {
+            setEditId(null);
+            setFormData({
+              name: "",
+              userid: "",
+              email: "",
+              contact: "",
+              password: "",
+              role: "Manager",
+              branchname: "",
+              branchcode: "",
+            });
+            setShowModal(true);
+          }}
+        >
+          <BsPlusLg className="ur-btn-icon" />
+          Add New User
+        </button>
+      </div>
+
+      {/* Stats */}
+      <div className="ur-stats-grid">
+        {stats.map((s, i) => (
+          <div className="ur-stat-card" key={i}>
+            <div className={`ur-stat-icon ${s.accent}`}>{s.icon}</div>
+            <div className="ur-stat-text">
+              <span className="ur-stat-label">{s.label}</span>
+              <span className="ur-stat-value">{s.value}</span>
+              <span className="ur-stat-sub">{s.sub}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Filters */}
+      <div className="ur-filters">
+        <div className="ur-search-box">
+          <BsSearch className="ur-search-icon" />
+          <input
+            type="text"
+            placeholder="Search users by name, email or role..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setActivePage(1);
+            }}
+          />
+        </div>
+
+        <select
+          className="ur-select"
+          value={roleFilter}
+          onChange={(e) => {
+            setRoleFilter(e.target.value);
+            setActivePage(1);
+          }}
+        >
+          <option>All Roles</option>
+          <option>Manager</option>
+          <option>Teller</option>
+        </select>
+
+        <select
+          className="ur-select"
+          value={statusFilter}
+          onChange={(e) => {
+            setStatusFilter(e.target.value);
+            setActivePage(1);
+          }}
+        >
+          <option>All Statuses</option>
+          <option>Active</option>
+          <option>Inactive</option>
+        </select>
+
+        <button
+          className="ur-filter-btn"
+          onClick={() => {
+            setSearchTerm("");
+            setRoleFilter("All Roles");
+            setStatusFilter("All Statuses");
+            setActivePage(1);
+          }}
+        >
+          <BsFilter className="ur-btn-icon" />
+          Reset
+        </button>
+      </div>
+
+      {/* Table */}
+      <div className="ur-table-card">
+        <div className="ur-table-wrap">
+          {loading ? (
+            <div className="text-center py-5">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          ) : paginatedUsers.length === 0 ? (
+            <div className="text-center py-5">
+              <p className="text-muted">No users found</p>
+            </div>
+          ) : (
+            <table className="ur-table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Branch</th>
+                  <th>Status</th>
+                  <th className="ur-actions-head">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedUsers.map((u, i) => (
+                  <tr key={i}>
+                    <td data-label="User">
+                      <div className="ur-user-cell">
+                        <div className="ur-avatar">
+                          {u?.name?.charAt(0) || "U"}
+                        </div>
+                        <div>
+                          <div className="ur-user-name">{u.name}</div>
+                          <div className="ur-user-phone">{u.contact}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td data-label="Email">{u.email}</td>
+                    <td data-label="Role">
+                      <span className={`ur-role-badge ${u.role === "Manager"
+                        ? "ur-role-manager"
+                        : "ur-role-teller"
+                        }`}>
+                        {u.role}
+                      </span>
+                    </td>
+                    <td data-label="Branch">{u.branchname || "N/A"}</td>
+                    <td data-label="Status">
+                      <span
+                        className={`ur-status-badge ${u.status === "Active" ? "bg-success" : "bg-secondary"}`}
+                      >
+                        {u.status}
+                      </span>
+                    </td>
+                    <td data-label="Actions">
+                      <div className="ur-action-buttons">
+                        <button
+                          className="ur-action-btn ur-action-view"
+                          title="View"
+                        >
+                          <BsEye />
+                        </button>
+                        <button
+                          className="ur-action-btn ur-action-edit"
+                          title="Edit"
+                          onClick={() => {
+                            setEditId(u._id);
+                            setFormData({
+                              name: u.name,
+                              userid: u.userid,
+                              email: u.email,
+                              contact: u.contact,
+                              password: "",
+                              role: u.role,
+                              branchname: u.branchname || "",
+                              branchcode: u.branchcode || "",
+                            });
+                            setShowModal(true);
+                          }}
+                        >
+                          <BsPencil />
+                        </button>
+                        <button
+                          className="ur-action-btn ur-action-delete"
+                          title="Delete"
+                          onClick={async () => {
+                            if (window.confirm(`Are you sure you want to delete ${u.name}?`)) {
+                              try {
+                                await axios.delete(
+                                  `http://localhost:5003/cbs/deleteuser?id=${u._id}`,
+                                  { withCredentials: true }
+                                );
+                                alert("User deleted successfully");
+                                fetchUsers();
+                              } catch (err) {
+                                alert(err.response?.data?.message || "Failed to delete user");
+                              }
+                            }
+                          }}
+                        >
+                          <BsTrash />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        {/* Pagination */}
+        {filteredUsers.length > 6 && (
+          <div className="ur-pagination">
+            <span className="ur-pagination-info">
+              Showing {((activePage - 1) * 6) + 1} to{" "}
+              {Math.min(activePage * 6, filteredUsers.length)} of{" "}
+              {filteredUsers.length} users
+            </span>
+            <div className="ur-pagination-controls">
+              <button
+                className="ur-page-nav"
+                disabled={activePage === 1}
+                onClick={() => setActivePage((p) => Math.max(1, p - 1))}
+              >
+                <BsChevronLeft />
+              </button>
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  className={`ur-page-btn ${activePage === i + 1 ? "ur-page-active" : ""}`}
+                  onClick={() => setActivePage(i + 1)}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              <button
+                className="ur-page-nav"
+                disabled={activePage === totalPages}
+                onClick={() => setActivePage((p) => Math.min(totalPages, p + 1))}
+              >
+                <BsChevronRight />
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Roles Overview */}
+      <div className="ur-roles-overview">
+        <h5>Roles Overview</h5>
+        <div className="ur-roles-grid">
+          {roleOverview.map((r, i) => (
+            <div className="ur-role-card" key={i}>
+              <div className={`ur-role-icon ${r.accent}`}>{r.icon}</div>
+              <div>
+                <div className="ur-role-name">{r.name}</div>
+                <div className="ur-role-count">{r.count}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="modal d-block" style={{ background: "rgba(0,0,0,0.5)" }}>
+          <div className="modal-dialog">
+            <div className="modal-content bg-dark text-white">
+              <div className="modal-header">
+                <h5 className="modal-title">
+                  {editId ? "Edit User" : "Add User"}
+                </h5>
+                <button
+                  className="btn-close btn-close-white"
+                  onClick={() => {
+                    setShowModal(false);
+                    setEditId(null);
+                  }}
+                />
+              </div>
+
+              <div className="modal-body">
+                <input
+                  className="form-control mb-2"
+                  placeholder="Full Name"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                />
+
+                <input
+                  className="form-control mb-2"
+                  placeholder="User ID"
+                  value={formData.userid}
+                  onChange={(e) =>
+                    setFormData({ ...formData, userid: e.target.value })
+                  }
+                  disabled={!!editId}
+                />
+
+                <input
+                  className="form-control mb-2"
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                />
+
+                <input
+                  className="form-control mb-2"
+                  placeholder="Contact"
+                  value={formData.contact}
+                  onChange={(e) =>
+                    setFormData({ ...formData, contact: e.target.value })
+                  }
+                />
+
+                <input
+                  type="password"
+                  className="form-control mb-2"
+                  placeholder={editId ? "New Password (optional)" : "Password"}
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                />
+
+                <select
+                  className="form-select mb-2"
+                  value={formData.role}
+                  onChange={(e) =>
+                    setFormData({ ...formData, role: e.target.value })
+                  }
+                >
+                  <option value="Manager">Manager</option>
+                  <option value="Teller">Teller</option>
+                </select>
+
+                <select
+                  className="form-select"
+                  value={formData.branchcode}
+                  onChange={(e) => {
+                    const branch = branches.find(
+                      (b) => b.branchcode === e.target.value
+                    );
+                    setFormData({
+                      ...formData,
+                      branchcode: e.target.value,
+                      branchname: branch?.branchname || "",
+                    });
+                  }}
+                >
+                  <option value="">Select Branch</option>
+                  {branches.map((b) => (
+                    <option key={b._id} value={b.branchcode}>
+                      {b.branchname} ({b.branchcode})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="modal-footer">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => {
+                    setShowModal(false);
+                    setEditId(null);
+                  }}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  className="btn btn-primary"
+                  onClick={handleAddUser}
+                >
+                  {editId ? "Update" : "Save"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

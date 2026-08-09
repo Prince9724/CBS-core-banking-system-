@@ -1,0 +1,11 @@
+.right-content {
+  margin-left: 310px;
+  width: calc(100% - 280px);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* background-color: aliceblue; */
+}
+.layout{
+    height: 100vh;
+}

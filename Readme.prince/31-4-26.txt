@@ -1,0 +1,7 @@
+aaj authentication ka saara kaam ho gya bina admin ke login kiye manager add nhi ho skta hai .
+url se bhi like api ka use krke bhi nhi 
+bina manager ke login kiye koi bhi customer ko create nhi kr skta  hai 
+
+
+cutomer ke account me deposite aur withdraw dono account ke base pr hoga 
+

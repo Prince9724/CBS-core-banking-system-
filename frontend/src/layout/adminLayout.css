@@ -1,0 +1,18 @@
+.layout {
+  display: flex;
+}
+
+.right-content {
+  flex: 1;
+  margin-left: 280px;
+  padding: 25px;
+  min-height: 100vh;
+  background: #212529;
+}
+
+@media (max-width: 991px) {
+  .right-content {
+    margin-left: 0;
+    padding: 80px 20px 20px;
+  }
+}
