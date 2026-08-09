@@ -3,3 +3,17 @@
   "password":"admin123"
   
 }
+manager ki id M001
+password 1234
+branchcode DI123 
+
+manager 2 = 
+ id M002
+ branchcode SUR123
+ password 1234
+
+
+ teller ki 
+ id T001
+ branchcode  SU123
+ password  1234
