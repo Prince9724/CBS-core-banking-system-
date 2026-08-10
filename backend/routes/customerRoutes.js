@@ -2,7 +2,7 @@ import express from "express"
 import { addCustomer, deleteCustomer, searchCustomers ,getCustomer, updateCustomer } from "../controller/customerCotroller.js";
 import { authMiddleware } from "../middleware/auth.js";
 import { managerOnly } from "../middleware/managerOnly.js";
-import { getAccounts, openAccount } from "../controller/accountController.js";
+import { getAccounts, openAccount, searchAccount } from "../controller/accountController.js";
 import { deposite, getHistory, withdraw } from "../controller/transactionController.js";
 
 const CustomerRoute = express.Router();
@@ -19,8 +19,9 @@ CustomerRoute.get(
 CustomerRoute.post("/openaccount", authMiddleware ,openAccount)
 CustomerRoute.get(
   "/accounts",authMiddleware,getAccounts);
-CustomerRoute.post("/deposit", authMiddleware, managerOnly, deposite);
-CustomerRoute.post("/withdraw", authMiddleware, managerOnly, withdraw);
-CustomerRoute.get("/history/:accountNumber", authMiddleware, managerOnly, getHistory);
-
+CustomerRoute.post("/deposit", authMiddleware, deposite);
+CustomerRoute.post("/withdraw", authMiddleware, withdraw);
+CustomerRoute.get("/history/:accountNumber", authMiddleware, getHistory);
+CustomerRoute.get("/search",authMiddleware,searchCustomers)
+CustomerRoute.get("/account-search",authMiddleware,searchAccount)
 export default CustomerRoute;

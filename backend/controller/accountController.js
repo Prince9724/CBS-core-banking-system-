@@ -66,3 +66,95 @@ export const getAccounts = async (req, res) => {
     });
   }
 };
+
+export const searchCustomers = async (req, res) => {
+  try {
+    const { search } = req.query;
+
+    if (!search) {
+      return res.status(400).json({
+        status: false,
+        message: "Search value required",
+      });
+    }
+
+    // Aadhar ya Name se search
+    const customers = await Customer.find({
+      $or: [
+        { aadhar: { $regex: search, $options: "i" } },
+        { name: { $regex: search, $options: "i" } },
+      ],
+    });
+
+    // Account number se search
+    const accounts = await Account.find({
+      accountNumber: { $regex: search, $options: "i" },
+    }).populate("customerId");
+
+    const accountCustomers = accounts.map((a) => a.customerId);
+
+    const result = [...customers, ...accountCustomers];
+
+    res.json({
+      status: true,
+      data: result,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: false,
+      message: err.message,
+    });
+  }
+};
+export const searchAccount = async (req, res) => {
+  try {
+    const { search } = req.query;
+
+    if (!search) {
+      return res.status(400).json({
+        status: false,
+        message: "Search value required",
+      });
+    }
+
+    let account;
+
+    // Account number se search
+    account = await Account.findOne({
+      accountNumber: search,
+    }).populate("customerId");
+
+    // Aadhar se search
+    if (!account) {
+      const customer = await Customer.findOne({ aadhar: search });
+
+      if (customer) {
+        account = await Account.findOne({
+          customerId: customer._id,
+        }).populate("customerId");
+      }
+    }
+
+    if (!account) {
+      return res.status(404).json({
+        status: false,
+        message: "Account not found",
+      });
+    }
+
+    res.json({
+      status: true,
+      data: {
+        accountNumber: account.accountNumber,
+        accountType: account.accountType,
+        balance: account.balance,
+        customer: account.customerId,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: false,
+      message: err.message,
+    });
+  }
+};
