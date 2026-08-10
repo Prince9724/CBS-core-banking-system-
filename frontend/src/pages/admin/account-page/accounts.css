@@ -1,0 +1,146 @@
+.accounts-page {
+  padding: 8px 0;
+}
+
+.accounts-title {
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.accounts-breadcrumb {
+  color: #9ca3af;
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+.accounts-breadcrumb span {
+  margin: 0 6px;
+}
+
+.create-account-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 11px 18px;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+.create-account-btn:hover {
+  background: #1d4ed8;
+  color: #fff;
+}
+
+.account-stat-card {
+  background: #23272f;
+  border: 1px solid #343a40;
+  border-radius: 16px;
+  padding: 6px 6px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 100%;
+  transition: all 0.25s ease;
+}
+
+.account-stat-card:hover {
+  border-color: #565759;
+}
+
+.account-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+}
+
+.account-content {
+  flex: 1;
+}
+
+.account-label {
+  color: #9ca3af;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.account-value {
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.account-growth {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.growth-up {
+  color: #22c55e;
+  font-size: 10px;
+}
+
+@media (max-width: 992px) {
+  .accounts-title {
+    font-size: 1.7rem;
+  }
+
+  .account-value {
+    font-size: 1.7rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .create-account-btn {
+    width: 100%;
+  }
+
+  .account-stat-card {
+    padding: 18px;
+  }
+
+  .account-icon {
+    width: 54px;
+    height: 54px;
+    font-size: 22px;
+  }
+
+  .account-value {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .accounts-title {
+    font-size: 1.5rem;
+  }
+
+  .accounts-breadcrumb {
+    font-size: 13px;
+  }
+
+  .account-stat-card {
+    gap: 14px;
+  }
+
+  .account-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+
+  .account-value {
+    font-size: 1.45rem;
+  }
+}

@@ -20,14 +20,14 @@ export default function QuickActions() {
 
   return (
     <div className="quick-action-card">
-      <h5 className="quick-title fw-bold">Quick Actions</h5>
+      <h4 className="quick-title">Quick Actions</h4>
 
       <div className="action-grid">
         {actions.map((item, index) => (
-          <button type="button" className="action-btn" key={index}>
-            <i className="action-icon" style={{ color: item.color }}>
+          <button key={index} className="action-btn">
+            <span className="action-icon" style={{ color: item.color }}>
               {item.icon}
-            </i>
+            </span>
             <span className="action-text">{item.title}</span>
           </button>
         ))}

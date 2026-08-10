@@ -1,45 +1,17 @@
-/* .sidebar-link{
-    display:flex;
-    align-items:center;
-    padding:14px 18px;
-    margin-bottom:8px;
-    color:white !important;
-    border-radius:12px;
-    transition:all .25s ease;
-}
-
-.sidebar-link:hover{
-    background:#0d6efd;
-    color:white !important;
-}
-
-.sidebar-link.active{
-    background:#0d6efd !important;
-    color:white !important;
-}
-
-.sidebar-link i{
-    font-size:20px;
-    min-width:24px;
-}
-
-.sidebar-link span{
-    margin-left:15px;
-} */
-.nav-pills .nav-link {
-  transition: background-color 0.15s ease-in, color 0.15s ease-in;
-}
 .nav-pills .nav-link {
   display: flex;
   align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 10px;
   transition: background-color 0.15s ease-in, color 0.15s ease-in;
 }
 
-/* Make sure nothing inside has its own background */
 .nav-pills .nav-link i,
 .nav-pills .nav-link span {
   background: none !important;
 }
+
 .sidebar {
   position: fixed;
   top: 0;
@@ -47,8 +19,16 @@
   width: 280px;
   height: 100vh;
   z-index: 1050;
-  transition: transform .35s ease;
+  transition: transform 0.35s ease;
   overflow-y: auto;
+}
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1040;
+  transition: opacity 0.3s ease;
 }
 
 .menu-btn {
@@ -58,45 +38,26 @@
   z-index: 1100;
 }
 
-/* Desktop */
+@media (min-width: 992px) {
+  .sidebar {
+    transform: translateX(0);
+  }
 
-@media (min-width:992px){
+  .menu-btn {
+    display: none;
+  }
 
-.sidebar{
-    transform:translateX(0);
+  .sidebar-overlay {
+    display: none !important;
+  }
 }
 
-.menu-btn{
-    display:none;
-}
+@media (max-width: 991px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
 
-.sidebar-overlay{
-    display:none;
-}
-
-}
-
-/* Tablet & Mobile */
-
-@media (max-width:991px){
-
-.sidebar{
-
-    transform:translateX(-100%);
-    border-radius:0 !important;
-}
-
-.show-sidebar{
-
-    transform:translateX(0);
-}
-
-.sidebar-overlay{
-
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.5);
-    z-index:1040;
-}
-
+  .show-sidebar {
+    transform: translateX(0);
+  }
 }

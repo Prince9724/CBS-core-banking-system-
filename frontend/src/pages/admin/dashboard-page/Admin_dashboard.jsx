@@ -1,8 +1,8 @@
 import React from 'react'
-import Admin_Sidebar from '../../Admin-component/Admin_Sidebar'
+import Admin_Sidebar from '../../../Admin-component/Admin_Sidebar'
 import "./admin_dashboard.css"
 import Home from './Home'
-import Branch from './branch-page/Branch'
+import Branch from '../branch-page/Branch'
 export default function Admin_dashboard() {
   return (
     <>

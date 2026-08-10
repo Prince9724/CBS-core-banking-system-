@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCustomers, addCustomer } from "../../App/features/customerSlice";
 
-export default function Customers() {
+export default function ManagerCustomers() {
     const dispatch = useDispatch();
 
     const { customers, loading } = useSelector((state) => state.customer);

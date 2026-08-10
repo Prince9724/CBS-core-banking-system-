@@ -54,42 +54,38 @@ export default function CustomerByBranchChart() {
     ],
   };
   const doughnutOptions = {
-    responsive: true,
-
-    maintainAspectRatio: false,
-
-    cutout: "65%",
-
-    plugins: {
-      legend: {
-        position: "right",
-
-        labels: {
-          usePointStyle: true,
-          pointStyle: "circle",
-
-          boxWidth: 12,
-          boxHeight: 12,
-
-          padding: 25,
-
-          font: {
-            size: 14,
-          },
-
-          color: "#fff",
+  responsive: true,
+  maintainAspectRatio: false,
+  cutout: "68%",
+  layout: {
+    padding: 8,
+  },
+  plugins: {
+    legend: {
+      position: "right",
+      align: "center",
+      labels: {
+        usePointStyle: true,
+        pointStyle: "circle",
+        boxWidth: 10,
+        boxHeight: 10,
+        padding: 18,
+        color: "#d1d5db",
+        font: {
+          size: 13,
+          weight: "500",
         },
       },
-
-      tooltip: {
-        backgroundColor: "#2b3035",
-      },
     },
-  };
+    tooltip: {
+      backgroundColor: "#2b3035",
+    },
+  },
+};
   return (
     <>
       <div className="doughnut-card">
-        <p className="chart-title">Customers by Branch</p>
+        <p className="chart-title fs-5">Customers by Branch</p>
 
         <div className="doughnut-box">
           <Doughnut data={doughnutData} options={doughnutOptions} />

@@ -1,19 +1,22 @@
 // import { Routes, Route } from "react-router";
 import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
-import Home from "./pages/admin/Home";
+import Home from "./pages/admin/dashboard-page/Home";
 import Branch from "./pages/admin/branch-page/Branch";
 // import BranchManager_dashboard from "./pages/branchmanager/BranchManager_dashboard";
 import ProtectedRoutes from "./componet-global/ProtectedRoutes";
 import AdminLayout from "./layout/AdminLayout";
 import UsersRoles from "./pages/admin/users and roles/UsersAndRoles";
-// import Customers from "./pages/admin/customers-page/Customers";
+import Customers from "./pages/admin/customers-page/Customers";
 import BranchManager_dashboard from "./pages/branchmanager/BranchManager_dashboard";
 import BranchDetails from "./pages/admin/branch-page/BranchDetails";
 import ManagerDashboard from "./pages/manager/ManagerDashboard";
-import Customers from "./pages/manager/Customers";
+import ManagerCustomers from "./pages/manager/Customers";
 import Accounts from "./pages/manager/Accounts";
 import TellerDashboard from "./pages/teller/TellerDashboard";
+import AdminAccounts from "./pages/admin/account-page/Accounts";
+import Transactions from "./pages/admin/Transaction-page/Transactions";
+
 export default function App() {
   return (
     <Routes>
@@ -65,16 +68,37 @@ export default function App() {
         />
 
         {/* cutomers-page */}
-        {/* <Route
+        <Route
           path="customers"
           element={
             <ProtectedRoutes>
               <Customers />
             </ProtectedRoutes>
           }
-        /> */}
-      </Route>
+        />
 
+        {/* Account-Page */}
+        <Route
+          path="accounts"
+          element={
+            <ProtectedRoutes>
+              <AdminAccounts />
+            </ProtectedRoutes>
+          }
+        />
+        {/* Account-Page */}
+        
+        {/* Transaction - Page */}
+        <Route path="transaction" element={
+          <ProtectedRoutes>
+            <Transactions/>
+          </ProtectedRoutes>
+        } />
+        {/* Transaction - Page */}
+      </Route> {/* END-OF-ADMIN */}
+      {/* END-OF-ADMIN */} 
+      
+         
       {/* Branch Manager */}
 
       <Route
@@ -85,15 +109,12 @@ export default function App() {
           </ProtectedRoutes>
         }
       />
-      <Route
-        path="/manager/:branchcode"
-        element={<ManagerDashboard />}
-      />
+      <Route path="/manager/:branchcode" element={<ManagerDashboard />} />
       <Route
         path="/manager/:branchcode/customers"
         element={
           <ProtectedRoutes>
-            <Customers />
+            <ManagerCustomers /> {/* this page for where manager can add customers */}
           </ProtectedRoutes>
         }
       />

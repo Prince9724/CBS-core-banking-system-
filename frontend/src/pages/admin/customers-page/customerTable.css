@@ -1,0 +1,261 @@
+/* =========================
+   Customer table card
+========================= */
+.customer-table-card {
+  background: #23272f;
+  border: 1px solid #343a40;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+/* =========================
+   Filter bar
+========================= */
+.filter-bar {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.2fr auto auto;
+  gap: 12px;
+  margin-bottom: 18px;
+  align-items: center;
+}
+
+/* =========================
+   Search box (FIXED)
+========================= */
+.search-box {
+  position: relative;
+  height: 46px;
+}
+
+.search-box input {
+  width: 100%;
+  height: 100%;
+  background: #1f242b;
+  border: 1px solid #343a40;
+  border-radius: 12px;
+  color: #fff;
+  padding: 0 14px 0 42px; /* space for icon */
+  outline: none;
+}
+
+.search-box input::placeholder {
+  color: #9ca3af;
+}
+
+.search-box input:focus {
+  border-color: #4b5563;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  background: transparent;
+  pointer-events: none;
+  margin: 0;
+}
+
+/* =========================
+   Select dropdown (FIXED)
+========================= */
+.filter-bar select {
+  height: 46px;
+  border-radius: 12px;
+  border: 1px solid #343a40;
+  background: #1f242b;
+  color: #fff;
+  padding: 0 42px 0 14px; /* right padding for arrow */
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 14px;
+}
+
+.filter-bar select:focus {
+  border-color: #4b5563;
+}
+
+/* =========================
+   Buttons
+========================= */
+.date-btn,
+.export-btn {
+  height: 46px;
+  border-radius: 12px;
+  border: 1px solid #343a40;
+  background: #1f242b;
+  color: #fff;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* =========================
+   Table
+========================= */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.customer-table {
+  width: 100%;
+  min-width: 1100px;
+  border-collapse: collapse;
+}
+
+.customer-table thead th {
+  color: #9ca3af;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 14px 12px;
+  border-bottom: 1px solid #343a40;
+}
+
+.customer-table tbody td {
+  color: #fff;
+  font-size: 14px;
+  padding: 16px 12px;
+  border-bottom: 1px solid #2d333b;
+}
+
+.customer-name {
+  font-weight: 600;
+}
+
+.balance {
+  font-weight: 600;
+}
+
+/* =========================
+   Status badge
+========================= */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-badge.active {
+  background: rgba(34, 197, 94, 0.12);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.status-badge.inactive {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+/* =========================
+   Action buttons (FIXED)
+========================= */
+.action-group {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* less space between buttons */
+}
+
+.action-btn {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  margin: 0;
+  border-radius: 8px;
+  background: transparent; /* remove dark background */
+  border: none; /* remove border */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.action-btn.view {
+  color: #60a5fa;
+}
+
+.action-btn.edit {
+  color: #f59e0b;
+}
+
+.action-btn.delete {
+  color: #ef4444;
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* =========================
+   Footer
+========================= */
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 18px;
+  color: #9ca3af;
+}
+
+.pagination {
+  display: flex;
+  gap: 8px;
+}
+
+.pagination button {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #1f242b;
+  border: 1px solid #343a40;
+  color: #fff;
+}
+
+.pagination button.active {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 1200px) {
+  .filter-bar {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .customer-table-card {
+    padding: 16px;
+  }
+
+  .filter-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .table-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+  }
+}

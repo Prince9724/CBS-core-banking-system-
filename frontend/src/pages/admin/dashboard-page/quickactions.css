@@ -36,8 +36,8 @@
 }
 
 .action-btn:hover {
-  background: #343a40 ;
-  border-color: #0d6efd !important;
+  /* background: #343a40 ; */
+  border-color: #777a7f !important;
 }
 
 .action-icon {

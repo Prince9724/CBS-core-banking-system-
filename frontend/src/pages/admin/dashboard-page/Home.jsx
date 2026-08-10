@@ -4,7 +4,7 @@ import DepositChart from "./DepositChart";
 import BranchChart from "./BranchChart";
 import RecentTransactions from "./RecentTransactions";
 import QuickActions from "./QuickAction";
-import Footer from "./Footer";
+import Footer from "../footer/Footer";
 
 export default function () {
   return (
@@ -24,25 +24,28 @@ export default function () {
           <div className="date-box">
             {/* <label className="date-label">Select Date</label> */}
 
-            <input type="date" className="form-control date-input bg-dark border border-secondary text-white" />
+            <input
+              type="date"
+              className="form-control date-input bg-dark border border-secondary text-white"
+            />
           </div>
         </div>
       </div>
-      <DashboardCards className="" />
-      <div className="row g-4 mt-2 pb-2 mb-5">
-        <div className="col-lg-8 col-md-12  p-0">
+      <DashboardCards /> 
+      <div className="row gap justify-content-between mt-5 pb-2 mb-5">
+        <div className="col-xl-8 col-lg-6 col-md-6  p-0">
           <DepositChart />
         </div>
 
-        <div className="col-lg-4 col-md-12 p-0">
+        <div className="col-xl-4 col-lg-6 col-md-6 p-0">
           <BranchChart />
         </div>
       </div>
-      <div className="row g-5 mt-5 mb-5">
-        <div className="col-lg-7">
+      <div className="row g-4 mt-4 mb-5 align-items-stretch">
+        <div className="col-xl-8 col-lg-7 col-md-12">
           <RecentTransactions />
         </div>
-        <div className="col-lg-5">
+        <div className="col-xl-4 col-lg-5 col-md-12">
           <QuickActions />
         </div>
       </div>

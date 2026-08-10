@@ -1,7 +1,14 @@
 import { Link } from "react-router-dom";
 import "./customers.css";
-import CustomersLineChart from "./CustomerGrowthOverviewLineChart"
-import CustomerDoughtnutChart from "./CustomerByBranchDoughtNutChart"
+import CustomersLineChart from "./CustomerGrowthOverviewLineChart";
+import CustomerDoughtnutChart from "./CustomerByBranchDoughtNutChart";
+import CustomerStatusBarChart from "./CustomerStatusBarChart";
+import CustomerAccountTypeChart from "./CustomerAccountTypeChart";
+import CustomerTable from "./CustomerTable";
+import RecentCustomerActivity from "./RecentCustomerActivity"
+import TopCustomersByBalance from "./TopCustomersByBalance"
+import CustomerInsights from "./CustomerInsights"
+import BranchPerformanceSummary from "./BranchPerformanceSummary";
 
 export default function Customers() {
   const customerStatusGrid = [
@@ -82,8 +89,7 @@ export default function Customers() {
   //   step:4 most important part so we have to create data suppose we have months or years so now i want to show them like
   //   suppose i have to show jan-december customers growth
   //   then i show them like this x xis i will show the months and Y xis i will show them customer
-  
-  
+
   return (
     <div className="customer-bigparent">
       <div
@@ -154,12 +160,40 @@ export default function Customers() {
       </div>
       <div className="graphs-grand-parent row mt-5 g-4">
         <div className="col-xl-7 col-lg-7 col-12">
-           <CustomersLineChart/>
+          <CustomersLineChart />
         </div>
         <div className="doughnut-chart col-xl-5 col-lg-5 col-12">
-            <CustomerDoughtnutChart/>
+          <CustomerDoughtnutChart />
         </div>
       </div>
+      <div className="row mt-4 g-4 align-items-stretch">
+        <div className="col-xl-6 col-lg-6 col-12">
+          <CustomerAccountTypeChart />
+        </div>
+
+        <div className="col-xl-6 col-lg-6 col-12">
+          <CustomerStatusBarChart />
+        </div>
+      </div>
+      <div className="mt-5">
+        <CustomerTable />
+      </div>
+      <div className="row g-4 mt-4">
+      <div className="col-xl-4 col-lg-6 col-12">
+        <RecentCustomerActivity />
+      </div>
+
+      <div className="col-xl-4 col-lg-6 col-12">
+        <TopCustomersByBalance />
+      </div>
+
+      <div className="col-xl-4 col-lg-12 col-12">
+        <CustomerInsights />
+      </div>
+    </div>
+    <div className="mt-4">
+      <BranchPerformanceSummary/>
+    </div>
     </div>
   );
 }

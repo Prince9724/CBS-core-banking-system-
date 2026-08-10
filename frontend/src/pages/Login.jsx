@@ -138,7 +138,6 @@
 //   );
 // }
 
-
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -148,9 +147,7 @@ export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { loggedinUser, loader, error } = useSelector(
-    (state) => state.auth
-  );
+  const { loggedinUser, loader, error } = useSelector((state) => state.auth);
 
   // refs
   const useridRef = useRef("");
@@ -190,12 +187,18 @@ export default function Login() {
   };
 
   return (
-    <div className="container-fluid bg-dark" style={{ height: "100vh" }}>
+    <div
+      className="w-100 min-vh-100 d-flex align-items-center justify-content-center bg-dark"
+      style={{ padding: "20px 0" }}
+    >
       <div className="container py-5">
         <div className="row justify-content-center">
           <div className="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
-            <div className="border rounded border-secondary p-4 p-md-5">
-              <h4 className="mb-4 text-center text-md-start text-white">
+            <div
+              className="border rounded border-secondary p-4 p-md-5 shadow-lg"
+              style={{ margin: "0 auto", maxWidth: "480px" }}
+            >
+              <h4 className="mb-4 text-center text-white">
                 <i className="bi bi-person-lines-fill fs-2 text-primary"></i>
                 <span className="ms-2">Login into your account</span>
               </h4>
@@ -255,11 +258,7 @@ export default function Login() {
               </div>
 
               {/* Error */}
-              {error && (
-                <div className="alert alert-danger py-2">
-                  {error}
-                </div>
-              )}
+              {error && <div className="alert alert-danger py-2">{error}</div>}
 
               <button
                 onClick={handleLoginAuth}
@@ -275,4 +274,3 @@ export default function Login() {
     </div>
   );
 }
-

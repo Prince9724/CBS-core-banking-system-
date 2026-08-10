@@ -1,0 +1,91 @@
+.recent-card {
+  background: #23272F;
+  border: 1px solid #343a40;
+  border-radius: 16px;
+  padding: 22px;
+  height: 100%;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+}
+
+.recent-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.recent-title {
+  color: #fff;
+  font-size: 1.9rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.recent-card .btn-outline-primary {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  border-radius: 10px;
+  padding: 8px 16px;
+}
+
+.recent-card .btn-outline-primary:hover {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.recent-card .table-responsive {
+  flex: 1;
+}
+
+.recent-card .table {
+  background: transparent;
+  color: #fff;
+  margin-bottom: 0;
+}
+
+.recent-card .table thead th {
+  background: transparent;
+  color: #9ca3af;
+  border-bottom: 1px solid #343a40;
+  padding: 14px 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.recent-card .table tbody td {
+  background: transparent;
+  color: #fff;
+  border-bottom: 1px solid #343a40;
+  padding: 16px 8px;
+  vertical-align: middle;
+}
+
+.recent-card .table tbody tr:hover td {
+  background: #2b3035;
+}
+
+.recent-card .badge {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 999px;
+}
+
+@media (max-width: 768px) {
+  .recent-card {
+    min-height: auto;
+    padding: 18px;
+  }
+
+  .recent-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .recent-title {
+    font-size: 1.5rem;
+  }
+}

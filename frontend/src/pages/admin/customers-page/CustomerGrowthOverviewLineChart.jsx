@@ -1,4 +1,4 @@
-import "./customergrowthLinechart.css"
+import "./customergrowthLinechart.css";
 import { Line } from "react-chartjs-2"; //this is for Line Chart
 import { Doughnut } from "react-chartjs-2"; //this is for cirlcle chart like doughnut
 // step -3 now i have to register what kind of i am chart using.
@@ -50,6 +50,7 @@ export default function CustomerGrowthOverview() {
         ],
         orderColor: "#296cd8",
         backgroundColor: "rgba(59,130,246,.15)",
+        borderColor: "#296cd8",
         borderWidth: 3,
         fill: true,
         tension: 0.45,
@@ -100,27 +101,18 @@ export default function CustomerGrowthOverview() {
     },
   };
   return (
-    <>
-      <div className="line-chart-card">
-        <div className="chart-header">
-          <div className="d-flex gap-5 justify-content-between">
-            <p>Customer Growth Overview</p>
-            <select
-              className="form-select bg-dark h-25 text-white  border-secondary"
-              aria-label="Default select example"
-            >
-              <option selected="">This Year</option>
-              <option value={1}>One</option>
-              <option value={2}>Two</option>
-              <option value={3}>Three</option>
-            </select>
-          </div>
-          <div>{/* <Line data={data} options={options} /> */}</div>
-        </div>
-        <div>
-          <Line data={data} options={options} />
-        </div>
+    <div className="line-chart-card">
+      <div className="chart-header">
+        <p className="fs-5">Customer Growth Overview</p>
+
+        <select className="form-select">
+          <option>This Year</option>
+        </select>
       </div>
-    </>
+
+      <div className="line-chart">
+        <Line data={data} options={options} />
+      </div>
+    </div>
   );
 }

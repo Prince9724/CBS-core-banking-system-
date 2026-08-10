@@ -1,0 +1,155 @@
+.analytics-card{
+  background:#23272f;
+  border:1px solid #343a40;
+  border-radius:16px;
+  padding:22px;
+  height:100%;
+  min-height:520px;
+  display:flex;
+  flex-direction:column;
+}
+
+.analytics-title{
+  color:#fff;
+  font-size:1.25rem;
+  font-weight:700;
+  margin:0;
+}
+
+.analytics-body{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+.activity-row,
+.customer-row{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:14px 0;
+  border-bottom:1px solid #2f353c;
+}
+
+.activity-row:last-of-type,
+.customer-row:last-of-type{
+  border-bottom:none;
+}
+
+.activity-icon{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  flex-shrink:0;
+}
+
+.activity-content{
+  flex:1;
+}
+
+.activity-title,
+.customer-name{
+  color:#fff;
+  font-size:15px;
+  font-weight:600;
+  margin-bottom:4px;
+}
+
+.activity-time,
+.customer-branch{
+  color:#9CA3AF;
+  font-size:13px;
+}
+
+.customer-avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.customer-info{
+  flex:1;
+}
+
+.customer-amount{
+  color:#fff;
+  font-size:15px;
+  font-weight:700;
+}
+
+.analytics-link{
+  color:#3B82F6;
+  text-decoration:none;
+  font-size:14px;
+  font-weight:600;
+  margin-top:18px;
+}
+
+.analytics-link:hover{
+  color:#60A5FA;
+}
+
+.analytics-divider{
+  border-color:#343a40;
+  margin:20px 0;
+}
+
+.chart-wrapper{
+  position:relative;
+  width:100%;
+  height:180px;
+}
+
+@media (max-width:1199px){
+  .analytics-card{
+    min-height:460px;
+  }
+}
+
+@media (max-width:768px){
+  .analytics-card{
+    min-height:auto;
+    padding:18px;
+  }
+
+  .analytics-title{
+    font-size:1.1rem;
+  }
+
+  .chart-wrapper{
+    height:220px;
+  }
+
+  .customer-row{
+    gap:12px;
+  }
+
+  .customer-amount{
+    font-size:14px;
+  }
+}
+
+@media (max-width:576px){
+  .activity-row,
+  .customer-row{
+    align-items:flex-start;
+  }
+
+  .customer-row{
+    flex-wrap:wrap;
+  }
+
+  .customer-amount{
+    width:100%;
+    padding-left:56px;
+  }
+
+  .chart-wrapper{
+    height:240px;
+  }
+}

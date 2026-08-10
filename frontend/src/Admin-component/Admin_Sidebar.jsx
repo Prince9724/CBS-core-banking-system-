@@ -82,6 +82,7 @@ export default function Admin_Sidebar() {
             </li>
             <li>
               <Link
+              to={"accounts"}
                 onClick={() => setActive("account")}
                 className={`nav-link text-white ${isActive === "account" ? "active" : ""}`}
               >
@@ -91,6 +92,7 @@ export default function Admin_Sidebar() {
             </li>
             <li>
               <Link
+              to={"transaction"}
                 onClick={() => setActive("transection")}
                 className={`nav-link text-white ${isActive === "transection" ? "active" : ""}`}
               >

@@ -1,0 +1,143 @@
+.branch-summary-card{
+  /* background:#23272f; */
+  border:1px solid #343a40;
+  border-radius:16px;
+  padding:22px;
+  width:100%;
+  height: 100%;
+}
+
+.branch-summary-title{
+  color:#fff;
+  font-size:1.25rem;
+  font-weight:700;
+  margin-bottom:18px;
+}
+
+.branch-table-wrapper{
+  width:100%;
+  overflow-x:auto;
+}
+
+.branch-summary-table{
+  width:100%;
+  min-width:860px;
+  margin-bottom:0;
+  color:#fff;
+  border-collapse:collapse;
+  background:transparent !important;
+}
+.branch-summary-table thead,
+.branch-summary-table tbody,
+.branch-summary-table tr,
+.branch-summary-table th,
+.branch-summary-table td{
+  background:transparent !important;
+}
+
+
+.branch-summary-table thead th{
+  background:#262b33;
+  color:#9CA3AF;
+  font-size:13px;
+  font-weight:600;
+  padding:14px 16px;
+  border-bottom:1px solid #343a40;
+  white-space:nowrap;
+}
+
+.branch-summary-table tbody td{
+  padding:16px;
+  border-bottom:1px solid #2f353c;
+  color:#E5E7EB;
+  font-size:14px;
+  white-space:nowrap;
+}
+
+.branch-summary-table tbody tr:last-child td{
+  border-bottom:none;
+}
+
+.branch-summary-table tbody tr:hover{
+  background:#2a3038;
+}
+
+.branch-name{
+  color:#fff;
+  font-weight:600;
+}
+
+.growth-up{
+  color:#22C55E;
+  font-weight:600;
+}
+
+.performance-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.badge-excellent{
+  background:rgba(34,197,94,.15);
+  color:#22C55E;
+}
+
+.badge-verygood{
+  background:rgba(59,130,246,.15);
+  color:#60A5FA;
+}
+
+.badge-good{
+  background:rgba(96,165,250,.15);
+  color:#93C5FD;
+}
+
+.branch-table-wrapper::-webkit-scrollbar{
+  height:6px;
+}
+
+.branch-table-wrapper::-webkit-scrollbar-thumb{
+  background:#3d444d;
+  border-radius:999px;
+}
+
+@media (max-width:992px){
+  .branch-summary-card{
+    padding:20px;
+  }
+
+  .branch-summary-title{
+    font-size:1.15rem;
+  }
+
+  .branch-summary-table{
+    min-width:780px;
+  }
+}
+
+@media (max-width:576px){
+  .branch-summary-card{
+    padding:16px;
+  }
+
+  .branch-summary-title{
+    font-size:1.05rem;
+    margin-bottom:14px;
+  }
+
+  .branch-summary-table thead th,
+  .branch-summary-table tbody td{
+    padding:12px 14px;
+    font-size:13px;
+  }
+
+  .performance-badge{
+    padding:5px 10px;
+    font-size:11px;
+  }
+}
