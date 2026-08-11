@@ -110,29 +110,22 @@ export const searchAccount = async (req, res) => {
   try {
     const { search } = req.query;
 
-    if (!search) {
-      return res.status(400).json({
-        status: false,
-        message: "Search value required",
-      });
-    }
+    // Aadhar se customer find
+    const customer = await Customer.findOne({
+      aadhar: search,
+    });
 
     let account;
 
-    // Account number se search
-    account = await Account.findOne({
-      accountNumber: search,
-    }).populate("customerId");
-
-    // Aadhar se search
-    if (!account) {
-      const customer = await Customer.findOne({ aadhar: search });
-
-      if (customer) {
-        account = await Account.findOne({
-          customerId: customer._id,
-        }).populate("customerId");
-      }
+    if (customer) {
+      account = await Account.findOne({
+        customerId: customer._id,
+      }).populate("customerId");
+    } else {
+      // direct account number se find
+      account = await Account.findOne({
+        accountNumber: search,
+      }).populate("customerId");
     }
 
     if (!account) {
@@ -146,9 +139,13 @@ export const searchAccount = async (req, res) => {
       status: true,
       data: {
         accountNumber: account.accountNumber,
-        accountType: account.accountType,
         balance: account.balance,
-        customer: account.customerId,
+        branchcode: account.branchcode,
+        customer: {
+          name: account.customerId.name,
+          aadhar: account.customerId.aadhar,
+          mobile: account.customerId.mobile,
+        },
       },
     });
   } catch (err) {
