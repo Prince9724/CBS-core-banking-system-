@@ -102,6 +102,7 @@ export default function Admin_Sidebar() {
             </li>
             <li>
               <Link
+              to={"reports"}
                 onClick={() => setActive("report")}
                 className={`nav-link text-white ${isActive === "report" ? "active" : ""}`}
               >

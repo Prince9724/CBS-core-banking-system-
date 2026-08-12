@@ -16,7 +16,7 @@ import Accounts from "./pages/manager/Accounts";
 import TellerDashboard from "./pages/teller/TellerDashboard";
 import AdminAccounts from "./pages/admin/account-page/Accounts";
 import Transactions from "./pages/admin/Transaction-page/Transactions";
-
+import Reports from "./pages/admin/reports-page/Reports";
 
 import TransactionHistory from "./pages/teller/TransactionHistory";
 // import TellerDashboard from "./pages/teller/TellerDashboard";
@@ -27,11 +27,8 @@ export default function App() {
   return (
     <Routes>
       {/* Login */}
-
       <Route path="/" element={<Login />} />
-
       {/* Admin */}
-
       <Route //now route is parent of admin-pages
         path="/admin"
         element={
@@ -95,18 +92,31 @@ export default function App() {
         {/* Account-Page */}
 
         {/* Transaction - Page */}
-        <Route path="transaction" element={
-          <ProtectedRoutes>
-            <Transactions />
-          </ProtectedRoutes>
-        } />
+        <Route
+          path="transaction"
+          element={
+            <ProtectedRoutes>
+              <Transactions />
+            </ProtectedRoutes>
+          }
+        />
         {/* Transaction - Page */}
-      </Route> {/* END-OF-ADMIN */}
+        {/* Reports - Page */}
+        <Route
+          path="reports"
+          element={
+            <ProtectedRoutes>
+              <Reports />
+            </ProtectedRoutes>
+          }
+        />{/* Reports - Page */}
+        {/* Reports - Page - END */}
+
+
+      </Route>{" "}
       {/* END-OF-ADMIN */}
-
-
+      {/* END-OF-ADMIN */}
       {/* Branch Manager */}
-
       <Route
         path="/branch-manager"
         element={
@@ -120,7 +130,8 @@ export default function App() {
         path="/manager/:branchcode/customers"
         element={
           <ProtectedRoutes>
-            <ManagerCustomers /> {/* this page for where manager can add customers */}
+            <ManagerCustomers />{" "}
+            {/* this page for where manager can add customers */}
           </ProtectedRoutes>
         }
       />
@@ -133,9 +144,6 @@ export default function App() {
         }
       />
       {/* TellerDashboard */}
-
-
-
       <Route
         path="/teller/:branchcode"
         element={
@@ -145,7 +153,6 @@ export default function App() {
         }
       />
       {/* //TransactionHistory */}
-
       {/* <Route path="/teller/:branchcode" element={<TellerDashboard />} /> */}
       <Route path="/teller/:branchcode/deposit" element={<Deposit />} />
       <Route path="/teller/:branchcode/withdraw" element={<Withdraw />} />

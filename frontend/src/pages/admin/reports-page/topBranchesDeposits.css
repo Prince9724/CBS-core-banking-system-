@@ -1,0 +1,175 @@
+.branches-card {
+  width: 100%;
+  max-width: 100%;
+  background: linear-gradient(180deg, #23272f 100%) !important;
+  border: 1px solid rgba(59, 130, 246, 0.12);
+  border-radius: 18px;
+  padding: 24px 24px 20px 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+  overflow: hidden;
+  height: 100%; /* This makes it fill the container */
+  display: flex;
+  flex-direction: column;
+}
+
+.branches-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.branches-header h3 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+}
+
+.branches-header a {
+  color: #3b82f6;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+}
+
+.branches-header a:hover {
+  color: #60a5fa;
+}
+
+.branches-chart {
+  width: 100%;
+  height: 100%; /* Changed from fixed height */
+  min-height: 200px;
+  flex: 1;
+}
+
+/* Make sure bars are properly aligned */
+.recharts-bar-rectangle {
+  shape-rendering: crispEdges;
+}
+
+.recharts-cartesian-axis-tick text {
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+  .branches-card {
+    padding: 20px 20px 16px 16px;
+    border-radius: 16px;
+  }
+
+  .branches-header h3 {
+    font-size: 18px;
+  }
+
+  .branches-chart {
+    height: 250px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .branches-card {
+    padding: 16px 16px 12px 12px;
+    border-radius: 14px;
+  }
+
+  .branches-header {
+    margin-bottom: 12px;
+  }
+
+  .branches-header h3 {
+    font-size: 16px;
+  }
+
+  .branches-header a {
+    font-size: 13px;
+  }
+
+  .branches-chart {
+    height: 240px;
+    min-height: 200px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .branches-card {
+    padding: 14px 12px 10px 8px;
+    border-radius: 12px;
+  }
+
+  .branches-header h3 {
+    font-size: 14px;
+  }
+
+  .branches-header a {
+    font-size: 11px;
+  }
+
+  .branches-chart {
+    height: 200px;
+    min-height: 180px;
+  }
+
+  .branches-card {
+    border: 1px solid rgba(59, 130, 246, 0.08);
+  }
+}
+
+/* Extra Small Devices */
+@media (max-width: 380px) {
+  .branches-card {
+    padding: 10px 8px 8px 6px;
+    border-radius: 10px;
+  }
+
+  .branches-header h3 {
+    font-size: 13px;
+  }
+
+  .branches-header a {
+    font-size: 10px;
+  }
+
+  .branches-chart {
+    height: 170px;
+    min-height: 150px;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .branches-header a {
+    padding: 4px 8px;
+  }
+}
+
+/* Keep background fixed */
+@media (prefers-color-scheme: dark) {
+  .branches-card {
+    background: linear-gradient(180deg, #23272f 100%) !important;
+  }
+}

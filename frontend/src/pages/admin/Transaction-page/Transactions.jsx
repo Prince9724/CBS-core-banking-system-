@@ -1,18 +1,22 @@
+// transactions.jsx
 import React from "react";
-import {
-  BsArrowDownCircle,
-  BsArrowUpCircle,
-  BsArrowLeftRight,
-  BsDownload,
-  BsSearch,
-  BsCalendar3,
-  BsEye,
-  BsThreeDotsVertical,
-  BsPlus,
-} from "react-icons/bs";
 import "./transactions.css";
+import {
+  FiSearch,
+  FiCalendar,
+  FiChevronDown,
+  FiDownload,
+  FiEye,
+  FiMoreVertical,
+} from "react-icons/fi";
+import {
+  FaCreditCard,
+  FaMoneyBillWave,
+  FaArrowUp,
+  FaArrowDown,
+} from "react-icons/fa";
 
-export default function Transactions() {
+const Transactions = () => {
   const transactions = [
     {
       id: "TXN10000001",
@@ -20,7 +24,7 @@ export default function Transactions() {
       account: "SA123456789",
       holder: "Rahul Patel",
       type: "Credit",
-      amount: "₹25,000.00",
+      amount: "25,000.00",
       status: "Completed",
       channel: "NEFT",
       remarks: "Salary Credit",
@@ -31,7 +35,7 @@ export default function Transactions() {
       account: "CA987654321",
       holder: "Neha Sharma",
       type: "Debit",
-      amount: "₹12,500.00",
+      amount: "12,500.00",
       status: "Completed",
       channel: "IMPS",
       remarks: "Online Transfer",
@@ -42,7 +46,7 @@ export default function Transactions() {
       account: "SA456789123",
       holder: "Amit Singh",
       type: "Credit",
-      amount: "₹50,000.00",
+      amount: "50,000.00",
       status: "Completed",
       channel: "NEFT",
       remarks: "Fixed Deposit",
@@ -53,7 +57,7 @@ export default function Transactions() {
       account: "CA321654987",
       holder: "Priya Mehta",
       type: "Debit",
-      amount: "₹15,000.00",
+      amount: "15,000.00",
       status: "Completed",
       channel: "UPI",
       remarks: "Bill Payment",
@@ -64,7 +68,7 @@ export default function Transactions() {
       account: "FD789123456",
       holder: "Vikram Joshi",
       type: "Credit",
-      amount: "₹1,00,000.00",
+      amount: "1,00,000.00",
       status: "Completed",
       channel: "NEFT",
       remarks: "FD Maturity",
@@ -75,9 +79,9 @@ export default function Transactions() {
       account: "SA159357753",
       holder: "Kavya Reddy",
       type: "Debit",
-      amount: "₹8,750.00",
+      amount: "8,750.00",
       status: "Pending",
-      channel: "IMPS",
+      channel: "",
       remarks: "Online Transfer",
     },
     {
@@ -86,9 +90,9 @@ export default function Transactions() {
       account: "LA753159357",
       holder: "Sandeep Kumar",
       type: "Debit",
-      amount: "₹22,000.00",
+      amount: "22,000.00",
       status: "Failed",
-      channel: "NEFT",
+      channel: "",
       remarks: "Loan Payment",
     },
     {
@@ -97,7 +101,7 @@ export default function Transactions() {
       account: "CA852963741",
       holder: "Anjali Verma",
       type: "Credit",
-      amount: "₹30,000.00",
+      amount: "30,000.00",
       status: "Completed",
       channel: "UPI",
       remarks: "Refund",
@@ -108,7 +112,7 @@ export default function Transactions() {
       account: "SA963852741",
       holder: "Rohan Das",
       type: "Debit",
-      amount: "₹5,500.00",
+      amount: "5,500.00",
       status: "Completed",
       channel: "IMPS",
       remarks: "Shopping",
@@ -119,243 +123,203 @@ export default function Transactions() {
       account: "CA741852963",
       holder: "Meera Nair",
       type: "Credit",
-      amount: "₹18,200.00",
+      amount: "18,200.00",
       status: "Completed",
       channel: "NEFT",
       remarks: "Interest Credit",
     },
   ];
 
-  return (
-    <div className="container-fluid py-4">
-      {/* Header */}
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
-        <div>
-          <h2 className="text-white fw-bold mb-1">Transactions</h2>
-          <p className="text-secondary mb-0">
-            Dashboard &gt; Transactions
-          </p>
-        </div>
+  const kpiData = [
+    {
+      title: "Total Transactions",
+      value: "12,846",
+      change: "+8.6%",
+      icon: <FaCreditCard />,
+      color: "#4f46e5",
+    },
+    {
+      title: "Total Credit Amount",
+      value: "₹24,85,60,000",
+      change: "+12.3%",
+      icon: <FaArrowUp />,
+      color: "#22c55e",
+    },
+    {
+      title: "Total Debit Amount",
+      value: "₹20,45,30,000",
+      change: "+6.7%",
+      icon: <FaArrowDown />,
+      color: "#ef4444",
+    },
+    {
+      title: "Net Transaction Amount",
+      value: "₹4,40,30,000",
+      change: "+10.5%",
+      icon: <FaMoneyBillWave />,
+      color: "#f59e0b",
+    },
+  ];
 
-        <button className="btn btn-primary px-4 py-2 rounded-3">
-          <BsPlus className="me-2" />
-          New Transaction
-        </button>
+  const getStatusBadge = (status) => {
+    if (status === "Completed")
+      return <span className="badge badge-success">{status}</span>;
+    if (status === "Pending")
+      return <span className="badge badge-warning">{status}</span>;
+    return <span className="badge badge-danger">{status}</span>;
+  };
+
+  const getTypeBadge = (type) => {
+    if (type === "Credit")
+      return <span className="badge badge-credit">{type}</span>;
+    return <span className="badge badge-debit">{type}</span>;
+  };
+
+  const getAmountClass = (type) => {
+    return type === "Credit" ? "text-credit" : "text-debit";
+  };
+
+  return (
+    <div className="transactions-page">
+      {/* Header */}
+      <div className="header-section">
+        <div className="header-left">
+          <h1 className="page-title">Transactions</h1>
+          <div className="breadcrumb">Dashboard &gt; Transactions</div>
+        </div>
+        <button className="btn-primary">+ New Transaction</button>
       </div>
 
       {/* KPI Cards */}
-      <div className="row g-4 mb-4">
-        <div className="col-xl-3 col-md-6">
-          <div className="stat-card">
-            <div className="stat-icon blue">
-              <BsArrowLeftRight />
+      <div className="kpi-grid">
+        {kpiData.map((kpi, index) => (
+          <div className="kpi-card" key={index}>
+            <div className="kpi-card-header">
+              <span className="kpi-title">{kpi.title}</span>
+              <div className="kpi-icon" style={{ backgroundColor: kpi.color }}>
+                {kpi.icon}
+              </div>
             </div>
-            <div>
-              <p className="text-secondary mb-1">Total Transactions</p>
-              <h3 className="text-white fw-bold mb-1">12,846</h3>
-              <span className="text-success">+8.6% from last month</span>
-            </div>
+            <div className="kpi-value">{kpi.value}</div>
+            <div className="kpi-change">{kpi.change} from last month</div>
           </div>
-        </div>
-
-        <div className="col-xl-3 col-md-6">
-          <div className="stat-card">
-            <div className="stat-icon green">
-              <BsArrowDownCircle />
-            </div>
-            <div>
-              <p className="text-secondary mb-1">Total Credit Amount</p>
-              <h3 className="text-white fw-bold mb-1">₹24,85,60,000</h3>
-              <span className="text-success">+12.3% from last month</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-xl-3 col-md-6">
-          <div className="stat-card">
-            <div className="stat-icon red">
-              <BsArrowUpCircle />
-            </div>
-            <div>
-              <p className="text-secondary mb-1">Total Debit Amount</p>
-              <h3 className="text-white fw-bold mb-1">₹20,45,30,000</h3>
-              <span className="text-success">+6.7% from last month</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-xl-3 col-md-6">
-          <div className="stat-card">
-            <div className="stat-icon orange">
-              <BsArrowLeftRight />
-            </div>
-            <div>
-              <p className="text-secondary mb-1">Net Transaction Amount</p>
-              <h3 className="text-white fw-bold mb-1">₹4,40,30,000</h3>
-              <span className="text-success">+10.5% from last month</span>
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
 
-      {/* Table Card */}
-      <div className="table-card">
-        {/* Filters */}
-        <div className="row g-3 mb-4">
-          <div className="col-xl-4 col-lg-6">
-            <div className="search-box">
-              <BsSearch className="search-icon" />
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search by transaction ID, account number, or remarks..."
-              />
-            </div>
+      {/* Filter Bar */}
+      <div className="filter-section">
+        <div className="filter-row">
+          <div className="filter-item search-wrapper">
+            <FiSearch className="filter-icon" />
+            <input
+              type="text"
+              placeholder="Search by transaction ID, account number, or remark..."
+              className="filter-input"
+            />
           </div>
-
-          <div className="col-xl-2 col-lg-3 col-md-6">
-            <button className="filter-btn w-100">
-              <BsCalendar3 className="me-2" />
-              Jul 2024
-            </button>
+          <div className="filter-item date-wrapper">
+            <FiCalendar className="filter-icon" />
+            <input
+              type="text"
+              placeholder="Date Filter"
+              className="filter-input"
+            />
           </div>
-
-          <div className="col-xl-2 col-lg-3 col-md-6">
-            <select className="form-select dark-select">
-              <option>All Types</option>
+          <div className="filter-item dropdown-wrapper">
+            <select className="filter-select">
+              <option>All Transaction Types</option>
+              <option>Credit</option>
+              <option>Debit</option>
             </select>
+            <FiChevronDown className="dropdown-icon" />
           </div>
-
-          <div className="col-xl-2 col-lg-3 col-md-6">
-            <select className="form-select dark-select">
+          <div className="filter-item dropdown-wrapper">
+            <select className="filter-select">
               <option>All Accounts</option>
+              <option>Savings</option>
+              <option>Current</option>
+              <option>Fixed Deposit</option>
+              <option>Loan</option>
             </select>
+            <FiChevronDown className="dropdown-icon" />
           </div>
-
-          <div className="col-xl-2 col-lg-3 col-md-6">
-            <button className="filter-btn w-100">
-              <BsDownload className="me-2" />
-              Export
-            </button>
-          </div>
-        </div>
-
-        {/* Table */}
-        <div className="table-responsive">
-          <table className="table transaction-table align-middle">
-            <thead>
-              <tr>
-                <th>Transaction ID</th>
-                <th>Date &amp; Time</th>
-                <th>Account Number</th>
-                <th>Account Holder</th>
-                <th>Type</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Channel</th>
-                <th>Remarks</th>
-                <th className="text-end">Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {transactions.map((tx) => (
-                <tr key={tx.id}>
-                  <td className="fw-semibold text-white">{tx.id}</td>
-                  <td className="text-secondary">{tx.date}</td>
-                  <td className="text-white">{tx.account}</td>
-                  <td className="text-white">{tx.holder}</td>
-                  <td>
-                    <span
-                      className={`type-badge ${
-                        tx.type === "Credit" ? "credit" : "debit"
-                      }`}
-                    >
-                      {tx.type === "Credit" ? (
-                        <BsArrowDownCircle className="me-1" />
-                      ) : (
-                        <BsArrowUpCircle className="me-1" />
-                      )}
-                      {tx.type}
-                    </span>
-                  </td>
-                  <td
-                    className={
-                      tx.type === "Credit" ? "text-success fw-semibold" : "text-danger fw-semibold"
-                    }
-                  >
-                    {tx.amount}
-                  </td>
-                  <td>
-                    <span
-                      className={`status-badge ${
-                        tx.status === "Completed"
-                          ? "completed"
-                          : tx.status === "Pending"
-                          ? "pending"
-                          : "failed"
-                      }`}
-                    >
-                      {tx.status}
-                    </span>
-                  </td>
-                  <td>
-                    <span className="channel-badge">{tx.channel}</span>
-                  </td>
-                  <td className="text-secondary">{tx.remarks}</td>
-                  <td className="text-end">
-                    <div className="d-flex justify-content-end gap-2">
-                      <button className="action-btn">
-                        <BsEye />
-                      </button>
-                      <button className="action-btn">
-                        <BsThreeDotsVertical />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Footer */}
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mt-4 gap-3">
-          <p className="text-secondary mb-0">
-            Showing 1 to 10 of 12,846 transactions
-          </p>
-
-          <nav>
-            <ul className="pagination pagination-dark mb-0">
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  ‹
-                </a>
-              </li>
-              <li className="page-item active">
-                <a className="page-link" href="#">
-                  1
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  2
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  3
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  ›
-                </a>
-              </li>
-            </ul>
-          </nav>
+          <button className="btn-export">
+            <FiDownload /> Export
+          </button>
         </div>
       </div>
+
+      {/* Transactions Table */}
+      <div className="table-wrapper">
+        <table className="transactions-table">
+          <thead>
+            <tr>
+              <th>Transaction ID</th>
+              <th>Date &amp; Time</th>
+              <th>Account Number</th>
+              <th>Account Holder</th>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Channel</th>
+              <th>Remarks</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {transactions.map((txn, index) => (
+              <tr key={index}>
+                <td data-label="Transaction ID">{txn.id}</td>
+                <td data-label="Date & Time">{txn.date}</td>
+                <td data-label="Account Number">{txn.account}</td>
+                <td data-label="Account Holder">{txn.holder}</td>
+                <td data-label="Type">{getTypeBadge(txn.type)}</td>
+                <td data-label="Amount" className={getAmountClass(txn.type)}>
+                  ₹{txn.amount}
+                </td>
+                <td data-label="Status">{getStatusBadge(txn.status)}</td>
+                <td data-label="Channel">{txn.channel}</td>
+                <td data-label="Remarks">{txn.remarks}</td>
+                <td data-label="Actions">
+                  <div className="action-buttons">
+                    <button className="action-btn">
+                      <FiEye />
+                    </button>
+                    <button className="action-btn">
+                      <FiMoreVertical />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Footer */}
+      <div className="table-footer">
+        <div className="footer-info">
+          Showing 1 to 10 of 12,846 transactions
+        </div>
+        <div className="pagination">
+          <button className="page-btn nav-btn">‹</button>
+          <button className="page-btn active">1</button>
+          <button className="page-btn">2</button>
+          <button className="page-btn">3</button>
+          <button className="page-btn">4</button>
+          <button className="page-btn">5</button>
+          <button className="page-btn">...</button>
+          <button className="page-btn page-number-wide">1285</button>
+          <button className="page-btn nav-btn">›</button>
+        </div>
+      </div>
+
+      {/* <div className="secure-banking">
+        <span>🔒 Secure Banking</span>
+        <span>All transactions are secure and encrypted</span>
+      </div> */}
     </div>
   );
-}
+};
+
+export default Transactions;
