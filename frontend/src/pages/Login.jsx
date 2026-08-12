@@ -137,8 +137,7 @@
 //     </div>
 //   );
 // }
-
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../App/features/authSlice";
@@ -147,14 +146,19 @@ export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { loggedinUser, loader, error } = useSelector((state) => state.auth);
+  const { loggedinUser, loader, error } = useSelector(
+    (state) => state.auth
+  );
+
+  // Login mode
+  const [loginType, setLoginType] = useState("branch");
 
   // refs
   const useridRef = useRef("");
   const passwordRef = useRef("");
   const branchCodeRef = useRef("");
 
-  // login hone ke baad redirect
+  // redirect after login
   useEffect(() => {
     if (!loggedinUser) return;
 
@@ -170,12 +174,15 @@ export default function Login() {
       navigate(`/teller/${loggedinUser.branchcode}`);
     }
   }, [loggedinUser, navigate]);
-  // login function
+  // login
   const handleLoginAuth = async () => {
     const loginData = {
-      userid: useridRef.current.value,
-      password: passwordRef.current.value,
-      branchcode: branchCodeRef.current.value,
+      userid: useridRef.current.value.trim(),
+      password: passwordRef.current.value.trim(),
+      branchcode:
+        loginType === "admin"
+          ? ""
+          : branchCodeRef.current.value.trim(),
     };
 
     try {
@@ -188,85 +195,136 @@ export default function Login() {
 
   return (
     <div
-      className="w-100 min-vh-100 d-flex align-items-center justify-content-center bg-dark"
-      style={{ padding: "20px 0" }}
+      className="d-flex justify-content-center align-items-center"
+      style={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(135deg, #0f172a 0%, #111827 50%, #1e293b 100%)",
+      }}
     >
-      <div className="container py-5">
+      <div className="container">
         <div className="row justify-content-center">
-          <div className="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+          <div className="col-lg-5 col-md-7">
             <div
-              className="border rounded border-secondary p-4 p-md-5 shadow-lg"
-              style={{ margin: "0 auto", maxWidth: "480px" }}
+              className="card border-0 shadow-lg text-white"
+              style={{
+                background: "rgba(17, 24, 39, 0.92)",
+                backdropFilter: "blur(12px)",
+                borderRadius: "24px",
+              }}
             >
-              <h4 className="mb-4 text-center text-white">
-                <i className="bi bi-person-lines-fill fs-2 text-primary"></i>
-                <span className="ms-2">Login into your account</span>
-              </h4>
+              <div className="card-body p-5">
+                {/* Logo */}
+                <div className="text-center mb-4">
+                  <div style={{ fontSize: "52px" }}>🏦</div>
+                  <h2 className="fw-bold mt-2 mb-1">CBS Banking</h2>
+                  <p className="text-secondary mb-0">
+                    Secure Core Banking System Login
+                  </p>
+                </div>
 
-              {/* User ID */}
-              <div className="form-floating mb-3">
-                <input
-                  ref={useridRef}
-                  type="text"
-                  className="form-control bg-dark text-white border-secondary"
-                  id="userid"
-                  placeholder="Enter User ID"
-                />
-                <label
-                  htmlFor="userid"
-                  className="text-white"
-                  style={{ background: "transparent" }}
+                {/* Toggle */}
+                <div className="d-flex bg-dark rounded-pill p-1 mb-4">
+                  <button
+                    type="button"
+                    className={`btn flex-fill rounded-pill ${loginType === "admin"
+                        ? "btn-primary"
+                        : "btn-dark text-white"
+                      }`}
+                    onClick={() => setLoginType("admin")}
+                  >
+                    👨‍💼 Admin Login
+                  </button>
+
+                  <button
+                    type="button"
+                    className={`btn flex-fill rounded-pill ${loginType === "branch"
+                        ? "btn-primary"
+                        : "btn-dark text-white"
+                      }`}
+                    onClick={() => setLoginType("branch")}
+                  >
+                    🏢 Branch Login
+                  </button>
+                </div>
+
+                <h5 className="text-center fw-semibold mb-4">
+                  {loginType === "admin"
+                    ? "Administrator Access"
+                    : "Manager / Teller Access"}
+                </h5>
+
+                {/* User ID */}
+                <div className="form-floating mb-3">
+                  <input
+                    ref={useridRef}
+                    type="text"
+                    className="form-control bg-dark text-white border-secondary"
+                    id="userid"
+                    placeholder="User ID"
+                  />
+                  <label htmlFor="userid" className="text-secondary">
+                    👤 User ID
+                  </label>
+                </div>
+
+                {/* Password */}
+                <div className="form-floating mb-3">
+                  <input
+                    ref={passwordRef}
+                    type="password"
+                    className="form-control bg-dark text-white border-secondary"
+                    id="password"
+                    placeholder="Password"
+                  />
+                  <label htmlFor="password" className="text-secondary">
+                    🔒 Password
+                  </label>
+                </div>
+
+                {/* Branch Code */}
+                {loginType === "branch" && (
+                  <div className="form-floating mb-3">
+                    <input
+                      ref={branchCodeRef}
+                      type="text"
+                      className="form-control bg-dark text-white border-secondary"
+                      id="branchcode"
+                      placeholder="Branch Code"
+                    />
+                    <label
+                      htmlFor="branchcode"
+                      className="text-secondary"
+                    >
+                      🏢 Branch Code
+                    </label>
+                  </div>
+                )}
+
+                {/* Error */}
+                {error && (
+                  <div className="alert alert-danger py-2 small">{error}</div>
+                )}
+
+                {/* Login Button */}
+                <button
+                  onClick={handleLoginAuth}
+                  className="btn btn-primary w-100 py-3 fw-semibold rounded-3 shadow-sm"
+                  disabled={loader}
                 >
-                  User ID
-                </label>
+                  {loader
+                    ? "Logging in..."
+                    : loginType === "admin"
+                      ? "Login as Admin"
+                      : "Login to Branch"}
+                </button>
+
+                <div className="text-center mt-4">
+                  <small className="text-secondary">
+                    🔐 Protected by CBS Banking Security Layer
+                  </small>
+                </div>
               </div>
-
-              {/* Branch Code */}
-              <div className="form-floating mb-3">
-                <input
-                  ref={branchCodeRef}
-                  type="text"
-                  className="form-control bg-dark text-white border-secondary"
-                  id="branchcode"
-                  placeholder="Enter Branch Code"
-                />
-                <label
-                  htmlFor="branchcode"
-                  className="text-white"
-                  style={{ background: "transparent" }}
-                >
-                  Branch Code
-                </label>
-              </div>
-
-              {/* Password */}
-              <div className="form-floating mb-3">
-                <input
-                  ref={passwordRef}
-                  type="password"
-                  className="form-control bg-dark text-white border-secondary"
-                  id="password"
-                  placeholder="********"
-                />
-                <label
-                  htmlFor="password"
-                  className="text-white"
-                  style={{ background: "transparent" }}
-                >
-                  Password
-                </label>
-              </div>
-
-              {/* Error */}
-              {error && <div className="alert alert-danger py-2">{error}</div>}
-
-              <button
-                onClick={handleLoginAuth}
-                className="btn btn-primary w-100"
-                disabled={loader}
-              >
-                {loader ? "Logging in..." : "Login"}
-              </button>
             </div>
           </div>
         </div>

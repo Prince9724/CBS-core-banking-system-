@@ -15,16 +15,24 @@
 //     // console.log(isLoggedin)
 //     return children;//this line is imp if is not empty then children will be appears
 // }
-import { Navigate } from "react-router-dom";
+// import { Navigate } from "react-router-dom";
+// import { useSelector } from "react-redux";
+
+// export default function ProtectedRoutes({ children }) {
+//   const { isAuthenticated } = useSelector((state) => state.auth);
+
+//   // Redux state check
+//   if (!isAuthenticated) {
+//     return <Navigate to="/" replace />;
+//   }
+
+//   return children;
+// }
 import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
 export default function ProtectedRoutes({ children }) {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
-  // Redux state check
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
-
-  return children;
+  return isAuthenticated ? children : <Navigate to="/" />;
 }

@@ -25,7 +25,7 @@ export const signUp = async (req, res) => {
             branchname,
             branchcode
         });
-        
+
         res.status(200).json({
             status: true,
             message: "user post succesfully !!",
@@ -42,87 +42,81 @@ export const signUp = async (req, res) => {
 }
 //signIn for admin
 export const signIn = async (req, res) => {
+  try {
+    const { userid, password, branchcode } = req.body;
 
-    try {
+    // user find
+    const auth = await Auth.findOne({ userid });
 
-        const {
-            userid,
-            password,
-            branchcode
-        } = req.body;
-
-        // user find
-        const auth = await Auth.findOne({ userid });
-
-        if (!auth) {
-
-            return res.status(404).json({
-                status: false,
-                message: "User not found"
-            });
-        }
-
-        // password check
-        const isMatch = await bcrypt.compare(
-            password,
-            auth.password
-        );
-
-        if (!isMatch) {
-
-            return res.status(400).json({
-                status: false,
-                message: "Wrong password"
-            });
-        }
-
-        // 🔥 Manager ke liye branchcode check
-        if (auth.role === "Manager") {
-
-            if (auth.branchcode !== branchcode) {
-
-                return res.status(400).json({
-                    status: false,
-                    message: "Branch code mismatch"
-                });
-            }
-        }
-
-        // token
-        const token = jwt.sign({
-            id: auth._id,
-            role: auth.role,
-            branchcode: auth.branchcode,
-            branchname: auth.branchname,
-            userid: auth.userid
-        }, "!@#$%^&*()", {
-            expiresIn: "12h"
-        });
-
-        res.cookie("token", token, {
-            httpOnly: true,
-            maxAge: 1000 * 60 * 60
-        });
-
-        res.status(200).json({
-            status: true,
-            message: "Login successful",
-            user: {
-                name: auth.name,
-                role: auth.role,
-                branchcode: auth.branchcode,
-                branchname: auth.branchname,
-            },
-        });
-    } catch (err) {
-
-        res.status(500).json({
-            status: false,
-            message: err.message
-        });
+    if (!auth) {
+      return res.status(404).json({
+        status: false,
+        message: "User not found",
+      });
     }
-};
 
+    // password check
+    const isMatch = await bcrypt.compare(password, auth.password);
+
+    if (!isMatch) {
+      return res.status(400).json({
+        status: false,
+        message: "Wrong password",
+      });
+    }
+
+    // Manager aur Teller ke liye branchcode check
+    if (
+      (auth.role === "Manager" || auth.role === "Teller") &&
+      auth.branchcode !== branchcode
+    ) {
+      return res.status(400).json({
+        status: false,
+        message: "Branch code mismatch",
+      });
+    }
+    res.clearCookie("token");
+    // JWT token
+    const token = jwt.sign(
+      {
+        id: auth._id,
+        role: auth.role.toLowerCase(),
+        branchcode: auth.branchcode,
+        branchname: auth.branchname,
+        userid: auth.userid,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "12h" }
+    );
+
+    // Cookie set
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false, // localhost
+      sameSite: "lax",
+      maxAge: 12 * 60 * 60 * 1000, // 12 hours
+    });
+
+    // Response
+    return res.status(200).json({
+      status: true,
+      message: "Login successful",
+      user: {
+        name: auth.name,
+        role: auth.role.toLowerCase(),
+        branchcode: auth.branchcode || "",
+        branchname: auth.branchname || "",
+      },
+    });
+  } catch (err) {
+    console.log("SIGNIN ERROR:", err);
+
+    return res.status(500).json({
+      status: false,
+      message: err.message,
+    });
+  }
+};
 export const updateAuth = async (req, res) => {
     try {
 
@@ -165,7 +159,18 @@ export const deleteAuth = async (req, res) => {
         })
     }
 }
+export const logout = (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: false,
+  });
 
+  res.json({
+    status: true,
+    message: "Logged out successfully",
+  });
+};
 export const forgetPassword = async (req, res) => {
 
 }

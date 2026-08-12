@@ -1,99 +1,109 @@
- import Customer from "../model/customerModel.js"
- 
- export const addCustomer = async(req , res)=>{
-     try{
-         const {name,email,phone,adress, aadhar,pan,branchname,} = req.body
-          const exist = await Customer.findOne({ email }); 
-         if(exist){
-           return  res.status(400).json({
-                 status:false,
-                 message:"customer is already exit with email",
- 
-             });
-         }
- 
-         const result = await Customer.create({
-             name,email, phone, adress,aadhar,pan, branchname
-         })
-         return res.status(201).json({
-             status: true,
-             message: "Customer added successfully",
-             data: result
-         });
- //     {
- //    "name": "customer4",
- //       "email": "customer4@gmail.com",
- //       "phone": 1234567890,
- //       "adress": "hello ",
- //       "aadhar": "123456789012",
- //       "pan": "pan",
- //       "branchname": "branch1"
-   
- // }
-     }
-     catch(err){
-         res.json({
-             status:false,
-             message:"user post failed !!",
-             err:err.message
-         })
-     }
- }
- export const getCustomer = async(req , res)=>{
-     try{
-         const result = await Customer.find(req.body)
-         res.json({
-             status:true,
-             message:"customer get Succesfully !!",
-             result
-         })
-     }
-     catch(err){
-         res.json({
-             status:false,
-             message:"user fetching failed !!",
-             err:err.message
-         })
-     }
- }
- export const updateCustomer = async(req , res)=>{
-     try{
-         const result = await Customer.findByIdAndUpdate(req.body.id,req.body);
-         res.json({
-             status:true,
-             message:"customer updated Succesfully !!",
-             result
-         })
-     }
-     catch(err){
-         res.json({
-             status:false,
-             message:"user updation failed !!",
-             err:err.message
-         })
-     }
- }
- export const deleteCustomer = async(req , res)=>{
-     try{
-         const id = req.query.id
-         const result = await Customer.findByIdAndDelete(id);
-         if(!result){
-             return res.status(400).json({
-                 status:false,
-                 message:"id is wrong !!"
-             })
-         }
-         res.json({
-             status:true,
-             message:"customer deleted Succesfully !!",
-             result
-         })   
-     }
-     catch(err){
-         res.json({
-             status:false,
-             message:"user delted failed !!",
-             err:err.message
-         })
-     }
- }
+import Customer from "../model/customerModel.js";
+import Account from "../model/accountModel.js";
+import Transaction from "../model/transactionModel.js";
+import Auth from "../model/authModel.js";
+
+export const getManagerDashboard = async (req, res) => {
+  try {
+    const branchcode = req.params.branchcode;
+
+    // Total customers
+    const totalCustomers = await Customer.countDocuments({ branchcode });
+
+    // Total accounts
+    const totalAccounts = await Account.countDocuments({ branchcode });
+
+    // Branch total balance
+    const balanceData = await Account.aggregate([
+      { $match: { branchcode } },
+      {
+        $group: {
+          _id: null,
+          totalBalance: { $sum: "$balance" },
+        },
+      },
+    ]);
+
+    const totalBranchBalance = balanceData[0]?.totalBalance || 0;
+
+    // Today range
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+
+    // Today deposit
+    const depositData = await Transaction.aggregate([
+      {
+        $match: {
+          branchcode,
+          type: "Deposit",
+          createdAt: { $gte: start, $lte: end },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$amount" },
+        },
+      },
+    ]);
+
+    // Today withdraw
+    const withdrawData = await Transaction.aggregate([
+      {
+        $match: {
+          branchcode,
+          type: "Withdraw",
+          createdAt: { $gte: start, $lte: end },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$amount" },
+        },
+      },
+    ]);
+
+    // Today transaction count
+    const todayTransactions = await Transaction.countDocuments({
+      branchcode,
+      createdAt: { $gte: start, $lte: end },
+    });
+
+    // Branch tellers
+    const tellers = await Auth.find({
+      branchcode,
+      role: "Teller",
+    }).select("name userid contact");
+
+    // Recent transactions
+    const recentTransactions = await Transaction.find({ branchcode })
+      .sort({ createdAt: -1 })
+      .limit(10)
+      .select(
+        "accountNumber customerName amount type createdAt performedBy balanceAfter"
+      );
+
+    res.status(200).json({
+      status: true,
+      data: {
+        totalCustomers,
+        totalAccounts,
+        totalBranchBalance,
+        todayDeposit: depositData[0]?.total || 0,
+        todayWithdraw: withdrawData[0]?.total || 0,
+        todayTransactions,
+        tellers,
+        recentTransactions,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: false,
+      message: err.message,
+    });
+  }
+};

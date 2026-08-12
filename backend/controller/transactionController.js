@@ -2,95 +2,97 @@ import Account from "../model/accountModel.js";
 import Transaction from "../model/transactionModel.js"
 
 export const deposite = async (req, res) => {
-    try {
-        const { accountNumber, amount } = req.body
-        const account = await Account.findOne({ accountNumber });
-        if (!account) {
-            return res.status(404).json({
-                status: false,
-                message: "Account is not found"
-            });
-        }
-        account.balance += Number(amount);
-        await account.save();
+  try {
+    const { accountNumber, amount } = req.body;
 
-        await Transaction.create({
-            accountNumber,
-            type: "deposit",
-            amount: Number(amount),
+    const account = await Account.findOne({ accountNumber });
 
-            balanceAfter: account.balance,
-            description: "cash deposite",
-            branchcode: account.branchcode,
-            branchname: account.branchname,
-
-            perfomerdBy: req.user.userid
-        });
-        res.json({
-            status: true,
-            message: "Deposit successful",
-            balance: account.balance
-        });
-
-
+    if (!account) {
+      return res.status(404).json({
+        status: false,
+        message: "Account not found",
+      });
     }
-    catch (err) {
-        res.json({
-            status: false,
-            message: "transiction failled !! ",
-            err: err.message
-        })
+
+    account.balance += Number(amount);
+
+    await account.save();
+
+    // transaction save
+    await Transaction.create({
+      accountNumber: account.accountNumber,
+      customerName: account.customerName,
+      type: "Deposit",
+      amount,
+      balanceAfter: account.balance,
+      branchcode: account.branchcode,
+      branchname: account.branchname,
+
+      performedBy: req.user.userid,
+      performedByRole: req.user.role,
+    });
+
+    res.json({
+      status: true,
+      message: "Deposit successful",
+      data: account,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: false,
+      message: err.message,
+    });
+  }
+};
+export const withdraw = async (req, res) => {
+  try {
+    const { accountNumber, amount } = req.body;
+
+    const account = await Account.findOne({ accountNumber });
+
+    if (!account) {
+      return res.status(404).json({
+        status: false,
+        message: "Account not found",
+      });
     }
-}
 
-export const withdraw = async (req , res)=>{
-try{
-    const {accountNumber,amount} = req.body;
-
-const account = await Account.findOne({accountNumber});
-
-if (!account) {
-        return res.status(404).json({
-            status: false,
-            message: "Account is not found"
-        });
+    if (account.balance < amount) {
+      return res.status(400).json({
+        status: false,
+        message: "Insufficient balance",
+      });
     }
-    if(account.balance <amount){
-        return res.status(400).json({
-            status: false,
-            message: "The amount is more than the account balance",
 
-        });
-
-    }   
     account.balance -= Number(amount);
 
     await account.save();
+
     await Transaction.create({
-        accountNumber,
-        type: "withdraw",
-        amount: Number(amount),
+      accountNumber: account.accountNumber,
+      customerName: account.customerName,
+      type: "Withdraw",
+      amount,
+      balanceAfter: account.balance,
+      branchcode: account.branchcode,
+      branchname: account.branchname,
 
-        balanceAfter: account.balance,
-        description: "cash withdraw",
-        branchcode: account.branchcode,
-        branchname: account.branchname,
-
-        perfomerdBy: req.user.userid
+      performedBy: req.user.userid,
+      performedByRole: req.user.role,
     });
+
     res.json({
-        status: true,
-        message: "withdraw successful",
-        balance: account.balance
+      status: true,
+      message: "Withdraw successful",
+      data: account,
     });
-
-}
-catch(err){
-
-}
-
-}
-
+  } catch (err) {
+    res.status(500).json({
+      status: false,
+      message: err.message,
+    });
+  }
+};
 export const getHistory = async (req , res)=>{
     try{
         const accountNumber =  req.params.accountNumber
