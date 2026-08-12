@@ -7,7 +7,7 @@ export const addCustomer = async (req, res) => {
       name,
       email,
       phone,
-      address,
+      adress, // model ke according
       aadhar,
       pan,
     } = req.body;
@@ -16,11 +16,11 @@ export const addCustomer = async (req, res) => {
       name,
       email,
       phone,
-      address,
+      adress,
       aadhar,
       pan,
 
-      // auto from JWT token
+      // JWT token se auto aayega
       branchname: req.user.branchname,
       branchcode: req.user.branchcode,
     });
@@ -37,7 +37,6 @@ export const addCustomer = async (req, res) => {
     });
   }
 };
-
 // ================= GET CUSTOMERS =================
 export const getCustomer = async (req, res) => {
   try {

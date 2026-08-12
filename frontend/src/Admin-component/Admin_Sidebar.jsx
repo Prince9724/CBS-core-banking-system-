@@ -1,9 +1,16 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import "./admin_Sidebar.css";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { handleLogout } from "../utils/handleLogout";
+
+
 export default function Admin_Sidebar() {
   const [isActive, setActive] = useState("dashboard");
   const [showSidebar, setShowSidebar] = useState(false); //for sidebar hide
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   return (
     <div>
       <>
@@ -72,7 +79,7 @@ export default function Admin_Sidebar() {
             </li>
             <li>
               <Link
-              to={"customers"}
+                to={"customers"}
                 onClick={() => setActive("customer")}
                 className={`nav-link text-white ${isActive === "customer" ? "active" : ""}`}
               >
@@ -82,7 +89,7 @@ export default function Admin_Sidebar() {
             </li>
             <li>
               <Link
-              to={"accounts"}
+                to={"accounts"}
                 onClick={() => setActive("account")}
                 className={`nav-link text-white ${isActive === "account" ? "active" : ""}`}
               >
@@ -92,7 +99,7 @@ export default function Admin_Sidebar() {
             </li>
             <li>
               <Link
-              to={"transaction"}
+                to={"transaction"}
                 onClick={() => setActive("transection")}
                 className={`nav-link text-white ${isActive === "transection" ? "active" : ""}`}
               >
@@ -173,15 +180,19 @@ export default function Admin_Sidebar() {
                 </Link>
               </li>
               <li>
+                <button
+                  className="btn btn-outline-light btn-sm"
+                  onClick={() => handleLogout(dispatch, navigate)}
+                >
+                  🚪 Logout
+                </button>
                 <Link className="dropdown-item" href="#">
                   Profile
                 </Link>
               </li>
               <li>{/* <hr className="dropdown-divider" />  */}</li>
               <li>
-                <Link className="dropdown-item" href="#">
-                  Sign out
-                </Link>
+
               </li>
             </ul>
           </div>

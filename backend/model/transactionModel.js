@@ -1,29 +1,37 @@
-import mongoose from "mongoose"
-const transactionSchema = new mongoose.Schema({
-    accountNumber:{
-        type:String,
-        required :true
-    },
-    type:{
-        type:String,
-        enum:["deposit","withdraw","transfer-credit","transfer-debit"]
-    },
-    amount:{
-        type:Number,
-        required:true
-    },
-    balanceAfter:{
-        type:Number,
-        required:true
-    },
-    description:{
-        type:String
-    },
-    branchcode:String,
-    branchname:String,
+import mongoose from "mongoose";
 
-    perfomerdBy:String // manager ke userid ke liye 
-},{
-    timestamps:true
-}) ;
-export default mongoose.model("Transaction", transactionSchema);
+const transactionSchema = new mongoose.Schema(
+  {
+    accountNumber: String,
+
+    customerName: String,
+
+    type: {
+      type: String,
+      enum: ["Deposit", "Withdraw"],
+    },
+
+    amount: Number,
+
+    balanceAfter: Number,
+
+    branchcode: String,
+
+    branchname: String,
+
+    // kisne transaction kiya
+    performedBy: {
+      type: String,
+    },
+
+    performedByRole: {
+      type: String,
+    },
+  },
+  { timestamps: true }
+);
+
+export default mongoose.model(
+  "Transaction",
+  transactionSchema
+);

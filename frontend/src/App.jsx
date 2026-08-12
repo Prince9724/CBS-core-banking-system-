@@ -23,6 +23,7 @@ import TellerDashboard from "./pages/teller/TellerDashboard";
 import Deposit from "./pages/teller/Deposit";
 import Withdraw from "./pages/teller/Withdraw";
 import TransactionHistory from "./pages/teller/TransactionHistory";
+import ManagerTransactions from "./pages/manager/ManagerTransactions";
 
 export default function App() {
   return (
@@ -72,6 +73,14 @@ export default function App() {
         element={
           <ProtectedRoutes>
             <Accounts />
+          </ProtectedRoutes>
+        }
+      />
+      <Route
+        path="/manager/:branchcode/transactions"
+        element={
+          <ProtectedRoutes>
+            <ManagerTransactions />
           </ProtectedRoutes>
         }
       />

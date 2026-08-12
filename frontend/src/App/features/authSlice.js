@@ -63,6 +63,20 @@ const authSlice = createSlice({
       });
   },
 });
-
+export const logoutUser = createAsyncThunk(
+  "auth/logoutUser",
+  async (_, thunkAPI) => {
+    try {
+      await axios.post(
+        "http://localhost:5003/cbs/logout",
+        {},
+        { withCredentials: true }
+      );
+      return true;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message);
+    }
+  }
+);
 export const { logout } = authSlice.actions;
 export default authSlice.reducer;
