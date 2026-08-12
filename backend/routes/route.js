@@ -1,5 +1,5 @@
 import express from "express"
-import {deleteAuth, signIn, signUp, updateAuth } from "../controller/authController.js";
+import {deleteAuth, logout, signIn, signUp, updateAuth } from "../controller/authController.js";
 // import { Authemiddle } from "../middleware/authMiddleware.js";
 import { addBranch, addManager, deleteBranch, getBranch, getBranchByCode, getSingleBranch, getUsers, otpSend, otpVerify, updateBranch } from "../controller/adminController.js";
 import { authMiddleware } from "../middleware/auth.js";
@@ -12,7 +12,7 @@ Router.post("/signup",signUp)
 Router.post("/addrole",authMiddleware,adminOnly,addManager);
 Router.put("/update",updateAuth)
 Router.delete("/delete",deleteAuth);
-
+Router.post("/logout",logout)
 /// branch
 
 Router.post("/addbranch",authMiddleware,adminOnly,addBranch);

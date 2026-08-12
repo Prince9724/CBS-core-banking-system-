@@ -1,12 +1,18 @@
 export const adminOnly = (req, res, next) => {
+  console.log("REQ.USER =>", req.user);
 
-    if (req.user.role !== "Admin") {
+  const role = req.user?.role;
 
-        return res.status(403).json({
-            status: false,
-            message: "Only Admin can access this route"
-        });
-    }
+  console.log("ROLE =>", role);
 
-    next();
+  // admin check
+  if (!role || role.toLowerCase() !== "admin") {
+    return res.status(403).json({
+      status: false,
+      message: "Admin access only",
+      currentRole: role,
+    });
+  }
+
+  next();
 };
