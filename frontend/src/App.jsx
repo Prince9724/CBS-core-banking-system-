@@ -31,6 +31,7 @@ export default function App() {
     <Routes>
       {/* Login */}
       <Route path="/" element={<Login />} />
+      <Route path="/login" element={<Login />} />
 
       {/* ================= ADMIN ================= */}
       <Route

@@ -36,6 +36,8 @@ const authSlice = createSlice({
     logout: (state) => {
       state.loggedinUser = null;
       state.isAuthenticated = false;
+      state.error = null;
+      localStorage.removeItem("cbsUser");
     },
   },
   extraReducers: (builder) => {
@@ -72,11 +74,21 @@ export const logoutUser = createAsyncThunk(
         {},
         { withCredentials: true }
       );
+
+      thunkAPI.dispatch(logout());
       return true;
     } catch (err) {
+      thunkAPI.dispatch(logout());
       return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
+
+logout: (state) => {
+  state.loggedinUser = null;
+  state.isAuthenticated = false;
+  state.error = null;
+  localStorage.removeItem("cbsUser");
+};
 export const { logout } = authSlice.actions;
 export default authSlice.reducer;

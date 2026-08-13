@@ -1,51 +1,53 @@
-import Auth from "../model/authModel.js"
-import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken"
-// import cookieparser from "cookie"
-export const signUp = async (req, res) => {
-    try {
-        const {
-            name,
-            email,
-            contact,
-            password,
-            role,
-            userid,
-            branchname,
-            branchcode
-        } = req.body;
-        const hash = await bcrypt.hash(password, 12);
-        const result = await Auth.create({
-            name,
-            userid,
-            email,
-            contact,
-            role,
-            password: hash,
-            branchname,
-            branchcode
-        });
+import Auth from "../model/authModel.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
-        res.status(200).json({
-            status: true,
-            message: "user post succesfully !!",
-            data: result
-        })
-    }
-    catch (err) {
-        res.json({
-            status: false,
-            message: "user post failed !!",
-            err: err.message
-        })
-    }
-}
-//signIn for admin
+// SIGN UP
+export const signUp = async (req, res) => {
+  try {
+    const {
+      name,
+      email,
+      contact,
+      password,
+      role,
+      userid,
+      branchname,
+      branchcode,
+    } = req.body;
+
+    const hash = await bcrypt.hash(password, 12);
+
+    const result = await Auth.create({
+      name,
+      userid,
+      email,
+      contact,
+      role,
+      password: hash,
+      branchname,
+      branchcode,
+    });
+
+    return res.status(200).json({
+      status: true,
+      message: "user post successfully !!",
+      data: result,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: false,
+      message: "user post failed !!",
+      err: err.message,
+    });
+  }
+};
+
+// SIGN IN
 export const signIn = async (req, res) => {
   try {
     const { userid, password, branchcode } = req.body;
 
-    // user find
     const auth = await Auth.findOne({ userid });
 
     if (!auth) {
@@ -55,7 +57,6 @@ export const signIn = async (req, res) => {
       });
     }
 
-    // password check
     const isMatch = await bcrypt.compare(password, auth.password);
 
     if (!isMatch) {
@@ -65,7 +66,7 @@ export const signIn = async (req, res) => {
       });
     }
 
-    // Manager aur Teller ke liye branchcode check
+    // branch check for manager/teller
     if (
       (auth.role === "Manager" || auth.role === "Teller") &&
       auth.branchcode !== branchcode
@@ -75,8 +76,7 @@ export const signIn = async (req, res) => {
         message: "Branch code mismatch",
       });
     }
-    res.clearCookie("token");
-    // JWT token
+
     const token = jwt.sign(
       {
         id: auth._id,
@@ -89,15 +89,14 @@ export const signIn = async (req, res) => {
       { expiresIn: "12h" }
     );
 
-    // Cookie set
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // localhost
+      secure: false,
       sameSite: "lax",
-      maxAge: 12 * 60 * 60 * 1000, // 12 hours
+      path: "/",
+      maxAge: 12 * 60 * 60 * 1000,
     });
 
-    // Response
     return res.status(200).json({
       status: true,
       message: "Login successful",
@@ -109,68 +108,76 @@ export const signIn = async (req, res) => {
       },
     });
   } catch (err) {
-    console.log("SIGNIN ERROR:", err);
-
     return res.status(500).json({
       status: false,
       message: err.message,
     });
   }
 };
-export const updateAuth = async (req, res) => {
-    try {
 
-        const result = await Auth.findByIdAndUpdate(req.body._id, req.body, { new: true })
-        if (!result) {
-            return res.json({
-                status: false,
-                message: "Id nahi milla ye Id data base me nhi hai ",
-                data: null
-            })
-        }
-        res.json({
-            status: true,
-            message: "manager updation succesfully !!",
-            data: result
-        })
-    }
-    catch (err) {
-        res.json({
-            status: false,
-            message: "user updation failed !!",
-            err: err.message
-        })
-    }
-}
-export const deleteAuth = async (req, res) => {
-    try {
-        const result = await Auth.findByIdAndDelete(req.query.id)
-        res.json({
-            status: true,
-            message: "manager deleted succesfully !!",
-            data: result
-        })
-    }
-    catch (err) {
-        res.json({
-            status: false,
-            message: "user delted failed !!",
-            err: err.message
-        })
-    }
-}
+// LOGOUT (ONLY ONE)
 export const logout = (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
     sameSite: "lax",
     secure: false,
+    path: "/",
   });
 
-  res.json({
+  return res.status(200).json({
     status: true,
     message: "Logged out successfully",
   });
 };
-export const forgetPassword = async (req, res) => {
 
-}
+// UPDATE AUTH
+export const updateAuth = async (req, res) => {
+  try {
+    const result = await Auth.findByIdAndUpdate(
+      req.body._id,
+      req.body,
+      { new: true }
+    );
+
+    if (!result) {
+      return res.json({
+        status: false,
+        message: "Id nahi mila",
+        data: null,
+      });
+    }
+
+    return res.json({
+      status: true,
+      message: "manager updation successfully !!",
+      data: result,
+    });
+  } catch (err) {
+    return res.json({
+      status: false,
+      message: "user updation failed !!",
+      err: err.message,
+    });
+  }
+};
+
+// DELETE AUTH
+export const deleteAuth = async (req, res) => {
+  try {
+    const result = await Auth.findByIdAndDelete(req.query.id);
+
+    return res.json({
+      status: true,
+      message: "manager deleted successfully !!",
+      data: result,
+    });
+  } catch (err) {
+    return res.json({
+      status: false,
+      message: "user delete failed !!",
+      err: err.message,
+    });
+  }
+};
+
+export const forgetPassword = async (req, res) => {};

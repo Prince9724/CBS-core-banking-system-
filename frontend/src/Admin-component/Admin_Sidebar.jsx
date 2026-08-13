@@ -109,7 +109,7 @@ export default function Admin_Sidebar() {
             </li>
             <li>
               <Link
-              to={"reports"}
+                to={"reports"}
                 onClick={() => setActive("report")}
                 className={`nav-link text-white ${isActive === "report" ? "active" : ""}`}
               >
@@ -146,6 +146,7 @@ export default function Admin_Sidebar() {
             </li>
             <li>
               <Link
+                to="/admin/profile"
                 onClick={() => setActive("profile")}
                 className={`nav-link text-white ${isActive === "profile" ? "active" : ""}`}
               >
@@ -173,27 +174,29 @@ export default function Admin_Sidebar() {
             </Link>
             <ul className="dropdown-menu dropdown-menu-dark text-small shadow">
               <li>
-                <Link className="dropdown-item">New project...</Link>
-              </li>
-              <li>
-                <Link className="dropdown-item" href="#">
-                  Settings
+                <Link to="/admin/profile" className="dropdown-item">
+                  👤 Profile
                 </Link>
               </li>
+
+              <li>
+                <Link to="/admin/settings" className="dropdown-item">
+                  ⚙️ Settings
+                </Link>
+              </li>
+
+              <li>
+                <hr className="dropdown-divider" />
+              </li>
+
               <li>
                 <button
-                  className="btn btn-outline-light btn-sm"
+                  type="button"
+                  className="dropdown-item text-danger"
                   onClick={() => handleLogout(dispatch, navigate)}
                 >
                   🚪 Logout
                 </button>
-                <Link className="dropdown-item" href="#">
-                  Profile
-                </Link>
-              </li>
-              <li>{/* <hr className="dropdown-divider" />  */}</li>
-              <li>
-
               </li>
             </ul>
           </div>

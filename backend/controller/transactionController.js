@@ -114,3 +114,29 @@ export const getHistory = async (req , res)=>{
         })
     }
 }
+
+
+export const getTodayTransactions = async (req, res) => {
+  try {
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+
+    const data = await Transaction.find({
+      branchcode: req.user.branchcode,
+      createdAt: { $gte: start, $lte: end },
+    }).sort({ createdAt: -1 });
+
+    res.json({
+      status: true,
+      data,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: false,
+      message: err.message,
+    });
+  }
+};

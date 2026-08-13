@@ -6,7 +6,7 @@ import { getAccounts, openAccount, searchAccount } from "../controller/accountCo
 import { deposite, getHistory, withdraw } from "../controller/transactionController.js";
 // import { getManagerDashboard } from "../controller/managerController.js";
 import { getManagerDashboard } from "../controller/dashboardController.js";
-
+import { getTodayTransactions } from "../controller/transactionController.js";
 const CustomerRoute = express.Router();
 CustomerRoute.post("/add", authMiddleware, managerOnly, addCustomer)
 CustomerRoute.get("/get", authMiddleware, getCustomer);
@@ -42,4 +42,9 @@ CustomerRoute.post("/withdraw", authMiddleware, withdraw);
 CustomerRoute.get("/history/:accountNumber", authMiddleware, getHistory);
 CustomerRoute.get("/search", authMiddleware, searchCustomers)
 CustomerRoute.get("/account-search", authMiddleware, searchAccount)
+CustomerRoute.get(
+  "/today-transactions",
+  authMiddleware,
+  getTodayTransactions
+);
 export default CustomerRoute;

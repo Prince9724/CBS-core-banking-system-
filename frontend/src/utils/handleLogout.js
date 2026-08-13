@@ -10,10 +10,13 @@ export const handleLogout = async (dispatch, navigate) => {
     );
 
     dispatch(logout());
-    localStorage.clear();
+    localStorage.removeItem("cbsUser");
 
-    navigate("/", { replace: true });
+    navigate("/login", { replace: true });
   } catch (err) {
     console.log("Logout Error:", err);
+    dispatch(logout());
+    localStorage.removeItem("cbsUser");
+    navigate("/login", { replace: true });
   }
 };

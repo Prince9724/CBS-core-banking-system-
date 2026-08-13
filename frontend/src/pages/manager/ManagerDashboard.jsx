@@ -13,50 +13,60 @@ export default function ManagerDashboard() {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
-        await dispatch(logoutUser());
-        navigate("/");
+        try {
+            await dispatch(logoutUser()).unwrap();
+        } catch (error) {
+            console.log("Logout failed:", error);
+        } finally {
+            navigate("/login", { replace: true });
+        }
     };
-
     const [stats, setStats] = useState({
         totalCustomers: 0,
         totalAccounts: 0,
-        todayDeposits: 0,
-        todayWithdrawals: 0,
+        todayDeposit: 0,
+        todayWithdraw: 0,
         todayTransactions: 0,
         totalBranchBalance: 0,
         totalTellers: 0,
-        recentTransactions: [],
     });
+    const [recentTransactions, setRecentTransactions] = useState([]);
+    // const [tellers, setTellers] = useState(0);
 
     useEffect(() => {
         fetchDashboard();
-    }, []);
-
-
+    }, [branchcode]);
     const fetchDashboard = async () => {
         try {
             const dashboardRes = await axios.get(
                 `http://localhost:5003/cbs/customer/manager-dashboard/${branchcode}`,
-                { withCredentials: true }
+                {
+                    withCredentials: true
+                }
             );
 
             const data = dashboardRes.data.data;
 
+            console.log("Dashboard API Response:", dashboardRes.data);
+            console.log("Dashboard Data:", data);
+
             setStats({
-                customers: data.totalCustomers || 0,
-                accounts: data.totalAccounts || 0,
+                totalCustomers: data.totalCustomers || 0,
+                totalAccounts: data.totalAccounts || 0,
                 todayDeposit: data.todayDeposit || 0,
                 todayWithdraw: data.todayWithdraw || 0,
-                todayTransactions: data.todayTransactions || 0,
-                branchBalance: data.totalBranchBalance || 0,
+                todayTransactions: data.todayTransactionsCount || 0,
+                totalBranchBalance: data.branchBalance || 0,
+                totalTellers: data.tellers || 0,
             });
 
             setRecentTransactions(data.recentTransactions || []);
-            setTellers(data.tellers || []);
 
-            console.log("DASHBOARD DATA:", data);
         } catch (err) {
-            console.log("Dashboard Error:", err.response?.data || err.message);
+            console.log(
+                "Dashboard Error:",
+                err.response?.data || err.message
+            );
         }
     };
     return (
@@ -194,7 +204,7 @@ export default function ManagerDashboard() {
                                 <div className="d-flex justify-content-between align-items-start">
                                     <div>
                                         <h6 className="text-white-50 mb-2">Today Deposit</h6>
-                                        <h3 className="fw-bold mb-0">₹{stats.todayDeposits}</h3>
+                                        <h3 className="fw-bold mb-0">₹{stats.todayDeposit}</h3>
                                     </div>
                                     <div className="fs-2">⬇️</div>
                                 </div>
@@ -208,7 +218,7 @@ export default function ManagerDashboard() {
                                 <div className="d-flex justify-content-between align-items-start">
                                     <div>
                                         <h6 className="text-dark-50 mb-2">Today Withdraw</h6>
-                                        <h3 className="fw-bold mb-0">₹{stats.todayWithdrawals}</h3>
+                                        <h3 className="fw-bold mb-0">₹{stats.todayWithdraw}</h3>
                                     </div>
                                     <div className="fs-2">⬆️</div>
                                 </div>
@@ -260,7 +270,7 @@ export default function ManagerDashboard() {
                             </thead>
 
                             <tbody>
-                                {stats.recentTransactions.map((t) => (
+                                {recentTransactions.map((t) => (
                                     <tr key={t._id}>
                                         <td>{t.accountNumber}</td>
 
