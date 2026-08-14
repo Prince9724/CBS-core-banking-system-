@@ -153,23 +153,46 @@ export const getBranchByCode = async (req, res) => {
 //add user for admin 
 export const addManager = async (req, res) => {
     try {
-        const { name, email, contact, role, branchcode, branchname, password, userid } = req.body
+        const {
+            name,
+            email,
+            contact,
+            role,
+            branchcode,
+            branchname,
+            password,
+            userid
+        } = req.body;
+
         const hash = await bcrypt.hash(password, 12);
-        const result = await Auth.create({ name, userid, email, contact, role, branchcode, branchname, password: hash });
-        res.status(200).json({
+
+        const result = await Auth.create({
+            name,
+            userid,
+            email,
+            contact,
+            role,
+            branchcode,
+            branchname,
+            password: hash
+        });
+
+        return res.status(201).json({
             status: true,
-            message: "user post succesfully !!",
+            message: "User added successfully",
             data: result
-        })
-    }
-    catch (err) {
-        res.json({
+        });
+
+    } catch (err) {
+        console.error("ADD MANAGER ERROR:", err);
+
+        return res.status(500).json({
             status: false,
-            message: "manager added failed !!",
-            err: err.message
-        })
+            message: "Manager add failed",
+            error: err.message
+        });
     }
-}
+};
 export const otpSend = async (req, res) => {
     try {
         const otp = generatorOtp();

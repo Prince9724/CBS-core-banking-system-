@@ -41,14 +41,14 @@ export default function UsersRoles() {
     },
     {
       label: "Managers",
-      value: users.filter((u) => u.role === "Manager").length,
+      value: users.filter((u) => u.role === "manager").length,
       sub: "Branch managers",
       icon: <HiOutlineUserGroup />,
       accent: "ur-accent-green",
     },
     {
       label: "Tellers",
-      value: users.filter((u) => u.role === "Teller").length,
+      value: users.filter((u) => u.role === "teller").length,
       sub: "Cash operators",
       icon: <TbShieldCog />,
       accent: "ur-accent-amber",
@@ -68,9 +68,9 @@ export default function UsersRoles() {
     email: "",
     contact: "",
     password: "",
-    role: "Manager",
+    role: "manager",
     branchname: "",
-    branchcode: "",
+    branchcode: ""
   });
 
   const roleOverview = [
@@ -199,7 +199,7 @@ export default function UsersRoles() {
         email: "",
         contact: "",
         password: "",
-        role: "Manager",
+        role: "manager",
         branchname: "",
         branchcode: "",
       });
@@ -239,7 +239,7 @@ export default function UsersRoles() {
               email: "",
               contact: "",
               password: "",
-              role: "Manager",
+              role: "manager",
               branchname: "",
               branchcode: "",
             });
@@ -559,8 +559,8 @@ export default function UsersRoles() {
                     setFormData({ ...formData, role: e.target.value })
                   }
                 >
-                  <option value="Manager">Manager</option>
-                  <option value="Teller">Teller</option>
+                  <option value="manager">Manager</option>
+                  <option value="teller">Teller</option>
                 </select>
 
                 <select

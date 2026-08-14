@@ -40,7 +40,7 @@ CustomerRoute.get(
 CustomerRoute.post("/deposit", authMiddleware, deposite);
 CustomerRoute.post("/withdraw", authMiddleware, withdraw);
 CustomerRoute.get("/history/:accountNumber", authMiddleware, getHistory);
-CustomerRoute.get("/search", authMiddleware, searchCustomers)
+// CustomerRoute.get("/search", authMiddleware, searchCustomers)
 CustomerRoute.get("/account-search", authMiddleware, searchAccount)
 CustomerRoute.get(
   "/today-transactions",

@@ -1,8 +1,11 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { handleLogout } from "../../utils/handleLogout";
+import { useDispatch } from "react-redux";
 
 export default function TellerDashboard() {
   const { branchcode } = useParams();
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   return (
     <div className="container py-4 bg-dark text-white">
       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -13,12 +16,13 @@ export default function TellerDashboard() {
           </p>
         </div>
 
-        <Link
-          to="/login"
-          className="btn btn-outline-light btn-sm"
+        <button
+          type="button"
+          className="btn btn-danger"
+          onClick={() => handleLogout(dispatch, navigate)}
         >
-          Logout
-        </Link>
+          🚪 Logout
+        </button>
       </div>
 
       <div className="row g-4">
@@ -70,3 +74,35 @@ export default function TellerDashboard() {
     </div>
   );
 }
+
+
+// import { useParams, Link, useNavigate } from "react-router-dom";
+// import { useDispatch } from "react-redux";
+// import { handleLogout } from "../../utils/handleLogout";
+
+// export default function TellerDashboard() {
+//   const { branchcode } = useParams();
+//   const dispatch = useDispatch();
+//   const navigate = useNavigate();
+
+//   return (
+//     <div className="container py-4 bg-dark text-white">
+//       <div className="d-flex justify-content-between align-items-center mb-4">
+//         <div>
+//           <h2 className="fw-bold">💵 Teller Dashboard</h2>
+//           <p className="text-light mb-0">
+//             Branch Code: <strong>{branchcode}</strong>
+//           </p>
+//         </div>
+
+//         <button
+//           type="button"
+//           className="btn btn-danger"
+//           onClick={() => handleLogout(dispatch, navigate)}
+//         >
+//           🚪 Logout
+//         </button>
+//       </div>
+//     </div>
+//   );
+// }

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { logoutUser } from "../../App/features/authSlice";
@@ -11,6 +11,7 @@ export default function ManagerDashboard() {
     const { branchcode } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { loggedinUser } = useSelector((state) => state.auth);
 
     const handleLogout = async () => {
         try {
@@ -75,10 +76,17 @@ export default function ManagerDashboard() {
             <div
                 className="bg-dark text-white p-4 shadow-lg"
                 style={{ width: "280px", borderRadius: "0 24px 24px 0" }}
-            >
-                <h2 className="fw-bold mb-1">Dindoli</h2>
-                <p className="text-secondary mb-4">{branchcode}</p>
+            ><h2 className="fw-bold mb-1">
+                    {loggedinUser?.branchname || "Branch"}
+                </h2>
 
+                <p className="text-secondary mb-1">
+                    Code: <strong>{loggedinUser?.branchcode}</strong>
+                </p>
+
+                <p className="text-light small mb-4">
+                    👨‍💼 Manager: <strong>{loggedinUser?.name}</strong>
+                </p>
                 <hr className="border-secondary" />
 
                 <div className="d-grid gap-3 mt-4">
@@ -128,9 +136,12 @@ export default function ManagerDashboard() {
             <div className="flex-grow-1 p-4 p-lg-5">
                 <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                     <div>
-                        <h1 className="fw-bold mb-1">🏦 Dindoli Dashboard</h1>
+                        <h1 className="fw-bold mb-1">
+                            🏦 {loggedinUser?.branchname || "Branch"} Dashboard
+                        </h1>
+
                         <p className="text-muted mb-0">
-                            Welcome back! Here is today’s branch overview.
+                            Welcome back, <strong>{loggedinUser?.name}</strong> 👋
                         </p>
                     </div>
 
@@ -142,8 +153,8 @@ export default function ManagerDashboard() {
                             ➕ Add Customer
                         </Link>
 
-                        <Link
-                            to="/manager/accounts"
+                        < Link
+                            to={`/manager/${branchcode}/accounts`}
                             className="btn btn-outline-primary rounded-3 px-4"
                         >
                             💳 Open Account
@@ -324,11 +335,11 @@ export default function ManagerDashboard() {
                                         ➕ Add New Customer
                                     </Link>
 
-                                    <Link
-                                        to="/manager/accounts"
-                                        className="btn btn-outline-success rounded-3 py-2"
+                                    < Link
+                                        to={`/manager/${branchcode}/accounts`}
+                                        className="btn btn-outline-primary rounded-3 px-4"
                                     >
-                                        💳 Open New Account
+                                        💳 Open Account
                                     </Link>
 
                                     <Link
@@ -342,33 +353,40 @@ export default function ManagerDashboard() {
                         </div>
                     </div>
 
-                    <div className="col-lg-6">
-                        <div className="card border-0 shadow-sm rounded-4 h-100">
-                            <div className="card-body p-4">
-                                <h5 className="fw-bold mb-3">📊 Branch Insights</h5>
+                    <div className="col-6 d-flex flex-column gap-5 text-dark">
+                        <div className="d-flex justify-content-between align-items-center">
+                            <span>Total Customers</span>
+                            <span className="fw-semibold text-primary">
+                                {stats.totalCustomers}
+                            </span>
+                        </div>
 
-                                <div className="d-flex flex-column gap-3">
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <span>Customers Growth</span>
-                                        <span className="fw-semibold text-success">+12%</span>
-                                    </div>
+                        <div className="d-flex justify-content-between align-items-center">
+                            <span>Total Accounts</span>
+                            <span className="fw-semibold text-primary">
+                                {stats.totalAccounts}
+                            </span>
+                        </div>
 
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <span>Deposit Performance</span>
-                                        <span className="fw-semibold text-success">+8%</span>
-                                    </div>
+                        <div className="d-flex justify-content-between align-items-center">
+                            <span>Today Deposit</span>
+                            <span className="fw-semibold text-success">
+                                ₹{stats.todayDeposit}
+                            </span>
+                        </div>
 
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <span>Withdraw Ratio</span>
-                                        <span className="fw-semibold text-warning">32%</span>
-                                    </div>
+                        <div className="d-flex justify-content-between align-items-center">
+                            <span>Today Withdraw</span>
+                            <span className="fw-semibold text-danger">
+                                ₹{stats.todayWithdraw}
+                            </span>
+                        </div>
 
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <span>Branch Health</span>
-                                        <span className="fw-semibold text-success">Excellent</span>
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="d-flex justify-content-between align-items-center">
+                            <span>Active Tellers</span>
+                            <span className="fw-semibold text-primary">
+                                {stats.totalTellers}
+                            </span>
                         </div>
                     </div>
                 </div>

@@ -3,37 +3,28 @@ import Customer from "../model/customerModel.js";
 // ================= ADD CUSTOMER =================
 export const addCustomer = async (req, res) => {
   try {
-    const {
-      name,
-      email,
-      phone,
-      adress, // model ke according
-      aadhar,
-      pan,
-    } = req.body;
+    console.log("ADD CUSTOMER BODY:", req.body);
+    console.log("LOGGED USER:", req.user);
 
     const result = await Customer.create({
-      name,
-      email,
-      phone,
-      adress,
-      aadhar,
-      pan,
-
-      // JWT token se auto aayega
-      branchname: req.user.branchname,
+      ...req.body,
       branchcode: req.user.branchcode,
+      branchname: req.user.branchname,
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       status: true,
       message: "Customer added successfully",
       data: result,
     });
+
   } catch (err) {
-    res.status(500).json({
+    console.error("ADD CUSTOMER ERROR:", err);
+
+    return res.status(500).json({
       status: false,
-      message: err.message,
+      message: "Customer add failed",
+      error: err.message,
     });
   }
 };

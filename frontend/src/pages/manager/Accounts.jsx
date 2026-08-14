@@ -130,7 +130,7 @@ export default function Accounts() {
 
       {/* Selected Customer */}
       {selectedCustomer && (
-        <div className="card bg-dark p-4 mb-4">
+        <div className="card p-4 mb-4">
           <h5 className="mb-3">Selected Customer</h5>
 
           <div className="row">

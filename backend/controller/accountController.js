@@ -2,16 +2,23 @@ import Account from "../model/accountModel.js";
 import Customer from "../model/customerModel.js";
 
 // ================= OPEN ACCOUNT =================
-
 export const openAccount = async (req, res) => {
   try {
     const {
       customerId,
       accountType,
-      initialBalance,
+      openingBalance,
     } = req.body;
 
-    // customer check
+    // Customer ID check
+    if (!customerId) {
+      return res.status(400).json({
+        status: false,
+        message: "Customer ID is required",
+      });
+    }
+
+    // Customer check
     const customer = await Customer.findById(customerId);
 
     if (!customer) {
@@ -21,28 +28,31 @@ export const openAccount = async (req, res) => {
       });
     }
 
-    // unique account number
-    const accountNumber =
-      `${customer.branchcode}-${Date.now()}`;
+    // Unique account number
+    const accountNumber = `${customer.branchcode}-${Date.now()}`;
 
+    // Create account
     const account = await Account.create({
-      customer: customer._id,
+      customerId: customer._id, 
       customerName: customer.name,
       accountNumber,
       accountType,
-      balance: initialBalance || 0,
+      balance: Number(openingBalance) || 0,
       branchcode: customer.branchcode,
       branchname: customer.branchname,
       status: "Active",
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       status: true,
       message: "Account opened successfully",
       data: account,
     });
+
   } catch (err) {
-    res.status(500).json({
+    console.error("Open Account Error:", err);
+
+    return res.status(500).json({
       status: false,
       message: err.message,
     });

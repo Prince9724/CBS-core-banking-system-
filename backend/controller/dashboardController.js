@@ -5,53 +5,65 @@ import Auth from "../model/authModel.js";
 
 export const getManagerDashboard = async (req, res) => {
   try {
-    const branchname = req.user.branchname;
+    // params se lo
+    const branchcode = req.params.branchcode;
+
+    // manager ka data database se lo
+    const manager = await Auth.findById(req.user.id);
+
+    const branchname = manager?.branchname;
+
+    console.log("REQ.USER =>", req.user);
+    console.log("BRANCHCODE =>", branchcode);
 
     // Total customers
-    const totalCustomers = await Customer.countDocuments({ branchname });
+    const totalCustomers = await Customer.countDocuments({
+      branchcode,
+    });
 
-    // Accounts of this branch
-    const accounts = await Account.find({ branchname });
+    // Accounts
+    const accounts = await Account.find({ branchcode });
+
     const totalAccounts = accounts.length;
 
     const accountNumbers = accounts.map((a) => a.accountNumber);
 
-    // Today date range
+    // Today range
     const start = new Date();
     start.setHours(0, 0, 0, 0);
 
     const end = new Date();
     end.setHours(23, 59, 59, 999);
 
-    // Today transactions
+    // Transactions
     const todayTransactions = await Transaction.find({
       accountNumber: { $in: accountNumbers },
       createdAt: { $gte: start, $lte: end },
     }).sort({ createdAt: -1 });
 
-    // Deposit total
+    // Deposit
     const todayDeposit = todayTransactions
       .filter((t) => t.type === "Deposit")
       .reduce((sum, t) => sum + Number(t.amount), 0);
 
-    // Withdraw total
+    // Withdraw
     const todayWithdraw = todayTransactions
       .filter((t) => t.type === "Withdraw")
       .reduce((sum, t) => sum + Number(t.amount), 0);
 
-    // Branch balance
+    // Balance
     const branchBalance = accounts.reduce(
       (sum, a) => sum + Number(a.balance || 0),
       0
     );
 
-    // Branch tellers
+    // ✅ Teller count
     const tellers = await Auth.countDocuments({
-      role: "Teller",
-      branchname,
+      role: "teller",
+      branchcode,
     });
 
-    // Recent 10 transactions
+    // Recent transactions
     const recentTransactions = await Transaction.find({
       accountNumber: { $in: accountNumbers },
     })
@@ -61,6 +73,8 @@ export const getManagerDashboard = async (req, res) => {
     res.json({
       status: true,
       data: {
+        branchname,
+        branchcode,
         totalCustomers,
         totalAccounts,
         todayDeposit,
@@ -72,6 +86,8 @@ export const getManagerDashboard = async (req, res) => {
       },
     });
   } catch (err) {
+    console.log("DASHBOARD ERROR =>", err);
+
     res.status(500).json({
       status: false,
       message: err.message,
