@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   ResponsiveContainer,
   PieChart,
@@ -28,37 +28,45 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
-// Simplified label - only shows percentage
-const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
-  const RADIAN = Math.PI / 180;
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.6;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  const isMobile = window.innerWidth < 480;
-  const fontSize = isMobile ? 12 : 14;
-
-  return (
-    <text
-      x={x}
-      y={y}
-      textAnchor="middle"
-      dominantBaseline="middle"
-      fill="#F8FAFC"
-      fontSize={fontSize}
-      fontWeight={700}
-    >
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
-
 export default function OverallPortfolio() {
-  const isMobile = window.innerWidth < 480;
-  const isTablet = window.innerWidth < 768;
-  
-  const innerRadius = isMobile ? 40 : isTablet ? 50 : 60;
-  const outerRadius = isMobile ? 65 : isTablet ? 80 : 95;
+  const [isMobile, setIsMobile] = useState(false);
+  const [isSmallMobile, setIsSmallMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsSmallMobile(window.innerWidth < 480);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const innerRadius = isSmallMobile ? 35 : isMobile ? 45 : 55;
+  const outerRadius = isSmallMobile ? 60 : isMobile ? 75 : 90;
+  const labelFontSize = isSmallMobile ? 10 : isMobile ? 12 : 14;
+
+  const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+    const RADIAN = Math.PI / 180;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.6;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text
+        x={x}
+        y={y}
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fill="#F8FAFC"
+        fontSize={labelFontSize}
+        fontWeight={700}
+      >
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  };
 
   return (
     <div className="portfolio-card">
@@ -82,8 +90,8 @@ export default function OverallPortfolio() {
                 label={renderCustomLabel}
               >
                 {data.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
+                  <Cell
+                    key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}
                     stroke="#23272F"
                     strokeWidth={2}
