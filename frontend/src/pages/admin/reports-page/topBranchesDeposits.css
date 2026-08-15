@@ -1,38 +1,35 @@
 .branches-card {
   width: 100%;
   max-width: 100%;
-  background: linear-gradient(180deg, #23272f 100%) !important;
+  background: #23272f !important;
   border: 1px solid rgba(59, 130, 246, 0.12);
   border-radius: 18px;
-  padding: 24px 24px 20px 20px;
+  padding: 20px 20px 16px 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   box-sizing: border-box;
-  overflow: hidden;
-  height: 100%; /* This makes it fill the container */
+  height: 100%;
   display: flex;
   flex-direction: column;
+  min-height: 300px;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .branches-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   flex-wrap: wrap;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .branches-header h3 {
   margin: 0;
   color: #f8fafc;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    sans-serif;
 }
 
 .branches-header a {
@@ -42,134 +39,147 @@
   font-weight: 600;
   white-space: nowrap;
   transition: color 0.2s ease;
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    sans-serif;
 }
 
 .branches-header a:hover {
   color: #60a5fa;
 }
 
-.branches-chart {
-  width: 100%;
-  height: 100%; /* Changed from fixed height */
-  min-height: 200px;
+.branches-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   flex: 1;
+  gap: 16px;
 }
 
-/* Make sure bars are properly aligned */
-.recharts-bar-rectangle {
-  shape-rendering: crispEdges;
+.branch-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
 }
 
-.recharts-cartesian-axis-tick text {
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    sans-serif;
+.branch-rank {
+  flex: 0 0 16px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.branch-name {
+  flex: 0 0 150px;
+  color: #e5e7eb;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.branch-bar-track {
+  flex: 1;
+  min-width: 40px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.branch-bar {
+  position: relative;
+  height: 100%;
+  width: 0%;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: width 1s cubic-bezier(0.65, 0, 0.35, 1),
+    box-shadow 1s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* diagonal shine sweep across each bar once it's grown */
+.branch-bar-shine {
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  animation: shine 2.4s ease-in-out infinite;
+  animation-delay: 1.1s;
+}
+
+@keyframes shine {
+  0% {
+    left: -60%;
+  }
+  40%,
+  100% {
+    left: 130%;
+  }
+}
+
+.branch-value {
+  flex: 0 0 90px;
+  text-align: right;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
 /* Tablet */
 @media (max-width: 992px) {
   .branches-card {
-    padding: 20px 20px 16px 16px;
+    padding: 16px 16px 12px 16px;
     border-radius: 16px;
+    min-height: 280px;
   }
-
-  .branches-header h3 {
-    font-size: 18px;
-  }
-
-  .branches-chart {
-    height: 250px;
-  }
+  .branches-header h3 { font-size: 16px; }
+  .branches-header a { font-size: 13px; }
+  .branch-name { flex-basis: 120px; font-size: 12px; }
+  .branch-value { flex-basis: 78px; font-size: 11px; }
 }
 
 /* Mobile */
 @media (max-width: 768px) {
   .branches-card {
-    padding: 16px 16px 12px 12px;
+    padding: 14px 14px 10px 14px;
     border-radius: 14px;
+    min-height: 250px;
   }
-
-  .branches-header {
-    margin-bottom: 12px;
-  }
-
-  .branches-header h3 {
-    font-size: 16px;
-  }
-
-  .branches-header a {
-    font-size: 13px;
-  }
-
-  .branches-chart {
-    height: 240px;
-    min-height: 200px;
-  }
+  .branches-header { margin-bottom: 12px; }
+  .branches-header h3 { font-size: 15px; }
+  .branches-header a { font-size: 12px; }
+  .branches-list { gap: 12px; }
+  .branch-name { flex-basis: 100px; font-size: 11px; }
+  .branch-bar-track { height: 14px; }
+  .branch-value { flex-basis: 68px; font-size: 10px; }
 }
 
 /* Small Mobile */
 @media (max-width: 480px) {
-  .branches-card {
-    padding: 14px 12px 10px 8px;
-    border-radius: 12px;
-  }
-
-  .branches-header h3 {
-    font-size: 14px;
-  }
-
-  .branches-header a {
-    font-size: 11px;
-  }
-
-  .branches-chart {
-    height: 200px;
-    min-height: 180px;
-  }
-
-  .branches-card {
-    border: 1px solid rgba(59, 130, 246, 0.08);
-  }
+  .branches-card { padding: 12px 12px 8px 12px; border-radius: 12px; min-height: 220px; }
+  .branches-header h3 { font-size: 14px; }
+  .branches-header a { font-size: 11px; }
+  .branch-name { flex-basis: 78px; font-size: 10px; }
+  .branch-bar-track { height: 12px; }
+  .branch-value { flex-basis: 58px; font-size: 9px; }
+  .branch-rank { flex-basis: 12px; font-size: 10px; }
 }
 
-/* Extra Small Devices */
+/* Extra Small */
 @media (max-width: 380px) {
-  .branches-card {
-    padding: 10px 8px 8px 6px;
-    border-radius: 10px;
-  }
-
-  .branches-header h3 {
-    font-size: 13px;
-  }
-
-  .branches-header a {
-    font-size: 10px;
-  }
-
-  .branches-chart {
-    height: 170px;
-    min-height: 150px;
-  }
-}
-
-/* Touch device optimizations */
-@media (hover: none) and (pointer: coarse) {
-  .branches-header a {
-    padding: 4px 8px;
-  }
-}
-
-/* Keep background fixed */
-@media (prefers-color-scheme: dark) {
-  .branches-card {
-    background: linear-gradient(180deg, #23272f 100%) !important;
-  }
+  .branches-card { padding: 10px 8px 6px 8px; min-height: 200px; }
+  .branch-name { flex-basis: 62px; }
+  .branch-value { flex-basis: 50px; font-size: 8px; }
 }

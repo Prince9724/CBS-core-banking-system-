@@ -1,13 +1,4 @@
-import React from "react";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Cell,
-  LabelList,
-} from "recharts";
+import React, { useEffect, useState } from "react";
 import "./topBranchesDeposits.css";
 
 const data = [
@@ -20,22 +11,17 @@ const data = [
 
 const colors = ["#36D66B", "#32CC66", "#2FC563", "#2AB85D", "#27AE58"];
 
-const ValueLabel = (props) => {
-  const { x, y, width, value } = props;
-  return (
-    <text
-      x={x + width + 10}
-      y={y + 14}
-      fill="#E5E7EB"
-      fontSize={13}
-      fontWeight={500}
-    >
-      ₹{Number(value).toFixed(2)} Cr
-    </text>
-  );
-};
-
 export default function TopBranchesDeposits() {
+  const [mounted, setMounted] = useState(false);
+  const maxValue = Math.max(...data.map((d) => d.value));
+
+  useEffect(() => {
+    // small delay so the browser paints the 0% state first,
+    // otherwise the transition can get skipped on mount
+    const timer = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(timer);
+  }, []);
+
   return (
     <div className="branches-card">
       <div className="branches-header">
@@ -43,62 +29,40 @@ export default function TopBranchesDeposits() {
         <a href="#">View All</a>
       </div>
 
-      <div className="branches-chart">
-        <ResponsiveContainer width="100%" height={260}>
-          <BarChart
-            data={data}
-            layout="vertical"
-            margin={{ top: 8, right: 90, left: 10, bottom: 8 }}
-            barCategoryGap={18}
-          >
-            <XAxis type="number" hide />
-
-            <YAxis
-              type="category"
-              dataKey="name"
-              axisLine={false}
-              tickLine={false}
-              width={170}
-              tick={({ x, y, payload, index }) => (
-                <g transform={`translate(${x},${y})`}>
-                  <text
-                    x={-12}
-                    y={0}
-                    textAnchor="end"
-                    fill="#64748B"
-                    fontSize={13}
-                    fontWeight={600}
-                    dominantBaseline="middle"
-                  >
-                    {index + 1}
-                  </text>
-
-                  <text
-                    x={0}
-                    y={0}
-                    textAnchor="start"
-                    fill="#E5E7EB"
-                    fontSize={13}
-                    dominantBaseline="middle"
-                  >
-                    {payload.value}
-                  </text>
-                </g>
-              )}
-            />
-
-            <Bar
-              dataKey="value"
-              radius={[0, 8, 8, 0]}
-              barSize={14}
-            >
-              {data.map((entry, index) => (
-                <Cell key={index} fill={colors[index]} />
-              ))}
-              <LabelList dataKey="value" content={<ValueLabel />} />
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+      <div className="branches-list">
+        {data.map((item, index) => {
+          const widthPercent = (item.value / maxValue) * 100;
+          return (
+            <div className="branch-row" key={item.name}>
+              <span className="branch-rank">{index + 1}</span>
+              <span className="branch-name" title={item.name}>
+                {item.name}
+              </span>
+              <div className="branch-bar-track">
+                <div
+                  className="branch-bar"
+                  style={{
+                    width: mounted ? `${widthPercent}%` : "0%",
+                    backgroundColor: colors[index],
+                    boxShadow: `0 0 10px ${colors[index]}66`,
+                    transitionDelay: `${index * 110}ms`,
+                  }}
+                >
+                  <span className="branch-bar-shine" />
+                </div>
+              </div>
+              <span
+                className="branch-value"
+                style={{
+                  transitionDelay: `${index * 110 + 300}ms`,
+                  opacity: mounted ? 1 : 0,
+                }}
+              >
+                ₹{item.value.toFixed(2)} Cr
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
