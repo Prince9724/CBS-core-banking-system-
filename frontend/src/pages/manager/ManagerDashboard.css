@@ -1,0 +1,854 @@
+/* =========================================================
+   MANAGER DASHBOARD
+   ========================================================= */
+
+.manager-dashboard {
+  width: 100%;
+  min-height: 100%;
+  /* padding: 24px; */
+  color: var(--text, #f8fafc);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.manager-dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.manager-dashboard-heading {
+  min-width: 0;
+}
+
+.manager-dashboard-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #8b9bb0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.manager-dashboard-heading h1 {
+  margin: 0;
+  font-size: 27px;
+  line-height: 1.25;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.manager-dashboard-heading p {
+  margin: 6px 0 0;
+  color: #8f9bab;
+  font-size: 14px;
+}
+
+.manager-dashboard-heading p strong {
+  color: #dce4ee;
+}
+
+.manager-dashboard-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.manager-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 40px;
+  padding: 0 15px;
+
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.manager-action-btn:hover {
+  transform: translateY(-1px);
+}
+
+.manager-action-primary {
+  background: #2563eb;
+  color: #fff;
+  border: 1px solid #2563eb;
+}
+
+.manager-action-primary:hover {
+  color: #fff;
+  background: #1d4ed8;
+}
+
+.manager-action-secondary {
+  background: transparent;
+  color: #cbd5e1;
+  border: 1px solid #344155;
+}
+
+.manager-action-secondary:hover {
+  color: #fff;
+  border-color: #4b5d73;
+}
+
+
+/* =========================================================
+   TOP STAT GRID
+   ========================================================= */
+
+.manager-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.manager-stat-card {
+  min-width: 0;
+  padding: 17px;
+
+  background: var(--card, #23272f);
+  border: 1px solid var(--border, #303846);
+  border-radius: 12px;
+
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.manager-stat-card:hover {
+  /* transform: translateY(-2px); */
+  border-color: #3e4c60;
+}
+
+.manager-stat-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.manager-stat-icon,
+.manager-quick-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 38px;
+  height: 38px;
+
+  flex: 0 0 38px;
+
+  border-radius: 9px;
+  font-size: 17px;
+}
+
+.manager-icon-blue {
+  color: #60a5fa;
+  background: rgba(37, 99, 235, 0.14);
+}
+
+.manager-icon-purple {
+  color: #a78bfa;
+  background: rgba(124, 58, 237, 0.14);
+}
+
+.manager-icon-green {
+  color: #4ade80;
+  background: rgba(22, 163, 74, 0.14);
+}
+
+.manager-icon-orange {
+  color: #fb923c;
+  background: rgba(234, 88, 12, 0.14);
+}
+
+.manager-icon-cyan {
+  color: #22d3ee;
+  background: rgba(8, 145, 178, 0.14);
+}
+
+.manager-stat-label {
+  margin-left: auto;
+  color: #8c99aa;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.manager-stat-value {
+  margin-top: 15px;
+
+  color: #f8fafc;
+  font-size: 25px;
+  line-height: 1;
+  font-weight: 700;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.manager-money-value {
+  font-size: 21px;
+}
+
+.manager-stat-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 13px;
+  padding-top: 11px;
+
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+
+  color: #7f8b9c;
+  font-size: 11px;
+}
+
+.manager-stat-footer i {
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   TRANSACTION STAT CARDS
+   ========================================================= */
+
+.manager-transaction-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.manager-transaction-card {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  min-width: 0;
+  padding: 16px;
+
+  border: 1px solid var(--border, #303846);
+  border-radius: 12px;
+
+  background: var(--card, #23272f);
+}
+
+.manager-transaction-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+
+  border-radius: 10px;
+
+  font-size: 18px;
+}
+
+.manager-deposit-card .manager-transaction-icon {
+  color: #4ade80;
+  background: rgba(22, 163, 74, 0.14);
+}
+
+.manager-withdraw-card .manager-transaction-icon {
+  color: #fbbf24;
+  background: rgba(217, 119, 6, 0.14);
+}
+
+.manager-transactions-card .manager-transaction-icon {
+  color: #60a5fa;
+  background: rgba(37, 99, 235, 0.14);
+}
+
+.manager-transaction-content {
+  min-width: 0;
+}
+
+.manager-transaction-content span {
+  display: block;
+  margin-bottom: 4px;
+
+  color: #8995a6;
+  font-size: 12px;
+}
+
+.manager-transaction-content strong {
+  display: block;
+
+  color: #f8fafc;
+  font-size: 20px;
+  line-height: 1.2;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.manager-transaction-content small {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  margin-top: 5px;
+
+  color: #718096;
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   PANEL
+   ========================================================= */
+
+.manager-panel {
+  overflow: hidden;
+
+  background: var(--card, #23272f);
+  border: 1px solid var(--border, #303846);
+  border-radius: 12px;
+
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.07);
+}
+
+.manager-transactions-panel {
+  margin-bottom: 14px;
+}
+
+.manager-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  padding: 17px 18px;
+
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.manager-panel-header-simple {
+  border-bottom: 0;
+  padding-bottom: 8px;
+}
+
+.manager-panel-eyebrow {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #718096;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.manager-panel-header h3 {
+  margin: 0;
+
+  color: #f1f5f9;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.manager-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 7px 11px;
+
+  border: 1px solid #354256;
+  border-radius: 7px;
+
+  color: #94bfff;
+  background: transparent;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  text-decoration: none;
+}
+
+.manager-view-btn:hover {
+  color: #bfdbfe;
+  border-color: #4b5d73;
+}
+
+.manager-heading-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  border-radius: 8px;
+
+  color: #94bfff;
+  background: rgba(37, 99, 235, 0.1);
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.manager-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.manager-table {
+  width: 100%;
+  min-width: 850px;
+
+  margin: 0;
+
+  border-collapse: collapse;
+
+  color: #cbd5e1;
+  font-size: 12px;
+}
+
+.manager-table th {
+  padding: 11px 16px;
+
+  background: rgba(15, 23, 42, 0.18);
+
+  color: #7f8b9c;
+
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+
+  font-size: 10px;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  white-space: nowrap;
+}
+
+.manager-table td {
+  padding: 13px 16px;
+
+  border-bottom: 1px solid rgba(148, 163, 184, 0.07);
+
+  vertical-align: middle;
+}
+
+.manager-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.manager-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.manager-table tbody tr:hover {
+  background: rgba(148, 163, 184, 0.035);
+}
+
+.manager-account-number {
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+.manager-customer-name {
+  color: #d8e0ea;
+}
+
+.manager-amount {
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+.manager-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 4px 7px;
+
+  border-radius: 5px;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.manager-badge-deposit {
+  color: #4ade80;
+  background: rgba(22, 163, 74, 0.12);
+}
+
+.manager-badge-withdraw {
+  color: #fbbf24;
+  background: rgba(217, 119, 6, 0.12);
+}
+
+.manager-performer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.manager-performer span {
+  color: #d5dde7;
+}
+
+.manager-performer small {
+  color: #718096;
+  font-size: 10px;
+}
+
+.manager-date {
+  color: #7f8b9c;
+  white-space: nowrap;
+  font-size: 10px;
+}
+
+.manager-empty-state {
+  padding: 40px 20px !important;
+
+  text-align: center;
+
+  color: #718096;
+}
+
+.manager-empty-state i {
+  display: block;
+  margin-bottom: 8px;
+
+  font-size: 24px;
+}
+
+
+/* =========================================================
+   BOTTOM GRID
+   ========================================================= */
+
+.manager-bottom-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+}
+
+
+/* =========================================================
+   QUICK ACTIONS
+   ========================================================= */
+
+.manager-quick-actions {
+  display: flex;
+  flex-direction: column;
+
+  padding: 0 16px 16px;
+}
+
+.manager-quick-action {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  padding: 11px 0;
+
+  color: inherit;
+  text-decoration: none;
+
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+}
+
+.manager-quick-action:last-child {
+  border-bottom: 0;
+}
+
+.manager-quick-action > div:nth-child(2) {
+  min-width: 0;
+  flex: 1;
+}
+
+.manager-quick-action strong {
+  display: block;
+
+  margin-bottom: 2px;
+
+  color: #dce4ee;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.manager-quick-action span {
+  display: block;
+
+  color: #718096;
+
+  font-size: 10px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.manager-quick-action > i {
+  color: #66758a;
+  font-size: 11px;
+}
+
+.manager-quick-action:hover > i {
+  color: #94bfff;
+}
+
+
+/* =========================================================
+   BRANCH SUMMARY
+   ========================================================= */
+
+.manager-summary-list {
+  padding: 0 16px 16px;
+}
+
+.manager-summary-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 46px;
+
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+}
+
+.manager-summary-item:last-child {
+  border-bottom: 0;
+}
+
+.manager-summary-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  color: #9aa6b5;
+  font-size: 12px;
+}
+
+.manager-summary-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 7px;
+
+  color: #8da3bf;
+  background: rgba(148, 163, 184, 0.08);
+
+  font-size: 12px;
+}
+
+.manager-summary-item > strong {
+  color: #dce4ee;
+  font-size: 12px;
+}
+
+.manager-summary-success {
+  color: #4ade80 !important;
+}
+
+.manager-summary-danger {
+  color: #f87171 !important;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+  .manager-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .manager-transaction-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+}
+
+
+@media (max-width: 992px) {
+
+  .manager-dashboard {
+    padding: 18px;
+  }
+
+  .manager-dashboard-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .manager-dashboard-actions {
+    width: 100%;
+  }
+
+  .manager-action-btn {
+    flex: 1;
+  }
+
+  .manager-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .manager-dashboard {
+    padding: 15px;
+  }
+
+  .manager-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .manager-transaction-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .manager-stat-card {
+    padding: 14px;
+  }
+
+  .manager-stat-value {
+    font-size: 22px;
+  }
+
+  .manager-money-value {
+    font-size: 18px;
+  }
+
+  .manager-transaction-card {
+    padding: 14px;
+  }
+
+}
+
+
+@media (max-width: 576px) {
+
+  .manager-dashboard {
+    padding: 12px;
+  }
+
+  .manager-dashboard-heading h1 {
+    font-size: 21px;
+  }
+
+  .manager-dashboard-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  .manager-action-btn {
+    width: 100%;
+    padding: 0 9px;
+    font-size: 11px;
+  }
+
+  .manager-stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .manager-stat-card {
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  .manager-stat-icon {
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
+    font-size: 14px;
+  }
+
+  .manager-stat-label {
+    font-size: 10px;
+  }
+
+  .manager-stat-value {
+    margin-top: 11px;
+    font-size: 20px;
+  }
+
+  .manager-money-value {
+    font-size: 16px;
+  }
+
+  .manager-stat-footer {
+    display: none;
+  }
+
+  .manager-transaction-card {
+    border-radius: 10px;
+  }
+
+  .manager-panel {
+    border-radius: 10px;
+  }
+
+  .manager-panel-header {
+    padding: 14px;
+  }
+
+  .manager-panel-header h3 {
+    font-size: 14px;
+  }
+
+  .manager-view-btn {
+    padding: 6px 8px;
+    font-size: 10px;
+  }
+
+  .manager-quick-actions,
+  .manager-summary-list {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+}

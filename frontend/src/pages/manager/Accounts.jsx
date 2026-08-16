@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "./Accounts.css";
 
 export default function Accounts() {
   const [search, setSearch] = useState("");
@@ -29,7 +30,7 @@ export default function Accounts() {
     try {
       const res = await axios.get(
         `http://localhost:5003/cbs/customer/search?search=${search}`,
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       setResults(res.data.data || []);
@@ -43,7 +44,7 @@ export default function Accounts() {
     try {
       const res = await axios.get(
         "http://localhost:5003/cbs/customer/accounts",
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       setAccounts(res.data.data || []);
@@ -70,10 +71,12 @@ export default function Accounts() {
           accountType,
           openingBalance: Number(openingBalance),
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
-      alert(`Account Created Successfully!\\nAccount No: ${res.data.data.accountNumber}`);
+      alert(
+        `Account Created Successfully!\nAccount No: ${res.data.data.accountNumber}`,
+      );
 
       // reset
       setSelectedCustomer(null);
@@ -91,103 +94,296 @@ export default function Accounts() {
   };
 
   return (
-    <div className="container py-4 text-dark">
-      <h2 className="mb-4">🏦 Account Management</h2>
+    <div className="manager-accounts-page">
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
 
-      {/* Search Box */}
-      <div className="card  p-4 mb-4">
-        <h5 className="mb-3">Search Customer</h5>
+      <div className="accounts-page-header">
+        <div>
+          <span className="accounts-eyebrow">
+            <i className="bi bi-wallet2"></i>
+            Account Management
+          </span>
 
-        <input
-          type="text"
-          className="form-control mb-3"
-          placeholder="Search by Name, Email or Aadhar"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+          <h1>Accounts</h1>
 
-        {results.length > 0 && (
-          <div className="border rounded p-2 bg-secondary-subtle">
-            {results.map((customer) => (
-              <div
-                key={customer._id}
-                className="border-bottom p-2 cursor-pointer text-dark"
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  setSelectedCustomer(customer);
-                  setResults([]);
-                  setSearch(customer.name);
-                }}
-              >
-                <strong>{customer.name}</strong>
-                <br />
-                📧 {customer.email} | 🆔 {customer.aadhar}
-              </div>
-            ))}
+          <p>Search customers, open accounts and manage branch accounts.</p>
+        </div>
+
+        <div className="accounts-count-card">
+          <div className="accounts-count-icon">
+            <i className="bi bi-bank2"></i>
           </div>
-        )}
+
+          <div>
+            <span>Branch Accounts</span>
+
+            <strong>{accounts.length}</strong>
+          </div>
+        </div>
       </div>
 
-      {/* Selected Customer */}
-      {selectedCustomer && (
-        <div className="card p-4 mb-4">
-          <h5 className="mb-3">Selected Customer</h5>
+      {/* =====================================================
+          SEARCH CUSTOMER
+      ===================================================== */}
 
-          <div className="row">
-            <div className="col-md-6">
-              <p><b>Name:</b> {selectedCustomer.name}</p>
-              <p><b>Email:</b> {selectedCustomer.email}</p>
+      <div className="accounts-panel">
+        <div className="accounts-panel-header">
+          <div className="accounts-section-title">
+            <div className="accounts-section-icon accounts-icon-blue">
+              <i className="bi bi-search"></i>
             </div>
 
-            <div className="col-md-6">
-              <p><b>Aadhar:</b> {selectedCustomer.aadhar}</p>
-              <p><b>Branch:</b> {selectedCustomer.branchname}</p>
+            <div>
+              <h3>Search Customer</h3>
+
+              <p>Find a customer by name, email or Aadhar number.</p>
             </div>
           </div>
+        </div>
 
-          <div className="row g-3 mt-2">
-            <div className="col-md-6">
-              <label className="form-label">Account Type</label>
-              <select
-                className="form-select"
-                value={accountType}
-                onChange={(e) => setAccountType(e.target.value)}
+        <div className="accounts-search-area">
+          <div className="accounts-search-wrapper">
+            <i className="bi bi-search"></i>
+
+            <input
+              type="text"
+              className="accounts-search-input"
+              placeholder="Search by Name, Email or Aadhar"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+
+            {search && (
+              <button
+                type="button"
+                className="accounts-search-clear"
+                onClick={() => {
+                  setSearch("");
+                  setResults([]);
+                }}
               >
-                <option value="Savings">Savings</option>
-                <option value="Current">Current</option>
-              </select>
+                <i className="bi bi-x"></i>
+              </button>
+            )}
+          </div>
+
+          {/* Search Results */}
+
+          {results.length > 0 && (
+            <div className="accounts-search-results">
+              <div className="accounts-results-header">
+                <span>Search Results</span>
+
+                <small>{results.length} found</small>
+              </div>
+
+              {results.map((customer) => (
+                <div
+                  key={customer._id}
+                  className="accounts-result-item"
+                  onClick={() => {
+                    setSelectedCustomer(customer);
+                    setResults([]);
+                    setSearch(customer.name);
+                  }}
+                >
+                  <div className="accounts-result-avatar">
+                    <i className="bi bi-person-fill"></i>
+                  </div>
+
+                  <div className="accounts-result-info">
+                    <strong>{customer.name}</strong>
+
+                    <div>
+                      <span>
+                        <i className="bi bi-envelope"></i>
+                        {customer.email}
+                      </span>
+
+                      <span>
+                        <i className="bi bi-person-vcard"></i>
+                        {customer.aadhar}
+                      </span>
+                    </div>
+                  </div>
+
+                  <i className="bi bi-chevron-right accounts-result-arrow"></i>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* =====================================================
+          SELECTED CUSTOMER
+      ===================================================== */}
+
+      {selectedCustomer && (
+        <div className="accounts-panel selected-customer-panel">
+          <div className="accounts-panel-header">
+            <div className="accounts-section-title">
+              <div className="accounts-section-icon accounts-icon-green">
+                <i className="bi bi-person-check-fill"></i>
+              </div>
+
+              <div>
+                <h3>Selected Customer</h3>
+
+                <p>Confirm customer details before opening the account.</p>
+              </div>
             </div>
 
-            <div className="col-md-6">
-              <label className="form-label">Opening Balance</label>
-              <input
-                type="number"
-                className="form-control"
-                value={openingBalance}
-                onChange={(e) => setOpeningBalance(e.target.value)}
-              />
+            <span className="selected-status">
+              <i className="bi bi-check-circle-fill"></i>
+              Selected
+            </span>
+          </div>
+
+          {/* Customer Information */}
+
+          <div className="selected-customer-info">
+            <div className="selected-customer-profile">
+              <div className="selected-customer-avatar">
+                <i className="bi bi-person-fill"></i>
+              </div>
+
+              <div>
+                <h4>{selectedCustomer.name}</h4>
+
+                <span>Customer</span>
+              </div>
+            </div>
+
+            <div className="selected-customer-details">
+              <div className="customer-detail-item">
+                <span>
+                  <i className="bi bi-envelope"></i>
+                  Email
+                </span>
+
+                <strong>{selectedCustomer.email}</strong>
+              </div>
+
+              <div className="customer-detail-item">
+                <span>
+                  <i className="bi bi-person-vcard"></i>
+                  Aadhar
+                </span>
+
+                <strong>{selectedCustomer.aadhar}</strong>
+              </div>
+
+              <div className="customer-detail-item">
+                <span>
+                  <i className="bi bi-building"></i>
+                  Branch
+                </span>
+
+                <strong>{selectedCustomer.branchname}</strong>
+              </div>
             </div>
           </div>
 
-          <button
-            className="btn btn-success mt-4"
-            onClick={handleOpenAccount}
-            disabled={loading}
-          >
-            {loading ? "Opening..." : "💳 Open Account"}
-          </button>
+          {/* Account Form */}
+
+          <div className="open-account-form">
+            <div className="account-form-group">
+              <label>Account Type</label>
+
+              <div className="account-input-wrapper">
+                <i className="bi bi-wallet2"></i>
+
+                <select
+                  className="account-form-input"
+                  value={accountType}
+                  onChange={(e) => setAccountType(e.target.value)}
+                >
+                  <option value="Savings">Savings</option>
+
+                  <option value="Current">Current</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="account-form-group">
+              <label>Opening Balance</label>
+
+              <div className="account-input-wrapper">
+                <i className="bi bi-currency-rupee"></i>
+
+                <input
+                  type="number"
+                  className="account-form-input"
+                  value={openingBalance}
+                  onChange={(e) => setOpeningBalance(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Open Account Button */}
+
+          <div className="open-account-footer">
+            <div className="account-security-note">
+              <i className="bi bi-shield-check"></i>
+
+              <span>Account creation is securely processed.</span>
+            </div>
+
+            <button
+              className="open-account-btn"
+              onClick={handleOpenAccount}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span
+                    className="spinner-border spinner-border-sm"
+                    role="status"
+                  ></span>
+                  Opening...
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-wallet-fill"></i>
+                  Open Account
+                </>
+              )}
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Accounts List */}
-      <div className="card  p-4">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5 className="mb-0">📋 Branch Accounts</h5>
-          <span className="badge bg-primary">{accounts.length} Accounts</span>
+      {/* =====================================================
+          ACCOUNTS LIST
+      ===================================================== */}
+
+      <div className="accounts-panel accounts-list-panel">
+        <div className="accounts-panel-header">
+          <div className="accounts-section-title">
+            <div className="accounts-section-icon accounts-icon-purple">
+              <i className="bi bi-list-ul"></i>
+            </div>
+
+            <div>
+              <h3>Branch Accounts</h3>
+
+              <p>View all accounts registered under this branch.</p>
+            </div>
+          </div>
+
+          <div className="accounts-total-badge">
+            <span>Total</span>
+
+            <strong>{accounts.length}</strong>
+          </div>
         </div>
 
-        <div className="table-responsive">
-          <table className="table table-dark table-hover align-middle">
+        <div className="accounts-table-wrapper">
+          <table className="accounts-table">
             <thead>
               <tr>
                 <th>Customer</th>
@@ -200,27 +396,76 @@ export default function Accounts() {
             <tbody>
               {accounts.length === 0 ? (
                 <tr>
-                  <td colSpan="4" className="text-center text-secondary py-4">
-                    No accounts found
+                  <td colSpan="4" className="accounts-empty">
+                    <div className="accounts-empty-icon">
+                      <i className="bi bi-wallet2"></i>
+                    </div>
+
+                    <strong>No accounts found</strong>
+
+                    <span>
+                      Accounts created for this branch will appear here.
+                    </span>
                   </td>
                 </tr>
               ) : (
                 accounts.map((acc) => (
                   <tr key={acc._id}>
-                    <td>{acc.customerId?.name || "-"}</td>
-                    <td><code>{acc.accountNumber}</code></td>
+                    {/* Customer */}
+
+                    <td>
+                      <div className="account-customer-cell">
+                        <div className="account-customer-avatar">
+                          <i className="bi bi-person-fill"></i>
+                        </div>
+
+                        <div>
+                          <strong>{acc.customerId?.name || "-"}</strong>
+
+                          <small>Account Holder</small>
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* Account Number */}
+
+                    <td>
+                      <div className="account-number-cell">
+                        <i className="bi bi-credit-card-2-front"></i>
+
+                        <code>{acc.accountNumber}</code>
+                      </div>
+                    </td>
+
+                    {/* Account Type */}
+
                     <td>
                       <span
-                        className={`badge ${
+                        className={`account-type-badge ${
                           acc.accountType === "Savings"
-                            ? "bg-success"
-                            : "bg-warning text-dark"
+                            ? "account-type-savings"
+                            : "account-type-current"
                         }`}
                       >
+                        <i
+                          className={
+                            acc.accountType === "Savings"
+                              ? "bi bi-piggy-bank"
+                              : "bi bi-building"
+                          }
+                        ></i>
+
                         {acc.accountType}
                       </span>
                     </td>
-                    <td>₹{acc.balance.toLocaleString()}</td>
+
+                    {/* Balance */}
+
+                    <td>
+                      <strong className="account-balance">
+                        ₹{acc.balance.toLocaleString()}
+                      </strong>
+                    </td>
                   </tr>
                 ))
               )}

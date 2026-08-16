@@ -1,0 +1,711 @@
+/* =========================================================
+   MANAGER REPORTS
+   ========================================================= */
+
+.manager-reports-page {
+  width: 100%;
+  min-height: 100%;
+
+  color: var(--text, #f8fafc);
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.manager-reports-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 18px;
+}
+
+.manager-reports-eyebrow {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-bottom: 6px;
+
+  color: #8190a5;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.manager-reports-header h1 {
+  margin: 0;
+
+  color: #f8fafc;
+
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.manager-reports-header p {
+  margin: 5px 0 0;
+
+  color: #7f8b9c;
+
+  font-size: 12px;
+}
+
+.manager-reports-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+}
+
+.manager-report-period {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+}
+
+.manager-report-period i {
+  position: absolute;
+  left: 10px;
+
+  color: #718096;
+
+  font-size: 10px;
+
+  pointer-events: none;
+}
+
+.manager-report-period select {
+  height: 35px;
+
+  padding: 0 10px 0 29px;
+
+  color: #cbd5e1;
+
+  background: var(--card, #23272f);
+
+  border: 1px solid var(--border, #303846);
+  border-radius: 7px;
+
+  outline: none;
+
+  font-size: 9px;
+}
+
+.manager-report-refresh {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  height: 35px;
+
+  padding: 0 11px;
+
+  color: #cbd5e1;
+
+  background: transparent;
+
+  border: 1px solid #344155;
+  border-radius: 7px;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.manager-report-refresh:hover {
+  background: rgba(148, 163, 184, 0.05);
+  border-color: #4b5d73;
+}
+
+/* =========================================================
+   STAT CARDS
+   ========================================================= */
+
+.manager-report-stats {
+  display: grid;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 10px;
+
+  margin-bottom: 12px;
+}
+
+.manager-report-stat {
+  padding: 13px;
+
+  background: var(--card, #23272f);
+
+  border: 1px solid var(--border, #303846);
+  border-radius: 9px;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.manager-report-stat:hover {
+  background: #262b34;
+  border-color: #3d4a5d;
+}
+
+.manager-report-stat-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+}
+
+.manager-report-stat-top > span {
+  color: #7f8b9c;
+
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.manager-report-stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+
+  border-radius: 7px;
+
+  font-size: 12px;
+}
+
+.report-green {
+  color: #4ade80;
+  background: rgba(22, 163, 74, 0.11);
+}
+
+.report-orange {
+  color: #fb923c;
+  background: rgba(234, 88, 12, 0.11);
+}
+
+.report-blue {
+  color: #60a5fa;
+  background: rgba(37, 99, 235, 0.11);
+}
+
+.report-purple {
+  color: #a78bfa;
+  background: rgba(124, 58, 237, 0.11);
+}
+
+.manager-report-stat > strong {
+  display: block;
+
+  margin-top: 13px;
+
+  color: #f1f5f9;
+
+  font-size: 19px;
+}
+
+.manager-report-stat-bottom {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 8px;
+}
+
+.manager-report-stat-bottom small {
+  color: #667386;
+
+  font-size: 8px;
+}
+
+.positive {
+  color: #4ade80;
+
+  font-size: 8px;
+  font-weight: 600;
+}
+
+.negative {
+  color: #f59e0b;
+
+  font-size: 8px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   CHART GRID
+   ========================================================= */
+
+.manager-chart-grid {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr);
+
+  gap: 12px;
+
+  margin-bottom: 12px;
+}
+
+/* =========================================================
+   CHART CARD
+   ========================================================= */
+
+.manager-chart-card {
+  min-width: 0;
+
+  overflow: hidden;
+
+  background: var(--card, #23272f);
+
+  border: 1px solid var(--border, #303846);
+  border-radius: 9px;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.manager-chart-card:hover {
+  background: #262b34;
+  border-color: #3d4a5d;
+}
+
+.manager-chart-large {
+  min-width: 0;
+}
+
+.manager-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  padding: 13px 15px;
+
+  border-bottom: 1px solid rgba(148, 163, 184, 0.07);
+}
+
+.manager-chart-title {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+}
+
+.manager-chart-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+
+  border-radius: 7px;
+
+  font-size: 12px;
+}
+
+.manager-chart-title h3 {
+  margin: 0 0 3px;
+
+  color: #e7edf5;
+
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.manager-chart-title p {
+  margin: 0;
+
+  color: #69778a;
+
+  font-size: 8px;
+}
+
+.manager-chart-period {
+  padding: 4px 7px;
+
+  color: #8190a5;
+
+  background: rgba(148, 163, 184, 0.06);
+
+  border: 1px solid rgba(148, 163, 184, 0.08);
+  border-radius: 5px;
+
+  font-size: 8px;
+}
+
+/* =========================================================
+   CHART CONTAINER
+   ========================================================= */
+
+.manager-chart-container {
+  width: 100%;
+  height: 285px;
+
+  padding: 12px 12px 8px;
+}
+
+.manager-small-chart {
+  width: 100%;
+  height: 165px;
+
+  padding: 8px 12px 12px;
+}
+
+.manager-teller-chart {
+  width: 100%;
+  height: 280px;
+
+  padding: 10px 14px 8px;
+}
+
+/* =========================================================
+   TOOLTIP
+   ========================================================= */
+
+.manager-chart-tooltip {
+  min-width: 125px;
+
+  padding: 8px 9px;
+
+  background: #1b2028;
+
+  border: 1px solid #364152;
+  border-radius: 6px;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+.manager-tooltip-label {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #94a3b8;
+
+  font-size: 8px;
+  font-weight: 600;
+}
+
+.manager-tooltip-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-top: 4px;
+}
+
+.manager-tooltip-row span {
+  color: #718096;
+
+  font-size: 8px;
+}
+
+.manager-tooltip-row strong {
+  color: #e2e8f0;
+
+  font-size: 8px;
+}
+
+/* =========================================================
+   PIE
+   ========================================================= */
+
+.manager-pie-container {
+  position: relative;
+
+  width: 100%;
+  height: 190px;
+}
+
+.manager-pie-center {
+  position: absolute;
+
+  top: 44%;
+  left: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+
+  transform: translate(-50%, -50%);
+
+  pointer-events: none;
+}
+
+.manager-pie-center strong {
+  color: #e2e8f0;
+
+  font-size: 17px;
+}
+
+.manager-pie-center span {
+  margin-top: 2px;
+
+  color: #69778a;
+
+  font-size: 8px;
+}
+
+.manager-pie-legend {
+  padding: 0 15px 13px;
+}
+
+.manager-pie-legend-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 7px 0;
+
+  border-bottom: 1px solid rgba(148, 163, 184, 0.06);
+
+  color: #8995a6;
+
+  font-size: 9px;
+}
+
+.manager-pie-legend-item:last-child {
+  border-bottom: 0;
+}
+
+.manager-pie-legend-item > div {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+}
+
+.manager-pie-legend-item strong {
+  color: #dce4ee;
+
+  font-size: 9px;
+}
+
+.manager-pie-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+}
+
+/* =========================================================
+   BALANCE
+   ========================================================= */
+
+.manager-balance-value {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  padding: 15px 15px 0;
+}
+
+.manager-balance-value strong {
+  color: #f1f5f9;
+
+  font-size: 22px;
+}
+
+.manager-balance-value span {
+  color: #4ade80;
+
+  font-size: 9px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   TELLER
+   ========================================================= */
+
+.manager-teller-card {
+  margin-bottom: 12px;
+}
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
+
+.manager-report-summary-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 10px;
+
+  padding-bottom: 2px;
+}
+
+.manager-summary-item {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 12px;
+
+  background: var(--card, #23272f);
+
+  border: 1px solid var(--border, #303846);
+  border-radius: 8px;
+}
+
+.manager-summary-item > i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 31px;
+  height: 31px;
+
+  color: #60a5fa;
+
+  background: rgba(37, 99, 235, 0.1);
+
+  border-radius: 7px;
+
+  font-size: 12px;
+}
+
+.manager-summary-item span {
+  display: block;
+
+  color: #6f7d90;
+
+  font-size: 8px;
+}
+
+.manager-summary-item strong {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #dce4ee;
+
+  font-size: 11px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .manager-report-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .manager-report-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .manager-reports-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .manager-chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .manager-chart-container {
+    height: 300px;
+  }
+}
+
+@media (max-width: 600px) {
+  .manager-report-stats {
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+  }
+
+  .manager-reports-actions {
+    width: 100%;
+  }
+
+  .manager-report-period {
+    flex: 1;
+  }
+
+  .manager-report-period select {
+    width: 100%;
+  }
+
+  .manager-reports-header h1 {
+    font-size: 22px;
+  }
+
+  .manager-reports-header p {
+    font-size: 10px;
+  }
+
+  .manager-report-stat {
+    padding: 11px;
+  }
+
+  .manager-report-stat > strong {
+    font-size: 17px;
+  }
+
+  .manager-chart-header {
+    padding: 11px 12px;
+  }
+
+  .manager-chart-container {
+    height: 270px;
+    padding: 8px;
+  }
+
+  .manager-teller-chart {
+    height: 260px;
+    padding: 7px;
+  }
+}
+
+@media (max-width: 430px) {
+  .manager-report-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .manager-report-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .manager-reports-actions {
+    display: grid;
+
+    grid-template-columns: 1fr auto;
+  }
+
+  .manager-chart-period {
+    display: none;
+  }
+
+  .manager-chart-title p {
+    display: none;
+  }
+}

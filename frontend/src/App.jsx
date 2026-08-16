@@ -15,16 +15,24 @@ import Transactions from "./pages/admin/Transaction-page/Transactions";
 import Reports from "./pages/admin/reports-page/Reports";
 
 // Manager
+import ManagerLayout from "./layout/ManagerLayout";
 import ManagerDashboard from "./pages/manager/ManagerDashboard";
 import ManagerCustomers from "./pages/manager/Customers";
 import Accounts from "./pages/manager/Accounts";
 import ManagerTransactions from "./pages/manager/ManagerTransactions";
+import CashVault from "./pages/manager/CashVault";
+import LoanRequests from "./pages/manager/LoanRequests";
+import BranchStaff from "./pages/manager/branch-staff-page/BranchStaff";
+import Attendance from "./pages/manager/attendance-page/Attendance";
 
 // Teller
 import TellerDashboard from "./pages/teller/TellerDashboard";
 import Deposit from "./pages/teller/Deposit";
 import Withdraw from "./pages/teller/Withdraw";
 import TransactionHistory from "./pages/teller/TransactionHistory";
+import ManagerReports from "./pages/manager/reports-page/ManagerReports";
+import ManagerSettings from "./pages/manager/setting-page/ManagerSettings";
+
 
 export default function App() {
   return (
@@ -57,37 +65,29 @@ export default function App() {
         path="/manager/:branchcode"
         element={
           <ProtectedRoutes>
+            <ManagerLayout />
+          </ProtectedRoutes>
+        }
+      >
+        <Route index element={<ManagerDashboard/>}/>
+        <Route path="customers" element={<ManagerCustomers/>}/>
+        <Route path="accounts" element={<Accounts/>}/>
+        <Route path="transactions" element={<ManagerTransactions/>}/>
+        <Route path="cash-vault" element={<CashVault/>}/>
+        <Route path="loan-request" element={<LoanRequests/>}/>
+        <Route path="branch-staff" element={<BranchStaff/>}/>
+        <Route path="attendance" element={<Attendance/>}/>
+        <Route path="reports" element={<ManagerReports/>}/>
+        <Route path="settings" element={<ManagerSettings/>}/>
+      </Route>
+      {/* <Route
+        path="/manager/:branchcode"
+        element={
+          <ProtectedRoutes>
             <ManagerDashboard />
           </ProtectedRoutes>
         }
-      />
-
-      <Route
-        path="/manager/:branchcode/customers"
-        element={
-          <ProtectedRoutes>
-            <ManagerCustomers />
-          </ProtectedRoutes>
-        }
-      />
-
-      <Route
-        path="/manager/:branchcode/accounts"
-        element={
-          <ProtectedRoutes>
-            <Accounts />
-          </ProtectedRoutes>
-        }
-      />
-
-      <Route
-        path="/manager/:branchcode/transactions"
-        element={
-          <ProtectedRoutes>
-            <ManagerTransactions />
-          </ProtectedRoutes>
-        }
-      />
+      /> */}
 
       {/* ================= TELLER ================= */}
       <Route
