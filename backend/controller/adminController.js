@@ -246,7 +246,7 @@ export const otpVerify = async (req, res) => {
 export const getUsers = async (req, res) => {
   try {
     const users = await Auth.find(
-      { role: { $in: ["Manager", "Teller"] } },
+      { role: { $in: ["manager", "teller"] } },
       "name userid email contact role branchname branchcode"
     );
 

@@ -31,10 +31,15 @@ export const addCustomer = async (req, res) => {
 // ================= GET CUSTOMERS =================
 export const getCustomer = async (req, res) => {
   try {
-    // sirf logged-in manager ki branch ke customers
-    const result = await Customer.find({
-      branchcode: req.user.branchcode,
-    }).sort({ createdAt: -1 });
+    let filter = {};
+    
+    // ✅ Agar Admin hai toh sabhi customers, warna sirf branch ke
+    if (req.user.role !== "admin") {
+      filter.branchcode = req.user.branchcode;
+    }
+
+    const result = await Customer.find(filter)
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
       status: true,
@@ -48,7 +53,6 @@ export const getCustomer = async (req, res) => {
     });
   }
 };
-
 // ================= UPDATE CUSTOMER =================
 export const updateCustomer = async (req, res) => {
   try {

@@ -11,9 +11,8 @@ import {
   BsChevronRight,
 } from "react-icons/bs";
 import { HiOutlineUsers, HiOutlineUserGroup } from "react-icons/hi2";
-import { MdOutlineVerifiedUser } from "react-icons/md";
 import { PiUserSwitchDuotone } from "react-icons/pi";
-import { RiShieldUserLine, RiUserSearchLine } from "react-icons/ri";
+import { RiShieldUserLine } from "react-icons/ri";
 import { FaRegEye } from "react-icons/fa";
 import { TbShieldCog } from "react-icons/tb";
 import "./userroles.css";
@@ -27,40 +26,89 @@ export default function UsersRoles() {
   const [showModal, setShowModal] = useState(false);
   const [editId, setEditId] = useState(null);
   const [branches, setBranches] = useState([]);
+  const [accounts, setAccounts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("All Roles");
   const [statusFilter, setStatusFilter] = useState("All Statuses");
 
-  const stats = [
+  // ✅ Stats - Real data se update hoga
+  const [stats, setStats] = useState([
     {
       label: "Total Users",
-      value: users.length,
-      sub: "Managers + Tellers",
+      value: 0,
+      sub: "Managers + Tellers + Admin",
       icon: <HiOutlineUsers />,
       accent: "ur-accent-blue",
     },
     {
       label: "Managers",
-      value: users.filter((u) => u.role === "manager").length,
+      value: 0,
       sub: "Branch managers",
       icon: <HiOutlineUserGroup />,
       accent: "ur-accent-green",
     },
     {
       label: "Tellers",
-      value: users.filter((u) => u.role === "teller").length,
+      value: 0,
       sub: "Cash operators",
       icon: <TbShieldCog />,
       accent: "ur-accent-amber",
     },
     {
       label: "Branches",
-      value: branches.length,
+      value: 0,
       sub: "Available branches",
       icon: <PiUserSwitchDuotone />,
       accent: "ur-accent-red",
     },
-  ];
+    {
+      label: "Accounts",
+      value: 0,
+      sub: "Total bank accounts",
+      icon: <PiUserSwitchDuotone />,
+      accent: "ur-accent-purple",
+    },
+  ]);
+
+  // ✅ Role Overview
+  const [roleOverview, setRoleOverview] = useState([
+    {
+      name: "Super Admin",
+      count: "0 Users",
+      icon: <RiShieldUserLine />,
+      accent: "ur-accent-blue",
+    },
+    {
+      name: "Branch Manager",
+      count: "0 Users",
+      icon: <HiOutlineUserGroup />,
+      accent: "ur-accent-blue",
+    },
+    {
+      name: "Teller",
+      count: "0 Users",
+      icon: <HiOutlineUsers />,
+      accent: "ur-accent-green",
+    },
+    {
+      name: "Customer Service",
+      count: "0 Users",
+      icon: <HiOutlineUserGroup />,
+      accent: "ur-accent-amber",
+    },
+    {
+      name: "Auditor",
+      count: "0 Users",
+      icon: <RiShieldUserLine />,
+      accent: "ur-accent-purple",
+    },
+    {
+      name: "Viewer",
+      count: "0 Users",
+      icon: <FaRegEye />,
+      accent: "ur-accent-gray",
+    },
+  ]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -70,62 +118,23 @@ export default function UsersRoles() {
     password: "",
     role: "manager",
     branchname: "",
-    branchcode: ""
+    branchcode: "",
   });
 
-  const roleOverview = [
-    {
-      name: "Super Admin",
-      count: "1 User",
-      icon: <RiShieldUserLine />,
-      accent: "ur-accent-blue",
-    },
-    {
-      name: "Branch Manager",
-      count: "4 Users",
-      icon: <HiOutlineUserGroup />,
-      accent: "ur-accent-blue",
-    },
-    {
-      name: "Teller",
-      count: "6 Users",
-      icon: <HiOutlineUsers />,
-      accent: "ur-accent-green",
-    },
-    {
-      name: "Customer Service",
-      count: "5 Users",
-      icon: <HiOutlineUserGroup />,
-      accent: "ur-accent-amber",
-    },
-    {
-      name: "Auditor",
-      count: "3 Users",
-      icon: <RiUserSearchLine />,
-      accent: "ur-accent-purple",
-    },
-    {
-      name: "Viewer",
-      count: "5 Users",
-      icon: <FaRegEye />,
-      accent: "ur-accent-gray",
-    },
-  ];
-
-  useEffect(() => {
-    fetchUsers();
-    fetchBranches();
-  }, []);
-
+  // ========== ✅ FETCH USERS ==========
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(
-        "http://localhost:5003/cbs/getusers",
-        { withCredentials: true }
-      );
+      const res = await axios.get("http://localhost:5003/cbs/getusers", {
+        withCredentials: true,
+      });
+
+      console.log("📊 Users Response:", res.data);
+
       if (res.data.status) {
-        setUsers(res.data.data || []);
+        const userData = res.data.data || [];
+        setUsers(userData);
+        updateStats(userData, branches, accounts);
       }
     } catch (err) {
       setError("Failed to fetch users");
@@ -135,29 +144,156 @@ export default function UsersRoles() {
     }
   };
 
+  // ========== ✅ FETCH BRANCHES ==========
   const fetchBranches = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:5003/cbs/getbranch",
-        { withCredentials: true }
-      );
+      const res = await axios.get("http://localhost:5003/cbs/getbranch", {
+        withCredentials: true,
+      });
+
+      console.log("🏢 Branches Response:", res.data);
+
       if (res.data.status) {
-        setBranches(res.data.data || []);
+        const branchData = res.data.data || [];
+        setBranches(branchData);
+        updateStats(users, branchData, accounts);
       }
     } catch (err) {
       console.error("Error fetching branches:", err);
     }
   };
 
-  // Filter users based on search and filters
+  // ========== ✅ FETCH ACCOUNTS ==========
+  const fetchAccounts = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5003/cbs/customer/accounts",
+        { withCredentials: true }
+      );
+
+      console.log("🏦 Accounts Response:", res.data);
+
+      if (res.data.status) {
+        const accountData = res.data.data || [];
+        setAccounts(accountData);
+        updateStats(users, branches, accountData);
+      }
+    } catch (err) {
+      console.error("Error fetching accounts:", err);
+    }
+  };
+
+  // ========== ✅ UPDATE STATS FUNCTION ==========
+  const updateStats = (userData, branchData, accountData) => {
+    const managers = userData.filter(
+      (u) => u.role?.toLowerCase() === "manager"
+    );
+    const tellers = userData.filter(
+      (u) => u.role?.toLowerCase() === "teller"
+    );
+    const admins = userData.filter((u) => u.role?.toLowerCase() === "admin");
+
+    // ✅ Update Stats
+    setStats([
+      {
+        label: "Total Users",
+        value: userData.length,
+        sub: "Managers + Tellers + Admin",
+        icon: <HiOutlineUsers />,
+        accent: "ur-accent-blue",
+      },
+      {
+        label: "Managers",
+        value: managers.length,
+        sub: "Branch managers",
+        icon: <HiOutlineUserGroup />,
+        accent: "ur-accent-green",
+      },
+      {
+        label: "Tellers",
+        value: tellers.length,
+        sub: "Cash operators",
+        icon: <TbShieldCog />,
+        accent: "ur-accent-amber",
+      },
+      {
+        label: "Branches",
+        value: branchData.length || 0,
+        sub: "Available branches",
+        icon: <PiUserSwitchDuotone />,
+        accent: "ur-accent-red",
+      },
+      {
+        label: "Accounts",
+        value: accountData.length || 0,
+        sub: "Total bank accounts",
+        icon: <PiUserSwitchDuotone />,
+        accent: "ur-accent-purple",
+      },
+    ]);
+
+    // ✅ Update Role Overview
+    setRoleOverview([
+      {
+        name: "Super Admin",
+        count: `${admins.length} Users`,
+        icon: <RiShieldUserLine />,
+        accent: "ur-accent-blue",
+      },
+      {
+        name: "Branch Manager",
+        count: `${managers.length} Users`,
+        icon: <HiOutlineUserGroup />,
+        accent: "ur-accent-blue",
+      },
+      {
+        name: "Teller",
+        count: `${tellers.length} Users`,
+        icon: <HiOutlineUsers />,
+        accent: "ur-accent-green",
+      },
+      {
+        name: "Customer Service",
+        count: "0 Users",
+        icon: <HiOutlineUserGroup />,
+        accent: "ur-accent-amber",
+      },
+      {
+        name: "Auditor",
+        count: "0 Users",
+        icon: <RiShieldUserLine />,
+        accent: "ur-accent-purple",
+      },
+      {
+        name: "Viewer",
+        count: "0 Users",
+        icon: <FaRegEye />,
+        accent: "ur-accent-gray",
+      },
+    ]);
+  };
+
+  // ========== ✅ EFFECT - Load All Data ==========
+  useEffect(() => {
+    fetchUsers();
+    fetchBranches();
+    fetchAccounts();
+  }, []);
+
+  // ========== ✅ FILTER USERS ==========
   const filteredUsers = users.filter((user) => {
     const matchesSearch =
       user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.userid?.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesRole = roleFilter === "All Roles" || user.role === roleFilter;
-    const matchesStatus = statusFilter === "All Statuses" || user.status === statusFilter;
+    const matchesRole =
+      roleFilter === "All Roles" ||
+      user.role?.toLowerCase() === roleFilter.toLowerCase();
+
+    const matchesStatus =
+      statusFilter === "All Statuses" ||
+      user.status?.toLowerCase() === statusFilter.toLowerCase();
 
     return matchesSearch && matchesRole && matchesStatus;
   });
@@ -168,31 +304,27 @@ export default function UsersRoles() {
     activePage * 6
   );
 
+  // ========== ✅ ADD/UPDATE USER ==========
   const handleAddUser = async () => {
     try {
       if (editId) {
-        // UPDATE
         await axios.put(
           "http://localhost:5003/cbs/update",
           { ...formData, _id: editId },
           { withCredentials: true }
         );
-
         alert("User updated successfully");
       } else {
-        // ADD
         await axios.post(
           "http://localhost:5003/cbs/addrole",
           formData,
           { withCredentials: true }
         );
-
         alert("User added successfully");
       }
 
       setShowModal(false);
       setEditId(null);
-
       setFormData({
         name: "",
         userid: "",
@@ -205,15 +337,34 @@ export default function UsersRoles() {
       });
 
       fetchUsers();
+      fetchBranches();
+      fetchAccounts();
     } catch (err) {
       console.log(err.response?.data);
       alert(err.response?.data?.message || "Failed to save user");
     }
   };
 
+  // ========== ✅ DELETE USER ==========
+  const handleDeleteUser = async (id, name) => {
+    if (!window.confirm(`Delete ${name}?`)) return;
+
+    try {
+      await axios.delete(`http://localhost:5003/cbs/deleteuser?id=${id}`, {
+        withCredentials: true,
+      });
+      alert("User deleted successfully");
+      fetchUsers();
+      fetchBranches();
+      fetchAccounts();
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to delete user");
+    }
+  };
+
   return (
     <div className="ur-page">
-      {/* Header */}
+      {/* ===== HEADER ===== */}
       <div className="ur-header">
         <div className="ur-crumb">
           <Link to={"/admin"} className="">
@@ -251,7 +402,7 @@ export default function UsersRoles() {
         </button>
       </div>
 
-      {/* Stats */}
+      {/* ===== STATS - REAL DATA ===== */}
       <div className="ur-stats-grid">
         {stats.map((s, i) => (
           <div className="ur-stat-card" key={i}>
@@ -265,7 +416,7 @@ export default function UsersRoles() {
         ))}
       </div>
 
-      {/* Filters */}
+      {/* ===== FILTERS ===== */}
       <div className="ur-filters">
         <div className="ur-search-box">
           <BsSearch className="ur-search-icon" />
@@ -289,8 +440,9 @@ export default function UsersRoles() {
           }}
         >
           <option>All Roles</option>
-          <option>Manager</option>
-          <option>Teller</option>
+          <option>manager</option>
+          <option>teller</option>
+          <option>admin</option>
         </select>
 
         <select
@@ -320,7 +472,7 @@ export default function UsersRoles() {
         </button>
       </div>
 
-      {/* Table */}
+      {/* ===== TABLE ===== */}
       <div className="ur-table-card">
         <div className="ur-table-wrap">
           {loading ? (
@@ -361,19 +513,28 @@ export default function UsersRoles() {
                     </td>
                     <td data-label="Email">{u.email}</td>
                     <td data-label="Role">
-                      <span className={`ur-role-badge ${u.role === "Manager"
-                        ? "ur-role-manager"
-                        : "ur-role-teller"
-                        }`}>
+                      <span
+                        className={`ur-role-badge ${
+                          u.role === "manager"
+                            ? "ur-role-manager"
+                            : u.role === "admin"
+                            ? "ur-role-admin"
+                            : "ur-role-teller"
+                        }`}
+                      >
                         {u.role}
                       </span>
                     </td>
                     <td data-label="Branch">{u.branchname || "N/A"}</td>
                     <td data-label="Status">
                       <span
-                        className={`ur-status-badge ${u.status === "Active" ? "bg-success" : "bg-secondary"}`}
+                        className={`ur-status-badge ${
+                          u.status === "Active" || !u.status
+                            ? "bg-success"
+                            : "bg-secondary"
+                        }`}
                       >
-                        {u.status}
+                        {u.status || "Active"}
                       </span>
                     </td>
                     <td data-label="Actions">
@@ -395,7 +556,7 @@ export default function UsersRoles() {
                               email: u.email,
                               contact: u.contact,
                               password: "",
-                              role: u.role,
+                              role: u.role || "manager",
                               branchname: u.branchname || "",
                               branchcode: u.branchcode || "",
                             });
@@ -407,20 +568,7 @@ export default function UsersRoles() {
                         <button
                           className="ur-action-btn ur-action-delete"
                           title="Delete"
-                          onClick={async () => {
-                            if (window.confirm(`Are you sure you want to delete ${u.name}?`)) {
-                              try {
-                                await axios.delete(
-                                  `http://localhost:5003/cbs/deleteuser?id=${u._id}`,
-                                  { withCredentials: true }
-                                );
-                                alert("User deleted successfully");
-                                fetchUsers();
-                              } catch (err) {
-                                alert(err.response?.data?.message || "Failed to delete user");
-                              }
-                            }
-                          }}
+                          onClick={() => handleDeleteUser(u._id, u.name)}
                         >
                           <BsTrash />
                         </button>
@@ -433,12 +581,12 @@ export default function UsersRoles() {
           )}
         </div>
 
-        {/* Pagination */}
+        {/* ===== PAGINATION ===== */}
         {filteredUsers.length > 6 && (
           <div className="ur-pagination">
             <span className="ur-pagination-info">
-              Showing {((activePage - 1) * 6) + 1} to{" "}
-              {Math.min(activePage * 6, filteredUsers.length)} of{" "}
+              Showing {Math.min((activePage - 1) * 6 + 1, filteredUsers.length)}{" "}
+              to {Math.min(activePage * 6, filteredUsers.length)} of{" "}
               {filteredUsers.length} users
             </span>
             <div className="ur-pagination-controls">
@@ -452,7 +600,9 @@ export default function UsersRoles() {
               {[...Array(totalPages)].map((_, i) => (
                 <button
                   key={i}
-                  className={`ur-page-btn ${activePage === i + 1 ? "ur-page-active" : ""}`}
+                  className={`ur-page-btn ${
+                    activePage === i + 1 ? "ur-page-active" : ""
+                  }`}
                   onClick={() => setActivePage(i + 1)}
                 >
                   {i + 1}
@@ -470,7 +620,7 @@ export default function UsersRoles() {
         )}
       </div>
 
-      {/* Roles Overview */}
+      {/* ===== ROLES OVERVIEW - REAL DATA ===== */}
       <div className="ur-roles-overview">
         <h5>Roles Overview</h5>
         <div className="ur-roles-grid">
@@ -486,7 +636,7 @@ export default function UsersRoles() {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* ===== MODAL ===== */}
       {showModal && (
         <div className="modal d-block" style={{ background: "rgba(0,0,0,0.5)" }}>
           <div className="modal-dialog">
@@ -506,8 +656,8 @@ export default function UsersRoles() {
 
               <div className="modal-body">
                 <input
-                  className="form-control mb-2"
-                  placeholder="Full Name"
+                  className="form-control mb-2 bg-secondary bg-opacity-25 text-white border-secondary"
+                  placeholder="Full Name *"
                   value={formData.name}
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
@@ -515,8 +665,8 @@ export default function UsersRoles() {
                 />
 
                 <input
-                  className="form-control mb-2"
-                  placeholder="User ID"
+                  className="form-control mb-2 bg-secondary bg-opacity-25 text-white border-secondary"
+                  placeholder="User ID *"
                   value={formData.userid}
                   onChange={(e) =>
                     setFormData({ ...formData, userid: e.target.value })
@@ -525,8 +675,8 @@ export default function UsersRoles() {
                 />
 
                 <input
-                  className="form-control mb-2"
-                  placeholder="Email"
+                  className="form-control mb-2 bg-secondary bg-opacity-25 text-white border-secondary"
+                  placeholder="Email *"
                   value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
@@ -534,8 +684,8 @@ export default function UsersRoles() {
                 />
 
                 <input
-                  className="form-control mb-2"
-                  placeholder="Contact"
+                  className="form-control mb-2 bg-secondary bg-opacity-25 text-white border-secondary"
+                  placeholder="Contact *"
                   value={formData.contact}
                   onChange={(e) =>
                     setFormData({ ...formData, contact: e.target.value })
@@ -544,8 +694,8 @@ export default function UsersRoles() {
 
                 <input
                   type="password"
-                  className="form-control mb-2"
-                  placeholder={editId ? "New Password (optional)" : "Password"}
+                  className="form-control mb-2 bg-secondary bg-opacity-25 text-white border-secondary"
+                  placeholder={editId ? "New Password (optional)" : "Password *"}
                   value={formData.password}
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
@@ -553,7 +703,7 @@ export default function UsersRoles() {
                 />
 
                 <select
-                  className="form-select mb-2"
+                  className="form-select mb-2 bg-secondary bg-opacity-25 text-white border-secondary"
                   value={formData.role}
                   onChange={(e) =>
                     setFormData({ ...formData, role: e.target.value })
@@ -564,7 +714,7 @@ export default function UsersRoles() {
                 </select>
 
                 <select
-                  className="form-select"
+                  className="form-select bg-secondary bg-opacity-25 text-white border-secondary"
                   value={formData.branchcode}
                   onChange={(e) => {
                     const branch = branches.find(
@@ -597,10 +747,7 @@ export default function UsersRoles() {
                   Cancel
                 </button>
 
-                <button
-                  className="btn btn-primary"
-                  onClick={handleAddUser}
-                >
+                <button className="btn btn-primary" onClick={handleAddUser}>
                   {editId ? "Update" : "Save"}
                 </button>
               </div>
