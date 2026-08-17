@@ -1,0 +1,578 @@
+/* =========================================================
+   TELLER DASHBOARD
+   ========================================================= */
+
+.teller-dashboard-page {
+  width: 100%;
+  min-height: 100%;
+
+  color: var(--text, #f8fafc);
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.teller-dashboard-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 16px;
+}
+
+.teller-eyebrow {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-bottom: 6px;
+
+  color: #8190a5;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.teller-dashboard-header h1 {
+  margin: 0;
+
+  color: #f8fafc;
+
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.teller-dashboard-header p {
+  margin: 5px 0 0;
+
+  color: #7f8b9c;
+
+  font-size: 12px;
+}
+
+.teller-header-right {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+}
+
+/* =========================================================
+   BRANCH INFO
+   ========================================================= */
+
+.teller-branch-info {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  min-height: 36px;
+
+  padding: 5px 10px;
+
+  background: var(--card, #23272f);
+
+  border: 1px solid var(--border, #303846);
+  border-radius: 7px;
+}
+
+.teller-branch-info > i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 26px;
+  height: 26px;
+
+  color: #60a5fa;
+
+  background: rgba(37, 99, 235, 0.1);
+
+  border-radius: 6px;
+
+  font-size: 10px;
+}
+
+.teller-branch-info span {
+  display: block;
+
+  margin-bottom: 1px;
+
+  color: #667386;
+
+  font-size: 7px;
+}
+
+.teller-branch-info strong {
+  display: block;
+
+  color: #dce4ee;
+
+  font-size: 9px;
+}
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+.teller-logout-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  height: 36px;
+
+  padding: 0 11px;
+
+  color: #fca5a5;
+
+  background: rgba(220, 38, 38, 0.07);
+
+  border: 1px solid rgba(220, 38, 38, 0.13);
+  border-radius: 7px;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.teller-logout-btn:hover {
+  background: rgba(220, 38, 38, 0.12);
+
+  border-color: rgba(220, 38, 38, 0.22);
+}
+
+/* =========================================================
+   WELCOME CARD
+   ========================================================= */
+
+.teller-welcome-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 17px;
+
+  padding: 14px 16px;
+
+  background: var(--card, #23272f);
+
+  border: 1px solid var(--border, #303846);
+  border-radius: 9px;
+}
+
+.teller-welcome-content {
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+}
+
+.teller-welcome-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  flex: 0 0 40px;
+
+  color: #60a5fa;
+
+  background: rgba(37, 99, 235, 0.1);
+
+  border-radius: 8px;
+
+  font-size: 15px;
+}
+
+.teller-welcome-content > div:last-child span {
+  color: #718096;
+
+  font-size: 8px;
+}
+
+.teller-welcome-content h2 {
+  margin: 3px 0;
+
+  color: #e2e8f0;
+
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.teller-welcome-content p {
+  margin: 0;
+
+  color: #657285;
+
+  font-size: 8px;
+}
+
+.teller-status {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 5px 8px;
+
+  color: #86efac;
+
+  background: rgba(22, 163, 74, 0.07);
+
+  border: 1px solid rgba(22, 163, 74, 0.13);
+  border-radius: 5px;
+
+  font-size: 8px;
+  font-weight: 600;
+}
+
+.teller-status span {
+  width: 5px;
+  height: 5px;
+
+  background: #4ade80;
+
+  border-radius: 50%;
+}
+
+/* =========================================================
+   SECTION HEADER
+   ========================================================= */
+
+.teller-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 9px;
+}
+
+.teller-section-heading h3 {
+  margin: 0 0 2px;
+
+  color: #dce4ee;
+
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.teller-section-heading p {
+  margin: 0;
+
+  color: #667386;
+
+  font-size: 8px;
+}
+
+/* =========================================================
+   ACTION GRID
+   ========================================================= */
+
+.teller-actions-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 10px;
+
+  margin-bottom: 12px;
+}
+
+.teller-action-link {
+  display: block;
+
+  color: inherit;
+
+  text-decoration: none;
+}
+
+.teller-action-card {
+  min-height: 172px;
+
+  padding: 13px;
+
+  background: var(--card, #23272f);
+
+  border: 1px solid var(--border, #303846);
+  border-radius: 9px;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.teller-action-card:hover {
+  background: #272c35;
+
+  border-color: #3d4a5d;
+}
+
+.teller-action-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.teller-action-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 36px;
+  height: 36px;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+}
+
+.teller-green {
+  color: #4ade80;
+
+  background: rgba(22, 163, 74, 0.1);
+}
+
+.teller-orange {
+  color: #fb923c;
+
+  background: rgba(234, 88, 12, 0.1);
+}
+
+.teller-blue {
+  color: #60a5fa;
+
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.teller-purple {
+  color: #a78bfa;
+
+  background: rgba(124, 58, 237, 0.1);
+}
+
+.teller-action-arrow {
+  color: #596679;
+
+  font-size: 10px;
+}
+
+.teller-action-content {
+  margin-top: 21px;
+}
+
+.teller-action-content h4 {
+  margin: 0 0 5px;
+
+  color: #e2e8f0;
+
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.teller-action-content p {
+  max-width: 230px;
+
+  margin: 0;
+
+  color: #69778a;
+
+  font-size: 8px;
+
+  line-height: 1.6;
+}
+
+.teller-action-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 17px;
+
+  padding-top: 10px;
+
+  border-top: 1px solid rgba(148, 163, 184, 0.07);
+
+  color: #8190a5;
+
+  font-size: 8px;
+  font-weight: 600;
+}
+
+.teller-action-footer i {
+  color: #596679;
+
+  font-size: 8px;
+}
+
+/* =========================================================
+   INFORMATION CARDS
+   ========================================================= */
+
+.teller-info-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  gap: 10px;
+}
+
+.teller-info-card {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  min-width: 0;
+
+  padding: 11px;
+
+  background: var(--card, #23272f);
+
+  border: 1px solid var(--border, #303846);
+  border-radius: 8px;
+}
+
+.teller-info-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 31px;
+  height: 31px;
+
+  flex: 0 0 31px;
+
+  border-radius: 7px;
+
+  font-size: 11px;
+}
+
+.teller-info-card strong {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #dce4ee;
+
+  font-size: 9px;
+}
+
+.teller-info-card span {
+  display: block;
+
+  color: #657285;
+
+  font-size: 7px;
+
+  line-height: 1.5;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .teller-dashboard-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .teller-header-right {
+    width: 100%;
+
+    justify-content: space-between;
+  }
+
+  .teller-actions-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .teller-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .teller-dashboard-header h1 {
+    font-size: 22px;
+  }
+
+  .teller-dashboard-header p {
+    font-size: 10px;
+  }
+
+  .teller-header-right {
+    align-items: stretch;
+
+    flex-direction: column;
+  }
+
+  .teller-branch-info {
+    width: 100%;
+  }
+
+  .teller-logout-btn {
+    width: 100%;
+  }
+
+  .teller-welcome-card {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .teller-status {
+    align-self: flex-start;
+  }
+
+  .teller-actions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .teller-action-card {
+    min-height: 155px;
+  }
+}
+
+@media (max-width: 400px) {
+  .teller-dashboard-header {
+    margin-bottom: 13px;
+  }
+
+  .teller-welcome-card {
+    padding: 12px;
+  }
+
+  .teller-action-card {
+    padding: 12px;
+  }
+
+  .teller-action-content {
+    margin-top: 17px;
+  }
+
+  .teller-action-footer {
+    margin-top: 14px;
+  }
+}

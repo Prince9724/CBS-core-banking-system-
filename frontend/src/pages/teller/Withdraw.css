@@ -1,0 +1,703 @@
+/* =========================================================
+   TELLER WITHDRAW PAGE
+   ========================================================= */
+
+.teller-withdraw-page {
+  width: 100%;
+  min-height: 100%;
+
+  color: var(--text, #f8fafc);
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.teller-withdraw-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 16px;
+}
+
+.teller-withdraw-eyebrow {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-bottom: 6px;
+
+  color: #8190a5;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.teller-withdraw-header h1 {
+  margin: 0;
+
+  color: #f8fafc;
+
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.teller-withdraw-header p {
+  margin: 5px 0 0;
+
+  color: #7f8b9c;
+
+  font-size: 11px;
+}
+
+/* =========================================================
+   BRANCH
+   ========================================================= */
+
+.teller-withdraw-branch {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 7px 10px;
+
+  background: var(--card, #23272f);
+
+  border: 1px solid var(--border, #303846);
+  border-radius: 7px;
+}
+
+.teller-withdraw-branch-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 29px;
+  height: 29px;
+
+  color: #60a5fa;
+
+  background: rgba(37, 99, 235, 0.1);
+
+  border-radius: 6px;
+
+  font-size: 11px;
+}
+
+.teller-withdraw-branch span {
+  display: block;
+
+  color: #667386;
+
+  font-size: 7px;
+}
+
+.teller-withdraw-branch strong {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #dce4ee;
+
+  font-size: 9px;
+}
+
+/* =========================================================
+   COMMON CARD
+   ========================================================= */
+
+.teller-withdraw-card {
+  margin-bottom: 12px;
+
+  background: var(--card, #23272f);
+
+  border: 1px solid var(--border, #303846);
+  border-radius: 9px;
+
+  overflow: hidden;
+}
+
+.teller-withdraw-section-header {
+  display: flex;
+  align-items: center;
+
+  padding: 13px 15px;
+
+  border-bottom: 1px solid rgba(148, 163, 184, 0.07);
+}
+
+.teller-withdraw-title {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+}
+
+.teller-withdraw-title-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+
+  flex: 0 0 32px;
+
+  border-radius: 7px;
+
+  font-size: 12px;
+}
+
+.teller-w-blue {
+  color: #60a5fa;
+
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.teller-w-orange {
+  color: #fb923c;
+
+  background: rgba(234, 88, 12, 0.1);
+}
+
+.teller-withdraw-title h3 {
+  margin: 0 0 3px;
+
+  color: #e2e8f0;
+
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.teller-withdraw-title p {
+  margin: 0;
+
+  color: #69778a;
+
+  font-size: 8px;
+}
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.teller-withdraw-search {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) 150px;
+
+  gap: 9px;
+
+  padding: 14px 15px;
+}
+
+.teller-withdraw-input {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+}
+
+.teller-withdraw-input > i {
+  position: absolute;
+  left: 11px;
+
+  color: #667386;
+
+  font-size: 10px;
+
+  pointer-events: none;
+}
+
+.teller-withdraw-input input {
+  width: 100%;
+  height: 38px;
+
+  padding: 0 11px 0 31px;
+
+  color: #dce4ee;
+
+  background: #1e232b;
+
+  border: 1px solid #343e4c;
+  border-radius: 7px;
+
+  outline: none;
+
+  font-size: 9px;
+}
+
+.teller-withdraw-input input::placeholder {
+  color: #596679;
+}
+
+.teller-withdraw-input input:focus {
+  border-color: #3b82f6;
+
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.07);
+}
+
+.teller-withdraw-search-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  height: 38px;
+
+  color: #fff;
+
+  background: #2563eb;
+
+  border: 0;
+  border-radius: 7px;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.teller-withdraw-search-btn:hover {
+  background: #1d4ed8;
+}
+
+/* =========================================================
+   ACCOUNT SECTION
+   ========================================================= */
+
+.teller-withdraw-account-section {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1.6fr) minmax(220px, 0.8fr);
+
+  gap: 12px;
+
+  margin-bottom: 12px;
+}
+
+/* =========================================================
+   ACCOUNT CARD
+   ========================================================= */
+
+.teller-withdraw-account-card {
+  min-width: 0;
+
+  padding: 15px;
+
+  background: var(--card, #23272f);
+
+  border: 1px solid var(--border, #303846);
+  border-radius: 9px;
+}
+
+.teller-withdraw-account-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  padding-bottom: 13px;
+
+  border-bottom: 1px solid rgba(148, 163, 184, 0.07);
+}
+
+.teller-withdraw-account-title {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+}
+
+.teller-withdraw-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 39px;
+  height: 39px;
+
+  flex: 0 0 39px;
+
+  color: #60a5fa;
+
+  background: rgba(37, 99, 235, 0.1);
+
+  border-radius: 8px;
+
+  font-size: 14px;
+}
+
+.teller-withdraw-account-title span {
+  color: #718096;
+
+  font-size: 7px;
+}
+
+.teller-withdraw-account-title h3 {
+  margin: 3px 0 0;
+
+  color: #e2e8f0;
+
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.teller-withdraw-status {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 5px 7px;
+
+  color: #86efac;
+
+  background: rgba(22, 163, 74, 0.07);
+
+  border: 1px solid rgba(22, 163, 74, 0.12);
+  border-radius: 5px;
+
+  font-size: 7px;
+  font-weight: 600;
+}
+
+.teller-withdraw-status span {
+  width: 5px;
+  height: 5px;
+
+  background: #4ade80;
+
+  border-radius: 50%;
+}
+
+/* =========================================================
+   CUSTOMER DETAILS
+   ========================================================= */
+
+.teller-withdraw-customer-info {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 10px;
+
+  padding-top: 13px;
+}
+
+.teller-withdraw-detail {
+  padding: 10px;
+
+  background: rgba(148, 163, 184, 0.035);
+
+  border: 1px solid rgba(148, 163, 184, 0.06);
+  border-radius: 7px;
+}
+
+.teller-withdraw-detail span {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  margin-bottom: 5px;
+
+  color: #667386;
+
+  font-size: 7px;
+}
+
+.teller-withdraw-detail strong {
+  display: block;
+
+  color: #cbd5e1;
+
+  font-size: 9px;
+
+  word-break: break-word;
+}
+
+/* =========================================================
+   BALANCE
+   ========================================================= */
+
+.teller-withdraw-balance-card {
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  min-height: 140px;
+
+  padding: 15px;
+
+  background: rgba(22, 163, 74, 0.055);
+
+  border: 1px solid rgba(22, 163, 74, 0.13);
+  border-radius: 9px;
+}
+
+.teller-withdraw-balance-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+
+  flex: 0 0 42px;
+
+  color: #4ade80;
+
+  background: rgba(22, 163, 74, 0.1);
+
+  border-radius: 8px;
+
+  font-size: 15px;
+}
+
+.teller-withdraw-balance-card span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #718096;
+
+  font-size: 8px;
+}
+
+.teller-withdraw-balance-card strong {
+  display: block;
+
+  color: #4ade80;
+
+  font-size: 22px;
+  font-weight: 700;
+
+  word-break: break-word;
+}
+
+.teller-withdraw-balance-card small {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #657285;
+
+  font-size: 7px;
+}
+
+/* =========================================================
+   WITHDRAW FORM
+   ========================================================= */
+
+.teller-withdraw-form-card {
+  margin-bottom: 0;
+}
+
+.teller-withdraw-amount-row {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) 160px;
+
+  gap: 9px;
+
+  padding: 14px 15px;
+}
+
+.teller-withdraw-amount-input {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+}
+
+.teller-withdraw-amount-input > span {
+  position: absolute;
+  left: 12px;
+
+  color: #fb923c;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  pointer-events: none;
+}
+
+.teller-withdraw-amount-input input {
+  width: 100%;
+  height: 42px;
+
+  padding: 0 12px 0 30px;
+
+  color: #e2e8f0;
+
+  background: #1e232b;
+
+  border: 1px solid #343e4c;
+  border-radius: 7px;
+
+  outline: none;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.teller-withdraw-amount-input input::placeholder {
+  color: #596679;
+}
+
+.teller-withdraw-amount-input input:focus {
+  border-color: #f97316;
+
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.07);
+}
+
+.teller-withdraw-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  min-height: 42px;
+
+  color: #fff;
+
+  background: #ea580c;
+
+  border: 0;
+  border-radius: 7px;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.teller-withdraw-submit-btn:hover {
+  background: #c2410c;
+}
+
+/* =========================================================
+   INFO NOTE
+   ========================================================= */
+
+.teller-withdraw-note {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  margin: 0 15px 14px;
+
+  padding: 8px 9px;
+
+  color: #657285;
+
+  background: rgba(59, 130, 246, 0.045);
+
+  border: 1px solid rgba(59, 130, 246, 0.09);
+  border-radius: 6px;
+
+  font-size: 7px;
+}
+
+.teller-withdraw-note i {
+  color: #60a5fa;
+
+  font-size: 9px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .teller-withdraw-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .teller-withdraw-branch {
+    width: 100%;
+  }
+
+  .teller-withdraw-account-section {
+    grid-template-columns: 1fr;
+  }
+
+  .teller-withdraw-balance-card {
+    min-height: 100px;
+  }
+}
+
+@media (max-width: 600px) {
+  .teller-withdraw-header h1 {
+    font-size: 22px;
+  }
+
+  .teller-withdraw-header p {
+    font-size: 10px;
+  }
+
+  .teller-withdraw-search {
+    grid-template-columns: 1fr;
+  }
+
+  .teller-withdraw-customer-info {
+    grid-template-columns: 1fr;
+  }
+
+  .teller-withdraw-amount-row {
+    grid-template-columns: 1fr;
+  }
+
+  .teller-withdraw-submit-btn {
+    min-height: 40px;
+  }
+}
+
+@media (max-width: 400px) {
+  .teller-withdraw-section-header {
+    padding: 12px;
+  }
+
+  .teller-withdraw-search {
+    padding: 12px;
+  }
+
+  .teller-withdraw-account-card {
+    padding: 12px;
+  }
+
+  .teller-withdraw-balance-card {
+    padding: 12px;
+  }
+
+  .teller-withdraw-amount-row {
+    padding: 12px;
+  }
+
+  .teller-withdraw-note {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+
+  .teller-withdraw-account-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+}

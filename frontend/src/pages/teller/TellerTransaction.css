@@ -1,0 +1,647 @@
+/* =========================================================
+   TELLER QUICK TRANSACTION
+   ========================================================= */
+
+.teller-transaction-page {
+  width: 100%;
+  min-height: 100%;
+
+  color: var(--text, #f8fafc);
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.teller-transaction-header {
+  margin-bottom: 16px;
+}
+
+.teller-transaction-eyebrow {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-bottom: 6px;
+
+  color: #8190a5;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.teller-transaction-header h1 {
+  margin: 0;
+
+  color: #f8fafc;
+
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.teller-transaction-header p {
+  margin: 5px 0 0;
+
+  color: #7f8b9c;
+
+  font-size: 11px;
+}
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.teller-transaction-card {
+  margin-bottom: 12px;
+
+  background: var(--card, #23272f);
+
+  border: 1px solid var(--border, #303846);
+  border-radius: 9px;
+
+  overflow: hidden;
+}
+
+.teller-transaction-section-header {
+  display: flex;
+  align-items: center;
+
+  padding: 13px 15px;
+
+  border-bottom: 1px solid rgba(148, 163, 184, 0.07);
+}
+
+.teller-transaction-title {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+}
+
+.teller-transaction-title-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+
+  flex: 0 0 32px;
+
+  border-radius: 7px;
+
+  font-size: 12px;
+}
+
+.teller-t-blue {
+  color: #60a5fa;
+
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.teller-t-green {
+  color: #4ade80;
+
+  background: rgba(22, 163, 74, 0.1);
+}
+
+.teller-transaction-title h3 {
+  margin: 0 0 3px;
+
+  color: #e2e8f0;
+
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.teller-transaction-title p {
+  margin: 0;
+
+  color: #69778a;
+
+  font-size: 8px;
+}
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.teller-transaction-search {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) 150px;
+
+  gap: 9px;
+
+  padding: 14px 15px;
+}
+
+.teller-transaction-input {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+}
+
+.teller-transaction-input > i {
+  position: absolute;
+  left: 11px;
+
+  color: #667386;
+
+  font-size: 10px;
+
+  pointer-events: none;
+}
+
+.teller-transaction-input input {
+  width: 100%;
+  height: 38px;
+
+  padding: 0 11px 0 31px;
+
+  color: #dce4ee;
+
+  background: #1e232b;
+
+  border: 1px solid #343e4c;
+  border-radius: 7px;
+
+  outline: none;
+
+  font-size: 9px;
+}
+
+.teller-transaction-input input::placeholder {
+  color: #596679;
+}
+
+.teller-transaction-input input:focus {
+  border-color: #3b82f6;
+
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.07);
+}
+
+.teller-transaction-search-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  height: 38px;
+
+  color: #fff;
+
+  background: #2563eb;
+
+  border: 0;
+  border-radius: 7px;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.teller-transaction-search-btn:hover {
+  background: #1d4ed8;
+}
+
+/* =========================================================
+   CUSTOMER + BALANCE GRID
+   ========================================================= */
+
+.teller-transaction-content {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1.6fr) minmax(220px, 0.8fr);
+
+  gap: 12px;
+}
+
+/* =========================================================
+   CUSTOMER CARD
+   ========================================================= */
+
+.teller-transaction-customer-card {
+  min-width: 0;
+
+  padding: 15px;
+
+  background: var(--card, #23272f);
+
+  border: 1px solid var(--border, #303846);
+  border-radius: 9px;
+}
+
+.teller-transaction-customer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  padding-bottom: 13px;
+
+  border-bottom: 1px solid rgba(148, 163, 184, 0.07);
+}
+
+.teller-transaction-customer-title {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+}
+
+.teller-transaction-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 39px;
+  height: 39px;
+
+  flex: 0 0 39px;
+
+  color: #60a5fa;
+
+  background: rgba(37, 99, 235, 0.1);
+
+  border-radius: 8px;
+
+  font-size: 14px;
+}
+
+.teller-transaction-customer-title span {
+  color: #718096;
+
+  font-size: 7px;
+}
+
+.teller-transaction-customer-title h3 {
+  margin: 3px 0 0;
+
+  color: #e2e8f0;
+
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.teller-transaction-status {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 5px 7px;
+
+  color: #86efac;
+
+  background: rgba(22, 163, 74, 0.07);
+
+  border: 1px solid rgba(22, 163, 74, 0.12);
+  border-radius: 5px;
+
+  font-size: 7px;
+  font-weight: 600;
+}
+
+.teller-transaction-status span {
+  width: 5px;
+  height: 5px;
+
+  background: #4ade80;
+
+  border-radius: 50%;
+}
+
+/* =========================================================
+   DETAILS
+   ========================================================= */
+
+.teller-transaction-details {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 10px;
+
+  padding-top: 13px;
+}
+
+.teller-transaction-detail {
+  padding: 10px;
+
+  background: rgba(148, 163, 184, 0.035);
+
+  border: 1px solid rgba(148, 163, 184, 0.06);
+  border-radius: 7px;
+}
+
+.teller-transaction-detail span {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  margin-bottom: 5px;
+
+  color: #667386;
+
+  font-size: 7px;
+}
+
+.teller-transaction-detail strong {
+  display: block;
+
+  color: #cbd5e1;
+
+  font-size: 9px;
+
+  word-break: break-word;
+}
+
+/* =========================================================
+   BALANCE
+   ========================================================= */
+
+.teller-transaction-balance {
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  min-height: 140px;
+
+  padding: 15px;
+
+  background: rgba(22, 163, 74, 0.055);
+
+  border: 1px solid rgba(22, 163, 74, 0.13);
+  border-radius: 9px;
+}
+
+.teller-transaction-balance-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+
+  flex: 0 0 42px;
+
+  color: #4ade80;
+
+  background: rgba(22, 163, 74, 0.1);
+
+  border-radius: 8px;
+
+  font-size: 15px;
+}
+
+.teller-transaction-balance span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #718096;
+
+  font-size: 8px;
+}
+
+.teller-transaction-balance strong {
+  display: block;
+
+  color: #4ade80;
+
+  font-size: 22px;
+  font-weight: 700;
+
+  word-break: break-word;
+}
+
+/* =========================================================
+   ACTION CARD
+   ========================================================= */
+
+.teller-transaction-action-card {
+  grid-column: 1 / -1;
+
+  margin-bottom: 0;
+}
+
+.teller-transaction-action-body {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) 260px;
+
+  gap: 10px;
+
+  padding: 14px 15px;
+}
+
+/* =========================================================
+   AMOUNT
+   ========================================================= */
+
+.teller-transaction-amount {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+}
+
+.teller-transaction-amount > span {
+  position: absolute;
+  left: 12px;
+
+  color: #60a5fa;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  pointer-events: none;
+}
+
+.teller-transaction-amount input {
+  width: 100%;
+  height: 42px;
+
+  padding: 0 12px 0 30px;
+
+  color: #e2e8f0;
+
+  background: #1e232b;
+
+  border: 1px solid #343e4c;
+  border-radius: 7px;
+
+  outline: none;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.teller-transaction-amount input::placeholder {
+  color: #596679;
+}
+
+.teller-transaction-amount input:focus {
+  border-color: #3b82f6;
+
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.07);
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.teller-transaction-buttons {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 8px;
+}
+
+.teller-deposit-btn,
+.teller-withdraw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  min-height: 42px;
+
+  border: 0;
+  border-radius: 7px;
+
+  color: #fff;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.teller-deposit-btn {
+  background: #16a34a;
+}
+
+.teller-deposit-btn:hover {
+  background: #15803d;
+}
+
+.teller-withdraw-btn {
+  background: #ea580c;
+}
+
+.teller-withdraw-btn:hover {
+  background: #c2410c;
+}
+
+/* =========================================================
+   SECURITY NOTE
+   ========================================================= */
+
+.teller-transaction-note {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  margin: 0 15px 14px;
+
+  padding: 8px 9px;
+
+  color: #657285;
+
+  background: rgba(148, 163, 184, 0.035);
+
+  border: 1px solid rgba(148, 163, 184, 0.06);
+  border-radius: 6px;
+
+  font-size: 7px;
+}
+
+.teller-transaction-note i {
+  color: #4ade80;
+
+  font-size: 9px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .teller-transaction-content {
+    grid-template-columns: 1fr;
+  }
+
+  .teller-transaction-balance {
+    min-height: 100px;
+  }
+
+  .teller-transaction-action-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .teller-transaction-header h1 {
+    font-size: 22px;
+  }
+
+  .teller-transaction-header p {
+    font-size: 10px;
+  }
+
+  .teller-transaction-search {
+    grid-template-columns: 1fr;
+  }
+
+  .teller-transaction-details {
+    grid-template-columns: 1fr;
+  }
+
+  .teller-transaction-buttons {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 400px) {
+  .teller-transaction-section-header {
+    padding: 12px;
+  }
+
+  .teller-transaction-search {
+    padding: 12px;
+  }
+
+  .teller-transaction-customer-card {
+    padding: 12px;
+  }
+
+  .teller-transaction-action-body {
+    padding: 12px;
+  }
+
+  .teller-transaction-note {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+
+  .teller-transaction-customer-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+}
