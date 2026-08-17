@@ -6,6 +6,8 @@ import { useState } from "react";
 import "../Admin-component/admin_sidebar.css"
 
 export default function BranchManager() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isActive, setActive] = useState("dashboard");
   const [showSidebar, setShowSidebar] = useState(false); //for sidebar hide
   return (

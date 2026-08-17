@@ -24,17 +24,14 @@ import CashVault from "./pages/manager/CashVault";
 import LoanRequests from "./pages/manager/LoanRequests";
 import BranchStaff from "./pages/manager/branch-staff-page/BranchStaff";
 import Attendance from "./pages/manager/attendance-page/Attendance";
-import TransactionHistory from "./pages/teller/TransactionHistory";
-import ManagerReports from "./pages/manager/reports-page/ManagerReports";
-import ManagerSettings from "./pages/manager/setting-page/ManagerSettings";
 
 // Teller
-import TellerLayout from "./layout/TellerLayout";
 import TellerDashboard from "./pages/teller/TellerDashboard";
 import Deposit from "./pages/teller/Deposit";
 import Withdraw from "./pages/teller/Withdraw";
-import TellerTransaction from "./pages/teller/TellerTransaction";
-
+import TransactionHistory from "./pages/teller/TransactionHistory";
+import ManagerReports from "./pages/manager/reports-page/ManagerReports";
+import ManagerSettings from "./pages/manager/setting-page/ManagerSettings";
 
 
 export default function App() {
@@ -72,16 +69,16 @@ export default function App() {
           </ProtectedRoutes>
         }
       >
-        <Route index element={<ManagerDashboard />} />
-        <Route path="customers" element={<ManagerCustomers />} />
-        <Route path="accounts" element={<Accounts />} />
-        <Route path="transactions" element={<ManagerTransactions />} />
-        <Route path="cash-vault" element={<CashVault />} />
-        <Route path="loan-request" element={<LoanRequests />} />
-        <Route path="branch-staff" element={<BranchStaff />} />
-        <Route path="attendance" element={<Attendance />} />
-        <Route path="reports" element={<ManagerReports />} />
-        <Route path="settings" element={<ManagerSettings />} />
+        <Route index element={<ManagerDashboard/>}/>
+        <Route path="customers" element={<ManagerCustomers/>}/>
+        <Route path="accounts" element={<Accounts/>}/>
+        <Route path="transactions" element={<ManagerTransactions/>}/>
+        <Route path="cash-vault" element={<CashVault/>}/>
+        <Route path="loan-request" element={<LoanRequests/>}/>
+        <Route path="branch-staff" element={<BranchStaff/>}/>
+        <Route path="attendance" element={<Attendance/>}/>
+        <Route path="reports" element={<ManagerReports/>}/>
+        <Route path="settings" element={<ManagerSettings/>}/>
       </Route>
       {/* <Route
         path="/manager/:branchcode"
@@ -94,20 +91,6 @@ export default function App() {
 
       {/* ================= TELLER ================= */}
       <Route
-        path="/teller/:branchcode"
-        element={
-          <ProtectedRoutes>
-            <TellerLayout />
-          </ProtectedRoutes>
-        }
-      >
-        <Route index element={<TellerDashboard />} />
-        <Route path="deposit" element={<Deposit/>}/>
-        <Route path="withdrawal" element={<Withdraw/>}/>
-        <Route path="transactions" element={<TellerTransaction/>}/>
-      </Route>
-      {/* ================= TELLER ================= */}
-      {/* <Route
         path="/teller/:branchcode"
         element={
           <ProtectedRoutes>
@@ -141,7 +124,7 @@ export default function App() {
             <TransactionHistory />
           </ProtectedRoutes>
         }
-      /> */}
+      />
     </Routes>
   );
 }
