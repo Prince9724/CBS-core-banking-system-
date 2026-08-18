@@ -72,12 +72,12 @@ export default function UsersRoles() {
 
   // ✅ Role Overview
   const [roleOverview, setRoleOverview] = useState([
-    {
-      name: "Super Admin",
-      count: "0 Users",
-      icon: <RiShieldUserLine />,
-      accent: "ur-accent-blue",
-    },
+    // {
+    //   name: "Super Admin",
+    //   count: " Users",
+    //   icon: <RiShieldUserLine />,
+    //   accent: "ur-accent-blue",
+    // },
     {
       name: "Branch Manager",
       count: "0 Users",
@@ -121,65 +121,39 @@ export default function UsersRoles() {
     branchcode: "",
   });
 
-  // ========== ✅ FETCH USERS ==========
-  const fetchUsers = async () => {
+  // ========== ✅ FETCH ALL DATA - Ek Saath ==========
+  const fetchAllData = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:5003/cbs/getusers", {
-        withCredentials: true,
-      });
+      setError("");
 
-      console.log("📊 Users Response:", res.data);
+      // ✅ Promise.all - Ek saath teeno API calls
+      const [usersRes, branchesRes, accountsRes] = await Promise.all([
+        axios.get("http://localhost:5003/cbs/getusers", { withCredentials: true }),
+        axios.get("http://localhost:5003/cbs/getbranch", { withCredentials: true }),
+        axios.get("http://localhost:5003/cbs/customer/accounts", { withCredentials: true }),
+      ]);
 
-      if (res.data.status) {
-        const userData = res.data.data || [];
-        setUsers(userData);
-        updateStats(userData, branches, accounts);
-      }
+      console.log("📊 Users Response:", usersRes.data);
+      console.log("🏢 Branches Response:", branchesRes.data);
+      console.log("🏦 Accounts Response:", accountsRes.data);
+
+      const userData = usersRes.data?.data || [];
+      const branchData = branchesRes.data?.data || [];
+      const accountData = accountsRes.data?.data || [];
+
+      setUsers(userData);
+      setBranches(branchData);
+      setAccounts(accountData);
+
+      // ✅ Ek baar stats update karo (sab data milne ke baad)
+      updateStats(userData, branchData, accountData);
+
     } catch (err) {
-      setError("Failed to fetch users");
-      console.error("Error fetching users:", err);
+      setError("Failed to fetch data");
+      console.error("Error fetching data:", err);
     } finally {
       setLoading(false);
-    }
-  };
-
-  // ========== ✅ FETCH BRANCHES ==========
-  const fetchBranches = async () => {
-    try {
-      const res = await axios.get("http://localhost:5003/cbs/getbranch", {
-        withCredentials: true,
-      });
-
-      console.log("🏢 Branches Response:", res.data);
-
-      if (res.data.status) {
-        const branchData = res.data.data || [];
-        setBranches(branchData);
-        updateStats(users, branchData, accounts);
-      }
-    } catch (err) {
-      console.error("Error fetching branches:", err);
-    }
-  };
-
-  // ========== ✅ FETCH ACCOUNTS ==========
-  const fetchAccounts = async () => {
-    try {
-      const res = await axios.get(
-        "http://localhost:5003/cbs/customer/accounts",
-        { withCredentials: true }
-      );
-
-      console.log("🏦 Accounts Response:", res.data);
-
-      if (res.data.status) {
-        const accountData = res.data.data || [];
-        setAccounts(accountData);
-        updateStats(users, branches, accountData);
-      }
-    } catch (err) {
-      console.error("Error fetching accounts:", err);
     }
   };
 
@@ -193,7 +167,6 @@ export default function UsersRoles() {
     );
     const admins = userData.filter((u) => u.role?.toLowerCase() === "admin");
 
-    // ✅ Update Stats
     setStats([
       {
         label: "Total Users",
@@ -232,7 +205,6 @@ export default function UsersRoles() {
       },
     ]);
 
-    // ✅ Update Role Overview
     setRoleOverview([
       {
         name: "Super Admin",
@@ -273,11 +245,9 @@ export default function UsersRoles() {
     ]);
   };
 
-  // ========== ✅ EFFECT - Load All Data ==========
+  // ========== ✅ EFFECT ==========
   useEffect(() => {
-    fetchUsers();
-    fetchBranches();
-    fetchAccounts();
+    fetchAllData();
   }, []);
 
   // ========== ✅ FILTER USERS ==========
@@ -336,9 +306,7 @@ export default function UsersRoles() {
         branchcode: "",
       });
 
-      fetchUsers();
-      fetchBranches();
-      fetchAccounts();
+      fetchAllData(); // ✅ Refresh all data
     } catch (err) {
       console.log(err.response?.data);
       alert(err.response?.data?.message || "Failed to save user");
@@ -354,9 +322,7 @@ export default function UsersRoles() {
         withCredentials: true,
       });
       alert("User deleted successfully");
-      fetchUsers();
-      fetchBranches();
-      fetchAccounts();
+      fetchAllData(); // ✅ Refresh all data
     } catch (err) {
       alert(err.response?.data?.message || "Failed to delete user");
     }
@@ -757,4 +723,4 @@ export default function UsersRoles() {
       )}
     </div>
   );
-}         
+}

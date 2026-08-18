@@ -167,3 +167,31 @@ export const getTodayTransactions = async (req, res) => {
     });
   }
 };
+// ✅ Get Single Transaction by ID
+export const getTransactionById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // ✅ Find transaction by ID
+    const transaction = await Transaction.findById(id);
+
+    if (!transaction) {
+      return res.status(404).json({
+        status: false,
+        message: "Transaction not found",
+      });
+    }
+
+    res.status(200).json({
+      status: true,
+      data: transaction,
+    });
+
+  } catch (err) {
+    console.error("❌ Error fetching transaction:", err);
+    res.status(500).json({
+      status: false,
+      message: err.message,
+    });
+  }
+};

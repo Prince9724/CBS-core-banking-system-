@@ -32,6 +32,7 @@ import Withdraw from "./pages/teller/Withdraw";
 import TransactionHistory from "./pages/teller/TransactionHistory";
 import ManagerReports from "./pages/manager/reports-page/ManagerReports";
 import ManagerSettings from "./pages/manager/setting-page/ManagerSettings";
+import TransactionDetail from "./pages/admin/Transaction-page/TransactionDetail";
 
 
 export default function App() {
@@ -58,6 +59,8 @@ export default function App() {
         <Route path="accounts" element={<AdminAccounts />} />
         <Route path="transaction" element={<Transactions />} />
         <Route path="reports" element={<Reports />} />
+        <Route path="/admin/transaction/:id" element={<TransactionDetail />} />
+        
       </Route>
 
       {/* ================= MANAGER ================= */}

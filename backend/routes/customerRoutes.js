@@ -3,7 +3,7 @@ import { addCustomer, deleteCustomer, searchCustomers, getCustomer, updateCustom
 import { authMiddleware } from "../middleware/auth.js";
 import { managerOnly } from "../middleware/managerOnly.js";
 import { getAccounts, openAccount, searchAccount } from "../controller/accountController.js";
-import { deposite, getHistory, withdraw } from "../controller/transactionController.js";
+import { deposite, getHistory, getTransactionById, withdraw } from "../controller/transactionController.js";
 // import { getManagerDashboard } from "../controller/managerController.js";
 import { getManagerDashboard } from "../controller/dashboardController.js";
 import { getTodayTransactions } from "../controller/transactionController.js";
@@ -45,5 +45,10 @@ CustomerRoute.get(
   "/today-transactions",
   authMiddleware,
   getTodayTransactions
+);
+CustomerRoute.get(
+  "/transaction/:id",
+  authMiddleware,
+  getTransactionById
 );
 export default CustomerRoute;
