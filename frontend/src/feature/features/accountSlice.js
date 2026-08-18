@@ -9,8 +9,7 @@ export const fetchAccounts = createAsyncThunk(
         "http://localhost:5003/cbs/customer/accounts",
         { withCredentials: true }
       );
-
-      return res.data.data;
+      return res.data.data || [];
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data?.message);
     }
@@ -22,16 +21,22 @@ const accountSlice = createSlice({
   initialState: {
     accounts: [],
     loading: false,
+    error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchAccounts.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchAccounts.fulfilled, (state, action) => {
         state.loading = false;
-        state.accounts = action.payload;
+        state.accounts = action.payload || [];
+      })
+      .addCase(fetchAccounts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

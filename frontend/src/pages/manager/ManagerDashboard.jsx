@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";  // ✅ FIX: extra } remove kiya
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../App/features/authSlice";
+import { logout } from "../../feature/features/authSlice";
 import { useNavigate } from "react-router-dom";
 import "./ManagerDashboard.css";
 

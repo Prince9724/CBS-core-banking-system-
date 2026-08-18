@@ -33,7 +33,7 @@ export const openAccount = async (req, res) => {
 
     // Create account
     const account = await Account.create({
-      customerId: customer._id, 
+      customerId: customer._id,
       customerName: customer.name,
       accountNumber,
       accountType,
@@ -60,15 +60,25 @@ export const openAccount = async (req, res) => {
 };
 export const getAccounts = async (req, res) => {
   try {
-    const result = await Account.find({
-      branchcode: req.user.branchcode,
-    }).populate("customerId", "name phone email");
+    let query = {};
+
+    // Manager/Teller ko sirf apni branch ke accounts
+    if (req.user.role === "Manager" || req.user.role === "Teller") {
+      query.branchcode = req.user.branchcode;
+    }
+
+    const result = await Account.find(query)
+      .populate("customerId", "name phone email")
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
       status: true,
+      count: result.length,
       data: result,
     });
   } catch (err) {
+    console.error("Get Accounts Error:", err);
+
     res.status(500).json({
       status: false,
       message: err.message,

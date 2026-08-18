@@ -140,7 +140,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../App/features/authSlice";
+import { loginUser } from "../feature/features/authSlice";
 
 export default function Login() {
   const navigate = useNavigate();

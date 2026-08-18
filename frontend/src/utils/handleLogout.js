@@ -1,6 +1,5 @@
 import axios from "axios";
-import { logout } from "../App/features/authSlice";
-
+import { logout } from "../feature/features/authSlice";
 export const handleLogout = async (dispatch, navigate) => {
   try {
     await axios.post(

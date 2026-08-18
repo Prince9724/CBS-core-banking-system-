@@ -1,93 +1,430 @@
-// import React from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import {fetchAccounts} from "../../../feature/features/accountSlice.js"
 import {
   BsWallet2,
   BsBank,
   BsCreditCard2Front,
-  BsFileEarmarkText
+  BsFileEarmarkText,
+  BsSearch,
+  BsFilter,
+  BsChevronLeft,
+  BsChevronRight,
+  BsEye,
+  BsPencil,
+  BsTrash,
 } from "react-icons/bs";
+import axios from "axios";
 import "./accounts.css";
-import CustomerTable from "../customers-page/CustomerTable";
 
 export default function AdminAccounts() {
+  const dispatch = useDispatch();
+  const { accounts, loading: sliceLoading } = useSelector(
+    (state) => state.account
+  );
+
+  const [branches, setBranches] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const [typeFilter, setTypeFilter] = useState("All");
+  const [branchFilter, setBranchFilter] = useState("All");
+
+  const fetchBranches = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5003/cbs/getbranch",
+        { withCredentials: true }
+      );
+      if (res.data.status) {
+        setBranches(res.data.data || []);
+      }
+    } catch (err) {
+      console.error("Error fetching branches:", err);
+    }
+  };
+
+  useEffect(() => {
+    dispatch(fetchAccounts());
+    fetchBranches();
+  }, []);
+
+  // ========== ✅ REAL STATS ==========
+  const totalAccounts = accounts.length;
+
+  const savingsAccounts = accounts.filter(
+    (a) => a.accountType?.toLowerCase() === "savings"
+  );
+
+  const currentAccounts = accounts.filter(
+    (a) => a.accountType?.toLowerCase() === "current"
+  );
+
+  const loanAccounts = accounts.filter(
+    (a) => a.accountType?.toLowerCase() === "loan" ||
+           a.accountType?.toLowerCase() === "fd" ||
+           a.accountType?.toLowerCase() === "fixed deposit"
+  );
+
+  const branchWiseAccounts = branches.map((branch) => ({
+    name: branch.branchname,
+    code: branch.branchcode,
+    count: accounts.filter((a) => a.branchcode === branch.branchcode).length,
+    balance: accounts
+      .filter((a) => a.branchcode === branch.branchcode)
+      .reduce((sum, acc) => sum + (acc.balance || 0), 0),
+  }));
+
+  const totalBranchBalance = accounts.reduce(
+    (sum, acc) => sum + (acc.balance || 0),
+    0
+  );
+
   const stats = [
     {
       title: "Total Accounts",
-      value: "25,846",
-      growth: "+8.5% from last month",
+      value: totalAccounts,
+      growth: `${branches.length} branches`,
       icon: <BsWallet2 />,
       bg: "#1D4ED8",
-      color: "#3B82F6"
+      color: "#3B82F6",
     },
     {
       title: "Savings Accounts",
-      value: "14,250",
-      growth: "+12.3% from last month",
+      value: savingsAccounts.length,
+      growth: "Savings account holders",
       icon: <BsBank />,
       bg: "#166534",
-      color: "#22C55E"
+      color: "#22C55E",
     },
     {
       title: "Current Accounts",
-      value: "8,540",
-      growth: "+6.7% from last month",
+      value: currentAccounts.length,
+      growth: "Current account holders",
       icon: <BsCreditCard2Front />,
       bg: "#B45309",
-      color: "#F59E0B"
+      color: "#F59E0B",
     },
     {
-      title: "Loan Accounts",
-      value: "3,056",
-      growth: "+4.2% from last month",
+      title: "Loan / FD Accounts",
+      value: loanAccounts.length,
+      growth: "Loan & FD holders",
       icon: <BsFileEarmarkText />,
       bg: "#6D28D9",
-      color: "#8B5CF6"
-    }
+      color: "#8B5CF6",
+    },
   ];
+
+  const filteredAccounts = accounts.filter((account) => {
+    const search = searchTerm.toLowerCase();
+    const accNum = account.accountNumber?.toString().toLowerCase() || "";
+    const custName = account.customerId?.name?.toString().toLowerCase() || "";
+    const accType = account.accountType?.toString().toLowerCase() || "";
+
+    const matchesSearch =
+      accNum.includes(search) ||
+      custName.includes(search) ||
+      accType.includes(search);
+
+    const matchesType =
+      typeFilter === "All" ||
+      account.accountType?.toLowerCase() === typeFilter.toLowerCase();
+
+    const matchesBranch =
+      branchFilter === "All" || account.branchcode === branchFilter;
+
+    return matchesSearch && matchesType && matchesBranch;
+  });
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentAccountsList = filteredAccounts.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredAccounts.length / itemsPerPage);
 
   return (
     <div className="accounts-page">
-      <div className="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
-        <div>
-          <h2 className="accounts-title">Accounts</h2>
-          <p className="accounts-breadcrumb">
-            Dashboard <span>›</span> Accounts
-          </p>
-        </div>
-
-        {/* <button className="btn create-account-btn">
-          Export in excel
-        </button> */}
+      <div className="d-flex gap-2 justify-content-end" style={{ fontSize: "14px" }}>
+        <Link className="text-primary" to={"/admin"}>
+          Dashboard
+        </Link>
+        <span>›</span>
+        <span>Accounts</span>
       </div>
 
-      <div className="row g-4">
-        {stats.map((item, index) => (
-          <div className="col-xl-3 col-lg-6 col-md-6 col-12" key={index}>
-            <div className="account-stat-card">
-              <div
-                className="account-icon"
-                style={{
-                  background: `${item.color}20`,
-                  color: item.color
-                }}
-              >
-                {item.icon}
-              </div>
+      <div className="d-flex justify-content-between mt-3">
+        <div className="d-flex flex-column">
+          <h4>Accounts</h4>
+          <p className="gray-text">Manage all bank accounts</p>
+        </div>
+        <div>
+          <Link to={"/admin/accounts/open"} className="btn btn-primary">
+            <i className="bi bi-plus"></i> Open Account
+          </Link>
+        </div>
+      </div>
 
-              <div className="account-content">
-                <p className="account-label">{item.title}</p>
-                <h3 className="account-value">{item.value}</h3>
-
-                <div className="account-growth">
-                  <span className="growth-up">▲</span>
-                  <span>{item.growth}</span>
-                </div>
+      <div className="accounts-stats-grid mt-4">
+        {stats.map((item, i) => (
+          <div className="account-stat-card" key={i}>
+            <div
+              className="account-stat-icon"
+              style={{
+                background: `${item.color}20`,
+                color: item.color,
+              }}
+            >
+              {item.icon}
+            </div>
+            <div className="account-stat-info">
+              <p className="account-stat-label">{item.title}</p>
+              <h2 className="account-stat-value">{item.value}</h2>
+              <div className="account-stat-sub">
+                <span className="sub-text">{item.growth}</span>
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      <div className="row mt-4 g-3">
+        <div className="col-12">
+          <div className="branch-wise-card">
+            <h6 className="mb-3">
+              <i className="bi bi-building me-2"></i>
+              Branch-wise Accounts
+            </h6>
+            <div className="d-flex flex-wrap gap-3">
+              <span className="branch-count-badge bg-primary">
+                All: {totalAccounts} accounts
+              </span>
+              {branchWiseAccounts.map((branch, i) => (
+                <span key={i} className="branch-count-badge bg-secondary">
+                  {branch.name}: {branch.count} accounts
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="row mt-3 g-3">
+        <div className="col-12">
+          <div className="branch-wise-card bg-success bg-opacity-10 border-success">
+            <h6 className="mb-0">
+              <i className="bi bi-cash-stack me-2 text-success"></i>
+              Total Bank Balance: <strong>₹{totalBranchBalance.toLocaleString()}</strong>
+            </h6>
+          </div>
+        </div>
+      </div>
+
+      <div className="d-flex flex-wrap gap-3 mt-4">
+        <div className="search-box">
+          <BsSearch className="search-icon" />
+          <input
+            type="text"
+            placeholder="Search by account number, customer name or type..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="form-control form-control-sm"
+            style={{ width: "280px" }}
+          />
+        </div>
+
+        <select
+          className="form-select form-select-sm"
+          style={{ width: "150px" }}
+          value={typeFilter}
+          onChange={(e) => {
+            setTypeFilter(e.target.value);
+            setCurrentPage(1);
+          }}
+        >
+          <option value="All">All Types</option>
+          <option value="Savings">Savings</option>
+          <option value="Current">Current</option>
+          <option value="FD">FD / Loan</option>
+        </select>
+
+        <select
+          className="form-select form-select-sm"
+          style={{ width: "180px" }}
+          value={branchFilter}
+          onChange={(e) => {
+            setBranchFilter(e.target.value);
+            setCurrentPage(1);
+          }}
+        >
+          <option value="All">All Branches</option>
+          {branches.map((branch) => (
+            <option key={branch._id} value={branch.branchcode}>
+              {branch.branchname} ({branch.branchcode})
+            </option>
+          ))}
+        </select>
+
+        <button
+          className="btn btn-sm btn-outline-secondary"
+          onClick={() => {
+            setSearchTerm("");
+            setTypeFilter("All");
+            setBranchFilter("All");
+            setCurrentPage(1);
+          }}
+        >
+          <BsFilter className="me-1" /> Reset
+        </button>
+      </div>
+
       <div className="mt-4">
-        <CustomerTable/>
+        <div className="table-responsive">
+          <table className="table table-hover">
+            <thead className="table-dark">
+              <tr>
+                <th>S.No</th>
+                <th>Account Number</th>
+                <th>Customer Name</th>
+                <th>Account Type</th>
+                <th>Balance</th>
+                <th>Branch</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sliceLoading || loading ? (
+                <tr>
+                  <td colSpan="8" className="text-center py-4">
+                    <div className="spinner-border text-primary" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : currentAccountsList.length === 0 ? (
+                <tr>
+                  <td colSpan="8" className="text-center py-4 text-muted">
+                    <i className="bi bi-inbox fs-2 d-block mb-2"></i>
+                    No accounts found
+                  </td>
+                </tr>
+              ) : (
+                currentAccountsList.map((account, index) => (
+                  <tr key={account._id}>
+                    <td>{indexOfFirstItem + index + 1}</td>
+                    <td>
+                      <code className="account-number">
+                        {account.accountNumber}
+                      </code>
+                    </td>
+                    <td>
+                      <strong>{account.customerId?.name || account.customerName || "N/A"}</strong>
+                    </td>
+                    <td>
+                      <span
+                        className={`badge ${
+                          account.accountType?.toLowerCase() === "savings"
+                            ? "bg-success"
+                            : account.accountType?.toLowerCase() === "current"
+                            ? "bg-warning text-dark"
+                            : "bg-info"
+                        }`}
+                      >
+                        {account.accountType || "N/A"}
+                      </span>
+                    </td>
+                    <td>
+                      <strong>₹{account.balance?.toLocaleString() || 0}</strong>
+                    </td>
+                    <td>
+                      <span className="badge bg-secondary">
+                        {account.branchname || account.branchcode || "N/A"}
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        className={`badge ${
+                          account.status === "inactive" || account.status === "Inactive"
+                            ? "bg-danger"
+                            : "bg-success"
+                        }`}
+                      >
+                        {account.status || "Active"}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="d-flex gap-2">
+                        <button className="btn btn-sm btn-outline-primary">
+                          <BsEye />
+                        </button>
+                        <button className="btn btn-sm btn-outline-warning">
+                          <BsPencil />
+                        </button>
+                        <button className="btn btn-sm btn-outline-danger">
+                          <BsTrash />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {filteredAccounts.length > itemsPerPage && (
+          <div className="d-flex justify-content-between align-items-center mt-3">
+            <span className="text-muted small">
+              Showing {indexOfFirstItem + 1} to{" "}
+              {Math.min(indexOfLastItem, filteredAccounts.length)} of{" "}
+              {filteredAccounts.length} accounts
+            </span>
+            <nav>
+              <ul className="pagination pagination-sm mb-0">
+                <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                  <button
+                    className="page-link"
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                  >
+                    <BsChevronLeft /> Previous
+                  </button>
+                </li>
+                {[...Array(totalPages)].map((_, i) => (
+                  <li
+                    key={i}
+                    className={`page-item ${
+                      currentPage === i + 1 ? "active" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => setCurrentPage(i + 1)}
+                    >
+                      {i + 1}
+                    </button>
+                  </li>
+                ))}
+                <li
+                  className={`page-item ${
+                    currentPage === totalPages ? "disabled" : ""
+                  }`}
+                >
+                  <button
+                    className="page-link"
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                  >
+                    Next <BsChevronRight />
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        )}
       </div>
     </div>
   );

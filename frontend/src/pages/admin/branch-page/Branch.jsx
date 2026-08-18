@@ -7,7 +7,7 @@ import {
   deleteBranch,
   addBranch,
   updateBranch,
-} from "../../../App/features/branchSlice";
+} from "../../../feature/features/branchSlice";
 import "./branch.css";
 
 export default function Branch() {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchHistory } from "../../App/features/transactionSlice";
+import { fetchHistory } from "../../feature/features/transactionSlice";
 import "./TransactionHistory.css";
 
 export default function TransactionHistory() {

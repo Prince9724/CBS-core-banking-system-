@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCustomers, addCustomer } from "../../App/features/customerSlice";
+import { fetchCustomers, addCustomer } from "../../feature/features/customerSlice";
 import "./ManagerCustomers.css";
 
 export default function ManagerCustomers() {

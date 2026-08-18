@@ -35,8 +35,7 @@ CustomerRoute.get(
 );
 
 CustomerRoute.post("/openaccount", authMiddleware, openAccount)
-CustomerRoute.get(
-  "/accounts", authMiddleware, getAccounts);
+CustomerRoute.get("/accounts", authMiddleware, getAccounts);
 CustomerRoute.post("/deposit", authMiddleware, deposite);
 CustomerRoute.post("/withdraw", authMiddleware, withdraw);
 CustomerRoute.get("/history/:accountNumber", authMiddleware, getHistory);
