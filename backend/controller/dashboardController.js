@@ -5,92 +5,92 @@ import Auth from "../model/authModel.js";
 
 export const getManagerDashboard = async (req, res) => {
   try {
-    // params se lo
     const branchcode = req.params.branchcode;
 
-    // manager ka data database se lo
-    const manager = await Auth.findById(req.user.id);
+    console.log("📊 Dashboard Request for branch:", branchcode);
 
-    const branchname = manager?.branchname;
+    // ===== TOTAL CUSTOMERS =====
+    const totalCustomers = await Customer.countDocuments({ branchcode });
+    console.log("👥 Total Customers:", totalCustomers);
 
-    console.log("REQ.USER =>", req.user);
-    console.log("BRANCHCODE =>", branchcode);
+    // ===== TOTAL ACCOUNTS =====
+    const totalAccounts = await Account.countDocuments({ branchcode });
+    console.log("🏦 Total Accounts:", totalAccounts);
 
-    // Total customers
-    const totalCustomers = await Customer.countDocuments({
-      branchcode,
-    });
+    // ===== BRANCH BALANCE =====
+    const balanceData = await Account.aggregate([
+      { $match: { branchcode } },
+      { $group: { _id: null, totalBalance: { $sum: "$balance" } } }
+    ]);
+    const totalBranchBalance = balanceData[0]?.totalBalance || 0;
+    console.log("💰 Total Balance:", totalBranchBalance);
 
-    // Accounts
-    const accounts = await Account.find({ branchcode });
-
-    const totalAccounts = accounts.length;
-
-    const accountNumbers = accounts.map((a) => a.accountNumber);
-
-    // Today range
+    // ===== TODAY TRANSACTIONS =====
     const start = new Date();
     start.setHours(0, 0, 0, 0);
-
     const end = new Date();
     end.setHours(23, 59, 59, 999);
 
-    // Transactions
+    // ✅ Get all account numbers for this branch
+    const accounts = await Account.find({ branchcode });
+    const accountNumbers = accounts.map(acc => acc.accountNumber);
+
+    // ✅ Today transactions
     const todayTransactions = await Transaction.find({
       accountNumber: { $in: accountNumbers },
-      createdAt: { $gte: start, $lte: end },
+      createdAt: { $gte: start, $lte: end }
     }).sort({ createdAt: -1 });
 
-    // Deposit
+    console.log("📝 Today Transactions Count:", todayTransactions.length);
+
+    // ✅ Calculate Deposit and Withdraw
     const todayDeposit = todayTransactions
-      .filter((t) => t.type === "Deposit")
-      .reduce((sum, t) => sum + Number(t.amount), 0);
+      .filter(t => t.type === "Deposit")
+      .reduce((sum, t) => sum + (t.amount || 0), 0);
 
-    // Withdraw
     const todayWithdraw = todayTransactions
-      .filter((t) => t.type === "Withdraw")
-      .reduce((sum, t) => sum + Number(t.amount), 0);
+      .filter(t => t.type === "Withdraw")
+      .reduce((sum, t) => sum + (t.amount || 0), 0);
 
-    // Balance
-    const branchBalance = accounts.reduce(
-      (sum, a) => sum + Number(a.balance || 0),
-      0
-    );
+    console.log("💰 Today Deposit:", todayDeposit);
+    console.log("💰 Today Withdraw:", todayWithdraw);
 
-    // ✅ Teller count
+    // ===== TELLERS =====
     const tellers = await Auth.countDocuments({
-      role: "teller",
       branchcode,
+      role: { $in: ["Teller", "teller"] }
     });
+    console.log("👤 Tellers:", tellers);
 
-    // Recent transactions
+    // ===== RECENT TRANSACTIONS (Last 10) =====
     const recentTransactions = await Transaction.find({
-      accountNumber: { $in: accountNumbers },
+      accountNumber: { $in: accountNumbers }
     })
       .sort({ createdAt: -1 })
-      .limit(10);
+      .limit(10)
+      .select("accountNumber customerName type amount balanceAfter createdAt performedBy performedByRole");
+
+    console.log("📋 Recent Transactions:", recentTransactions.length);
 
     res.json({
       status: true,
       data: {
-        branchname,
-        branchcode,
         totalCustomers,
         totalAccounts,
+        totalBranchBalance,
         todayDeposit,
         todayWithdraw,
         todayTransactionsCount: todayTransactions.length,
-        branchBalance,
         tellers,
-        recentTransactions,
-      },
+        recentTransactions
+      }
     });
-  } catch (err) {
-    console.log("DASHBOARD ERROR =>", err);
 
+  } catch (err) {
+    console.error("❌ Dashboard Error:", err);
     res.status(500).json({
       status: false,
-      message: err.message,
+      message: err.message
     });
   }
 };

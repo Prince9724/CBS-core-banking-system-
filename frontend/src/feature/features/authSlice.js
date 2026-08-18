@@ -1,8 +1,8 @@
-import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+
 const savedUser = JSON.parse(localStorage.getItem("cbsUser"));
 
-// LOGIN API
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (loginData, thunkAPI) => {
@@ -10,16 +10,11 @@ export const loginUser = createAsyncThunk(
       const res = await axios.post(
         "http://localhost:5003/cbs/signin",
         loginData,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
-
       return res.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response?.data?.message || "Login failed"
-      );
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Login failed");
     }
   }
 );
@@ -39,6 +34,12 @@ const authSlice = createSlice({
       state.error = null;
       localStorage.removeItem("cbsUser");
     },
+    // ✅ Add setUser
+    setUser: (state, action) => {
+      state.loggedinUser = action.payload;
+      state.isAuthenticated = true;
+      localStorage.setItem("cbsUser", JSON.stringify(action.payload));
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -47,17 +48,10 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        console.log("LOGIN RESPONSE:", action.payload);
-
         state.loader = false;
         state.loggedinUser = action.payload.user;
         state.isAuthenticated = true;
-
-        // 🔥 important
-        localStorage.setItem(
-          "cbsUser",
-          JSON.stringify(action.payload.user)
-        );
+        localStorage.setItem("cbsUser", JSON.stringify(action.payload.user));
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loader = false;
@@ -65,30 +59,6 @@ const authSlice = createSlice({
       });
   },
 });
-export const logoutUser = createAsyncThunk(
-  "auth/logoutUser",
-  async (_, thunkAPI) => {
-    try {
-      await axios.post(
-        "http://localhost:5003/cbs/logout",
-        {},
-        { withCredentials: true }
-      );
 
-      thunkAPI.dispatch(logout());
-      return true;
-    } catch (err) {
-      thunkAPI.dispatch(logout());
-      return thunkAPI.rejectWithValue(err.message);
-    }
-  }
-);
-
-logout: (state) => {
-  state.loggedinUser = null;
-  state.isAuthenticated = false;
-  state.error = null;
-  localStorage.removeItem("cbsUser");
-};
-export const { logout } = authSlice.actions;
+export const { logout, setUser } = authSlice.actions;
 export default authSlice.reducer;

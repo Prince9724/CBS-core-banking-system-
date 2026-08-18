@@ -1,7 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-import "./Deposit.css";
+import { useParams, Link } from "react-router-dom";
 
 export default function Deposit() {
   const { branchcode } = useParams();
@@ -9,217 +8,288 @@ export default function Deposit() {
   const [search, setSearch] = useState("");
   const [account, setAccount] = useState(null);
   const [amount, setAmount] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const handleSearch = async () => {
+    if (!search) {
+      return alert("Please enter account number or Aadhar");
+    }
+
     try {
+      setSearchLoading(true);
       const res = await axios.get(
         `http://localhost:5003/cbs/customer/account-search?search=${search}`,
-        { withCredentials: true },
+        { withCredentials: true }
       );
 
       setAccount(res.data.data);
     } catch (err) {
-      alert("Account not found");
+      alert(err.response?.data?.message || "Account not found");
       setAccount(null);
+    } finally {
+      setSearchLoading(false);
     }
   };
 
   const handleDeposit = async () => {
+    if (!amount || Number(amount) <= 0) {
+      return alert("Enter valid amount");
+    }
+
     try {
+      setLoading(true);
       await axios.post(
         "http://localhost:5003/cbs/customer/deposit",
         {
           accountNumber: account.accountNumber,
           amount: Number(amount),
         },
-        { withCredentials: true },
+        { withCredentials: true }
       );
 
-      alert("Deposit successful");
+      alert("✅ Deposit successful");
 
       // balance refresh
       handleSearch();
       setAmount("");
     } catch (err) {
       alert(err.response?.data?.message || "Deposit failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="teller-deposit-page">
-      {/* ================= HEADER ================= */}
+    <div className="container-fluid px-4 py-4 bg-dark min-vh-100">
 
-      <div className="teller-deposit-header">
+      {/* ===== BACK BUTTON + HEADER ===== */}
+      <div className="d-flex align-items-center gap-3 mb-4">
+        <Link
+          to={`/teller/${branchcode}`}
+          className="btn btn-outline-light d-flex align-items-center gap-2"
+        >
+          <i className="bi bi-arrow-left"></i>
+          Back to Dashboard
+        </Link>
+        <div className="vr text-secondary"></div>
         <div>
-          <span className="teller-deposit-eyebrow">
-            <i className="bi bi-cash-stack"></i>
+          <span className="badge bg-success bg-opacity-10 text-success mb-1">
+            <i className="bi bi-cash-stack me-1"></i>
             Teller Operations
           </span>
-
-          <h1>Cash Deposit</h1>
-
-          <p>Search for a customer account and deposit cash securely.</p>
+          <h1 className="text-white fw-bold mb-0">Cash Deposit</h1>
         </div>
+      </div>
 
-        <div className="teller-deposit-branch">
-          <div className="teller-deposit-branch-icon">
-            <i className="bi bi-bank"></i>
-          </div>
-
+      {/* ===== BRANCH INFO ===== */}
+      <div className="d-flex justify-content-end mb-4">
+        <div className="d-flex align-items-center gap-2 bg-dark bg-opacity-50 border border-secondary px-3 py-2 rounded-3">
+          <i className="bi bi-bank text-success"></i>
           <div>
-            <span>Branch Code</span>
-            <strong>{branchcode}</strong>
+            <small className="text-secondary d-block lh-1">Branch</small>
+            <strong className="text-white">{branchcode}</strong>
           </div>
         </div>
       </div>
 
-      {/* ================= SEARCH CARD ================= */}
-
-      <div className="teller-deposit-card">
-        <div className="teller-deposit-section-header">
-          <div className="teller-deposit-title">
-            <div className="teller-deposit-title-icon teller-blue">
-              <i className="bi bi-search"></i>
+      {/* ===== SEARCH CARD ===== */}
+      <div className="card bg-dark border-secondary mb-4">
+        <div className="card-body">
+          <div className="d-flex align-items-center gap-3 mb-3">
+            <div className="bg-primary bg-opacity-10 rounded-3 p-3">
+              <i className="bi bi-search fs-4 text-primary"></i>
             </div>
-
             <div>
-              <h3>Find Customer Account</h3>
-
-              <p>Search using account number or Aadhar number.</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="teller-deposit-search">
-          <div className="teller-deposit-input">
-            <i className="bi bi-search"></i>
-
-            <input
-              type="text"
-              placeholder="Enter Account Number or Aadhar"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-
-          <button className="teller-deposit-search-btn" onClick={handleSearch}>
-            <i className="bi bi-search"></i>
-            Search Account
-          </button>
-        </div>
-      </div>
-
-      {/* ================= ACCOUNT DETAILS ================= */}
-
-      {account && (
-        <div className="teller-account-section">
-          <div className="teller-account-card">
-            <div className="teller-account-header">
-              <div className="teller-account-title">
-                <div className="teller-account-avatar">
-                  <i className="bi bi-person-fill"></i>
-                </div>
-
-                <div>
-                  <span>Customer Account</span>
-
-                  <h3>{account.customer.name}</h3>
-                </div>
-              </div>
-
-              <span className="teller-account-status">
-                <span></span>
-                Active
-              </span>
-            </div>
-
-            {/* CUSTOMER INFORMATION */}
-
-            <div className="teller-customer-info">
-              <div className="teller-detail-item">
-                <span>
-                  <i className="bi bi-person-vcard"></i>
-                  Aadhar Number
-                </span>
-
-                <strong>{account.customer.aadhar}</strong>
-              </div>
-
-              <div className="teller-detail-item">
-                <span>
-                  <i className="bi bi-credit-card"></i>
-                  Account Number
-                </span>
-
-                <strong>{account.accountNumber}</strong>
-              </div>
+              <h5 className="text-white mb-0">Find Customer Account</h5>
+              <p className="text-secondary mb-0 small">Search using account number or Aadhar number</p>
             </div>
           </div>
 
-          {/* ================= BALANCE ================= */}
-
-          <div className="teller-balance-card">
-            <div className="teller-balance-icon">
-              <i className="bi bi-wallet2"></i>
-            </div>
-
-            <div>
-              <span>Current Balance</span>
-
-              <strong>₹{account.balance}</strong>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ================= DEPOSIT FORM ================= */}
-
-      {account && (
-        <div className="teller-deposit-card teller-deposit-form-card">
-          <div className="teller-deposit-section-header">
-            <div className="teller-deposit-title">
-              <div className="teller-deposit-title-icon teller-green">
-                <i className="bi bi-arrow-down-left"></i>
-              </div>
-
-              <div>
-                <h3>Deposit Amount</h3>
-
-                <p>Enter the amount you want to deposit into this account.</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="teller-deposit-amount-row">
-            <div className="teller-deposit-amount-input">
-              <span>₹</span>
-
+          <div className="d-flex gap-3 flex-wrap">
+            <div className="flex-grow-1 position-relative">
+              <i className="bi bi-search position-absolute text-secondary" style={{ left: "14px", top: "12px" }}></i>
               <input
-                type="number"
-                placeholder="0.00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                type="text"
+                className="form-control bg-dark text-white border-secondary ps-5"
+                placeholder="Enter Account Number or Aadhar Number"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               />
             </div>
-
             <button
-              className="teller-deposit-submit-btn"
-              onClick={handleDeposit}
+              className="btn btn-primary d-flex align-items-center gap-2"
+              onClick={handleSearch}
+              disabled={searchLoading}
             >
-              <i className="bi bi-check-circle"></i>
-              Deposit Now
+              {searchLoading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm" role="status"></span>
+                  Searching...
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-search"></i>
+                  Search Account
+                </>
+              )}
             </button>
           </div>
+        </div>
+      </div>
 
-          <div className="teller-secure-note">
-            <i className="bi bi-shield-check"></i>
+      {/* ===== ACCOUNT DETAILS ===== */}
+      {account && (
+        <div className="row g-4 mb-4">
+          {/* Customer Info */}
+          <div className="col-md-8">
+            <div className="card bg-dark border-secondary h-100">
+              <div className="card-body">
+                <div className="d-flex justify-content-between align-items-start mb-3">
+                  <div className="d-flex align-items-center gap-3">
+                    <div className="bg-success bg-opacity-10 rounded-3 p-3">
+                      <i className="bi bi-person-fill fs-3 text-success"></i>
+                    </div>
+                    <div>
+                      <span className="text-secondary small">Customer Account</span>
+                      <h4 className="text-white mb-0">{account.customer.name}</h4>
+                    </div>
+                  </div>
+                  <span className="badge bg-success d-flex align-items-center gap-1">
+                    <span className="bg-success rounded-circle d-inline-block" style={{ width: "6px", height: "6px" }}></span>
+                    Active
+                  </span>
+                </div>
 
-            <span>
-              Please verify the customer account before confirming the deposit.
-            </span>
+                <div className="row g-3">
+                  <div className="col-md-6">
+                    <div className="bg-dark bg-opacity-50 rounded-3 p-3 border border-secondary">
+                      <span className="text-secondary small d-block">
+                        <i className="bi bi-person-vcard me-1"></i>
+                        Aadhar Number
+                      </span>
+                      <strong className="text-white">{account.customer.aadhar}</strong>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="bg-dark bg-opacity-50 rounded-3 p-3 border border-secondary">
+                      <span className="text-secondary small d-block">
+                        <i className="bi bi-credit-card me-1"></i>
+                        Account Number
+                      </span>
+                      <strong className="text-white">{account.accountNumber}</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Balance */}
+          <div className="col-md-4">
+            <div className="card bg-dark border-secondary h-100">
+              <div className="card-body d-flex align-items-center gap-3">
+                <div className="bg-success bg-opacity-10 rounded-3 p-3">
+                  <i className="bi bi-wallet2 fs-2 text-success"></i>
+                </div>
+                <div>
+                  <span className="text-secondary small">Current Balance</span>
+                  <h3 className="text-white fw-bold mb-0">₹{account.balance.toLocaleString()}</h3>
+                  <small className="text-secondary">Available Balance</small>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
+
+      {/* ===== DEPOSIT FORM ===== */}
+      {account && (
+        <div className="card bg-dark border-secondary">
+          <div className="card-body">
+            <div className="d-flex align-items-center gap-3 mb-3">
+              <div className="bg-success bg-opacity-10 rounded-3 p-3">
+                <i className="bi bi-arrow-down-left fs-4 text-success"></i>
+              </div>
+              <div>
+                <h5 className="text-white mb-0">Deposit Amount</h5>
+                <p className="text-secondary mb-0 small">Enter the amount you want to deposit into this account</p>
+              </div>
+            </div>
+
+            <div className="d-flex gap-3 flex-wrap align-items-end">
+              <div className="flex-grow-1">
+                <label className="text-secondary small mb-1 d-block">Amount (₹)</label>
+                <div className="position-relative">
+                  <span className="position-absolute text-secondary" style={{ left: "14px", top: "12px" }}>₹</span>
+                  <input
+                    type="number"
+                    className="form-control bg-dark text-white border-secondary ps-5"
+                    placeholder="0.00"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                  />
+                </div>
+              </div>
+              <button
+                className="btn btn-success d-flex align-items-center gap-2 px-4"
+                onClick={handleDeposit}
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm" role="status"></span>
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-check-circle"></i>
+                    Deposit Now
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Note */}
+            <div className="mt-3 d-flex align-items-center gap-2 text-secondary small bg-dark bg-opacity-50 rounded-3 p-2 border border-secondary">
+              <i className="bi bi-shield-check text-success"></i>
+              <span>Please verify the customer account before confirming the deposit.</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== NO ACCOUNT FOUND ===== */}
+      {!account && search && !searchLoading && (
+        <div className="card bg-dark border-secondary">
+          <div className="card-body text-center py-5">
+            <i className="bi bi-inbox fs-1 text-secondary d-block mb-3"></i>
+            <h5 className="text-secondary">No account found</h5>
+            <p className="text-secondary small">Try searching with a different account number or Aadhar</p>
+          </div>
+        </div>
+      )}
+
+      {/* ===== CUSTOM CSS ===== */}
+      <style>{`
+        .form-control:focus {
+          border-color: #0d6efd;
+          box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        .bg-dark.bg-opacity-50 {
+          background-color: rgba(33, 37, 41, 0.5);
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        input[type="number"] {
+          -moz-appearance: textfield;
+        }
+      `}</style>
+
     </div>
   );
 }

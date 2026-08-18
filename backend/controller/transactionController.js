@@ -118,22 +118,49 @@ export const getHistory = async (req , res)=>{
 
 export const getTodayTransactions = async (req, res) => {
   try {
-    const start = new Date();
-    start.setHours(0, 0, 0, 0);
+    const { date, branchcode } = req.query;
 
-    const end = new Date();
-    end.setHours(23, 59, 59, 999);
+    // ✅ Agar date query mein hai toh wo date use karo, nahi toh today
+    let start, end;
 
-    const data = await Transaction.find({
-      branchcode: req.user.branchcode,
-      createdAt: { $gte: start, $lte: end },
-    }).sort({ createdAt: -1 });
+    if (date) {
+      // ✅ Specific date ka data
+      start = new Date(date);
+      start.setHours(0, 0, 0, 0);
+
+      end = new Date(date);
+      end.setHours(23, 59, 59, 999);
+    } else {
+      // ✅ Today ka data
+      start = new Date();
+      start.setHours(0, 0, 0, 0);
+
+      end = new Date();
+      end.setHours(23, 59, 59, 999);
+    }
+
+    console.log("📅 Date Range:", { start, end, branchcode });
+
+    let filter = {
+      createdAt: { $gte: start, $lte: end }
+    };
+
+    // ✅ Branch filter
+    if (branchcode) {
+      filter.branchcode = branchcode;
+    }
+
+    const data = await Transaction.find(filter)
+      .sort({ createdAt: -1 });
+
+    console.log("📝 Transactions Found:", data.length);
 
     res.json({
       status: true,
       data,
     });
   } catch (err) {
+    console.error("❌ Transaction Error:", err);
     res.status(500).json({
       status: false,
       message: err.message,

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";  // ✅ FIX: extra } remove kiya
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../feature/features/authSlice";
+import { logout, setUser } from "../../feature/features/authSlice";  // ✅ setUser import karo
 import { useNavigate } from "react-router-dom";
 import "./ManagerDashboard.css";
 
@@ -12,7 +12,6 @@ export default function ManagerDashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Branchcode fallback
   const branchcode = urlBranchcode || loggedinUser?.branchcode;
 
   const [stats, setStats] = useState({
@@ -29,18 +28,17 @@ export default function ManagerDashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Axios instance with credentials
   const api = axios.create({
     baseURL: "http://localhost:5003",
     withCredentials: true,
   });
 
-  // Logout function
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
   };
 
+  // ✅ useEffect ko sahi karo - pehle fetchDashboard call karo
   useEffect(() => {
     if (branchcode) {
       fetchDashboard();
@@ -93,6 +91,14 @@ export default function ManagerDashboard() {
       setLoading(false);
     }
   };
+
+  // ✅ Yeh extra useEffect hatao - already ek hai upar
+  // useEffect(() => {
+  //   const user = JSON.parse(localStorage.getItem("cbsUser"));
+  //   if (user && user.branchcode !== loggedinUser?.branchcode) {
+  //     dispatch(setUser(user));
+  //   }
+  // }, [branchcode]);
 
   // Loading State
   if (loading) {
@@ -324,11 +330,10 @@ export default function ManagerDashboard() {
                     </td>
                     <td>
                       <span
-                        className={`manager-type-badge ${
-                          t.type === "Deposit"
+                        className={`manager-type-badge ${t.type === "Deposit"
                             ? "manager-badge-deposit"
                             : "manager-badge-withdraw"
-                        }`}
+                          }`}
                       >
                         <i
                           className={
