@@ -1,110 +1,84 @@
 import React from "react";
-import "./dashboardcard.css";
 
-export default function DashboardCards() {
+export default function DashboardCards({ stats }) {
   const cards = [
     {
       title: "Total Branches",
-      value: "3",
-      subtitle: "Active Branches",
-      icon: "bi-bank2",
-      bg: "#DDE9FE",
-      color: "#2563EB",
+      value: stats.totalBranches || 0,
+      icon: "bi bi-building",
+      color: "#4fc3f7",
+      bg: "rgba(79, 195, 247, 0.1)",
     },
     {
       title: "Total Customers",
-      value: "20,142",
-      subtitle: "this week",
-      growth: "+120",
-      icon: "bi-people-fill",
-      bg: "#CFF2D3",
-      color: "#22C55E",
-      growthType: "up",
+      value: stats.totalCustomers || 0,
+      icon: "bi bi-people",
+      color: "#66bb6a",
+      bg: "rgba(102, 187, 106, 0.1)",
     },
     {
       title: "Total Accounts",
-      value: "22,589",
-      subtitle: "this week",
-      growth: "+150",
-      icon: "bi-wallet2",
-      bg: "#E6DBFB",
-      color: "#7C3AED",
-      growthType: "up",
+      value: stats.totalAccounts || 0,
+      icon: "bi bi-wallet2",
+      color: "#ffb74d",
+      bg: "rgba(255, 183, 77, 0.1)",
     },
     {
-      title: "Total Deposits",
-      value: "₹700.45 Cr",
-      subtitle: "All Branches",
-      icon: "bi-currency-rupee",
-      bg: "#FDECCD",
-      color: "#F59E0B",
+      title: "Total Balance",
+      value: `₹${(stats.totalBalance || 0).toLocaleString()}`,
+      icon: "bi bi-cash-stack",
+      color: "#4fc3f7",
+      bg: "rgba(79, 195, 247, 0.1)",
     },
     {
-      title: "Today's Transactions",
-      value: "1,248",
-      subtitle: "Total Txn Amount",
-      right: "₹10.25 Cr",
-      growth: "+12.5%",
-      icon: "bi-arrow-right",
-      bg: "#DDE9FE",
-      color: "#2563EB",
-      growthType: "up",
+      title: "Today's Deposit",
+      value: `₹${(stats.todayDeposit || 0).toLocaleString()}`,
+      icon: "bi bi-arrow-down-circle",
+      color: "#66bb6a",
+      bg: "rgba(102, 187, 106, 0.1)",
     },
     {
-      title: "Today's Deposits",
-      value: "₹6.25 Cr",
-      subtitle: "Total 356 Deposits",
-      growth: "+8.4%",
-      icon: "bi-arrow-down",
-      bg: "#E0F4E1",
-      color: "#22C55E",
-      growthType: "up",
+      title: "Today's Withdraw",
+      value: `₹${(stats.todayWithdraw || 0).toLocaleString()}`,
+      icon: "bi bi-arrow-up-circle",
+      color: "#ef5350",
+      bg: "rgba(239, 83, 80, 0.1)",
     },
     {
-      title: "Today's Withdrawals",
-      value: "₹4.00 Cr",
-      subtitle: "Total 492 Withdrawals",
-      growth: "-3.2%",
-      icon: "bi-arrow-up",
-      bg: "#F7D5CF",
-      color: "#EF4444",
-      growthType: "down",
+      title: "Managers",
+      value: stats.totalManagers || 0,
+      icon: "bi bi-person-badge",
+      color: "#ce93d8",
+      bg: "rgba(206, 147, 216, 0.1)",
+    },
+    {
+      title: "Tellers",
+      value: stats.totalTellers || 0,
+      icon: "bi bi-person-workspace",
+      color: "#ffb74d",
+      bg: "rgba(255, 183, 77, 0.1)",
     },
   ];
 
   return (
-    <div className="dashboard-details-grid">
+    <div className="row g-3">
       {cards.map((card, index) => (
-        <div key={index} className="dashboard-stat-card">
-          <div
-            className="dashboard-icon"
-            style={{ background: card.bg, color: card.color }}
-          >
-            <i className={`bi ${card.icon}`}></i>
-          </div>
-
-          <div className="dashboard-info">
-            <p className="dashboard-label">{card.title}</p>
-
-            <div className="dashboard-value-row">
-              <h2 className="dashboard-value">{card.value}</h2>
-
-              {card.growth && (
-                <span
-                  className={
-                    card.growthType === "down"
-                      ? "growth-down"
-                      : "growth-up"
-                  }
-                >
-                  {card.growth}
+        <div className="col-xl-3 col-lg-4 col-md-6" key={index}>
+          <div className="card bg-dark border-secondary h-100">
+            <div className="card-body">
+              <div className="d-flex justify-content-between align-items-center mb-2">
+                <span className="text-secondary small fw-semibold text-uppercase">
+                  {card.title}
                 </span>
-              )}
-            </div>
-
-            <div className="dashboard-sub">
-              <span className="sub-text">{card.subtitle}</span>
-              {card.right && <span className="sub-right">{card.right}</span>}
+                <div
+                  className="rounded-3 p-2"
+                  style={{ background: card.bg, color: card.color }}
+                >
+                  <i className={card.icon}></i>
+                </div>
+              </div>
+              <h3 className="text-white fw-bold mb-1">{card.value}</h3>
+              <span className="text-secondary small">{card.title}</span>
             </div>
           </div>
         </div>

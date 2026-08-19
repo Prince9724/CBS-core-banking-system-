@@ -449,6 +449,10 @@ export default function ManagerAccounts() {
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(false);
   
+  // ✅ Account Password State
+  const [accountPassword, setAccountPassword] = useState("");
+  const [showPasswordField, setShowPasswordField] = useState(false);
+
   // ✅ Customer Form State
   const [showCustomerForm, setShowCustomerForm] = useState(false);
   const [customerForm, setCustomerForm] = useState({
@@ -523,7 +527,6 @@ export default function ManagerAccounts() {
         pan: ""
       });
       
-      // Refresh search results
       if (search.length >= 2) {
         handleSearch();
       }
@@ -534,19 +537,26 @@ export default function ManagerAccounts() {
     }
   };
 
-  // 💳 Open Account
+  // 💳 Open Account - WITH PASSWORD
   const handleOpenAccount = async () => {
     if (!selectedCustomer) return alert("Please select customer");
 
     setLoading(true);
     try {
+      const payload = {
+        customerId: selectedCustomer._id,
+        accountType,
+        openingBalance: Number(openingBalance),
+      };
+
+      // ✅ Add password only if provided
+      if (accountPassword && accountPassword.trim() !== "") {
+        payload.accountPassword = accountPassword;
+      }
+
       const res = await axios.post(
         "http://localhost:5003/cbs/customer/openaccount",
-        {
-          customerId: selectedCustomer._id,
-          accountType,
-          openingBalance: Number(openingBalance),
-        },
+        payload,
         { withCredentials: true }
       );
 
@@ -556,6 +566,8 @@ export default function ManagerAccounts() {
       setSearch("");
       setResults([]);
       setOpeningBalance(1000);
+      setAccountPassword("");
+      setShowPasswordField(false);
       fetchAccounts();
 
     } catch (err) {
@@ -565,7 +577,6 @@ export default function ManagerAccounts() {
     }
   };
 
-  // Branch-wise accounts
   const branchAccounts = accounts.filter((a) => a.branchcode === branchcode);
 
   return (
@@ -786,7 +797,7 @@ export default function ManagerAccounts() {
             </div>
           </div>
 
-          {/* Account Form */}
+          {/* Account Form - WITH PASSWORD */}
           <div className="open-account-form">
             <div className="account-form-group">
               <label>Account Type</label>
@@ -813,6 +824,35 @@ export default function ManagerAccounts() {
                   onChange={(e) => setOpeningBalance(e.target.value)}
                 />
               </div>
+            </div>
+
+            {/* ✅ PASSWORD FIELD - Optional */}
+            <div className="account-form-group">
+              <label>
+                Account Password
+                <span className="text-secondary ms-1">(Optional)</span>
+              </label>
+              <div className="account-input-wrapper">
+                <i className="bi bi-lock"></i>
+                <input
+                  type={showPasswordField ? "text" : "password"}
+                  className="account-form-input"
+                  placeholder="Leave empty for no password"
+                  value={accountPassword}
+                  onChange={(e) => setAccountPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="btn btn-sm btn-outline-secondary"
+                  onClick={() => setShowPasswordField(!showPasswordField)}
+                >
+                  <i className={showPasswordField ? "bi bi-eye-slash" : "bi bi-eye"}></i>
+                </button>
+              </div>
+              <small className="text-secondary">
+                <i className="bi bi-info-circle"></i>
+                Optional: Set a password for secure transactions. Teller will need this password for deposits/withdrawals.
+              </small>
             </div>
           </div>
 
@@ -868,12 +908,13 @@ export default function ManagerAccounts() {
                 <th>Account Number</th>
                 <th>Type</th>
                 <th>Balance</th>
+                <th>Password</th>
               </tr>
             </thead>
             <tbody>
               {branchAccounts.length === 0 ? (
                 <tr>
-                  <td colSpan="4" className="accounts-empty">
+                  <td colSpan="5" className="accounts-empty">
                     <div className="accounts-empty-icon">
                       <i className="bi bi-wallet2"></i>
                     </div>
@@ -909,6 +950,11 @@ export default function ManagerAccounts() {
                     </td>
                     <td>
                       <strong className="account-balance">₹{acc.balance?.toLocaleString() || 0}</strong>
+                    </td>
+                    <td>
+                      <span className={`badge ${acc.accountPassword ? "bg-warning" : "bg-secondary"}`}>
+                        {acc.accountPassword ? "🔒 Yes" : "No"}
+                      </span>
                     </td>
                   </tr>
                 ))

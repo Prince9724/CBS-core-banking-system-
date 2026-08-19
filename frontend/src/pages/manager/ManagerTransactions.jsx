@@ -262,7 +262,7 @@ export default function ManagerTransactions() {
   });
 
   return (
-    <div className="container py-4 text-dark">
+    <div className="container py-4 text-white">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
           <h2>📄 Transaction History</h2>

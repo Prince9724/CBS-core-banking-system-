@@ -1,103 +1,102 @@
 import React from "react";
-import "./depositbranches.css";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
-  Filler,
 } from "chart.js";
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-);
+import { Bar } from "react-chartjs-2";
 
-import { Line } from "react-chartjs-2";
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-export default function DepositChart() {
-  const options = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      display: true,
-      position: "top",
-      align: "center",
-      labels: {
-        color: "#9ca3af",
-        boxWidth: 24,
-      },
-    },
-    title: { display: false },
-  },
-  scales: {
-    x: {
-      grid: { color: "rgba(255,255,255,0.06)" },
-      ticks: { color: "#9ca3af" },
-    },
-    y: {
-      grid: { color: "rgba(255,255,255,0.06)" },
-      ticks: { color: "#9ca3af" },
-    },
-  },
-};
+export default function DepositChart({ stats = {} }) {
+  const { branchWiseData = [] } = stats;
+
+  const colors = ["#3B82F6", "#22C55E", "#F59E0B", "#EF4444", "#8B5CF6"];
+
+  const labels = branchWiseData.map((branch) => branch.name);
+  const depositData = branchWiseData.map((branch) => branch.balance || 0);
+  const customerData = branchWiseData.map((branch) => branch.customers || 0);
+  const transactionData = branchWiseData.map((branch) => branch.transactions || 0);
 
   const data = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-
+    labels: labels,
     datasets: [
       {
-        label: "Deposits",
-        data: [12000, 18000, 15000, 21000, 24000, 22000, 28000],
-
-        borderColor: "#0d6efd",
-        borderWidth: 4,
-
-        pointRadius: 5,
-        pointHoverRadius: 10,
-
-        pointBackgroundColor: "#0d6efd",
-        pointHoverBackgroundColor: "#fff",
-
-        pointBorderWidth: 3,
-        pointHoverBorderWidth: 4,
-
-        fill: true,
-
-        tension: 0.5,
-
-        cubicInterpolationMode: "monotone",
+        label: "Balance (₹)",
+        data: depositData,
+        backgroundColor: "rgba(59, 130, 246, 0.8)",
+        borderColor: "#3B82F6",
+        borderWidth: 2,
+        borderRadius: 6,
+      },
+      {
+        label: "Customers",
+        data: customerData,
+        backgroundColor: "rgba(34, 197, 94, 0.8)",
+        borderColor: "#22C55E",
+        borderWidth: 2,
+        borderRadius: 6,
+      },
+      {
+        label: "Transactions",
+        data: transactionData,
+        backgroundColor: "rgba(245, 158, 11, 0.8)",
+        borderColor: "#F59E0B",
+        borderWidth: 2,
+        borderRadius: 6,
       },
     ],
   };
- return (
-  <div className="chart-card">
-    <div className="chart-header">
-      <p className="chart-title fs-5">
-        Deposit Overview <span>(All Branches)</span>
-      </p>
 
-      <select className="form-select chart-filter">
-        <option>This Month</option>
-        <option>Last Month</option>
-        <option>Last 3 Months</option>
-        <option>Last 6 Months</option>
-      </select>
-    </div>
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: {
+          color: "#d1d5db",
+          usePointStyle: true,
+          pointStyle: "circle",
+          padding: 16,
+          font: { size: 12 },
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: { color: "rgba(255,255,255,0.05)" },
+        ticks: { color: "#9ca3af" },
+      },
+      y: {
+        grid: { color: "rgba(255,255,255,0.05)" },
+        ticks: { color: "#9ca3af" },
+        beginAtZero: true,
+      },
+    },
+  };
 
-    <div className="chart-body">
-      <Line data={data} options={options} />
+  if (branchWiseData.length === 0) {
+    return (
+      <div className="text-center py-5">
+        <i className="bi bi-bar-chart fs-1 text-secondary d-block mb-3"></i>
+        <h5 className="text-secondary">No data available</h5>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <h5 className="text-white fw-bold mb-3">
+        <i className="bi bi-bar-chart me-2 text-primary"></i>
+        Branch Performance
+      </h5>
+      <div style={{ height: "280px" }}>
+        <Bar data={data} options={options} />
+      </div>
     </div>
-  </div>
-);
+  );
 }

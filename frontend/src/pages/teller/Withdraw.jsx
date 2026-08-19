@@ -8,10 +8,11 @@ export default function Withdraw() {
   const [search, setSearch] = useState("");
   const [account, setAccount] = useState(null);
   const [amount, setAmount] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
 
-  // Search account
   const handleSearch = async () => {
     if (!search) {
       return alert("Please enter account number or Aadhar");
@@ -25,6 +26,7 @@ export default function Withdraw() {
       );
 
       setAccount(res.data.data);
+      setPassword(""); // Reset password on new search
     } catch (err) {
       alert(err.response?.data?.message || "Account not found");
       setAccount(null);
@@ -33,7 +35,6 @@ export default function Withdraw() {
     }
   };
 
-  // Withdraw
   const handleWithdraw = async () => {
     if (!amount || Number(amount) <= 0) {
       return alert("Enter valid amount");
@@ -43,6 +44,11 @@ export default function Withdraw() {
       return alert("Insufficient balance");
     }
 
+    // ✅ If account has password, validate
+    if (account?.hasPassword && !password) {
+      return alert("Account password is required for this account");
+    }
+
     try {
       setLoading(true);
       await axios.post(
@@ -50,15 +56,15 @@ export default function Withdraw() {
         {
           accountNumber: account.accountNumber,
           amount: Number(amount),
+          password: account?.hasPassword ? password : null,
         },
         { withCredentials: true }
       );
 
       alert("✅ Withdrawal successful");
-
-      // updated balance refresh
       handleSearch();
       setAmount("");
+      setPassword("");
     } catch (err) {
       alert(err.response?.data?.message || "Withdrawal failed");
     } finally {
@@ -71,18 +77,13 @@ export default function Withdraw() {
 
       {/* ===== BACK BUTTON + HEADER ===== */}
       <div className="d-flex align-items-center gap-3 mb-4">
-        <Link
-          to={`/teller/${branchcode}`}
-          className="btn btn-outline-light d-flex align-items-center gap-2"
-        >
-          <i className="bi bi-arrow-left"></i>
-          Back to Dashboard
+        <Link to={`/teller/${branchcode}`} className="btn btn-outline-light d-flex align-items-center gap-2">
+          <i className="bi bi-arrow-left"></i> Back to Dashboard
         </Link>
         <div className="vr text-secondary"></div>
         <div>
           <span className="badge bg-warning bg-opacity-10 text-warning mb-1">
-            <i className="bi bi-wallet2 me-1"></i>
-            Teller Operations
+            <i className="bi bi-wallet2 me-1"></i> Teller Operations
           </span>
           <h1 className="text-white fw-bold mb-0">Cash Withdrawal</h1>
         </div>
@@ -130,15 +131,9 @@ export default function Withdraw() {
               disabled={searchLoading}
             >
               {searchLoading ? (
-                <>
-                  <span className="spinner-border spinner-border-sm" role="status"></span>
-                  Searching...
-                </>
+                <><span className="spinner-border spinner-border-sm" role="status"></span> Searching...</>
               ) : (
-                <>
-                  <i className="bi bi-search"></i>
-                  Search Account
-                </>
+                <><i className="bi bi-search"></i> Search Account</>
               )}
             </button>
           </div>
@@ -148,7 +143,6 @@ export default function Withdraw() {
       {/* ===== ACCOUNT DETAILS ===== */}
       {account && (
         <div className="row g-4 mb-4">
-          {/* Customer Info */}
           <div className="col-md-8">
             <div className="card bg-dark border-secondary h-100">
               <div className="card-body">
@@ -172,8 +166,7 @@ export default function Withdraw() {
                   <div className="col-md-6">
                     <div className="bg-dark bg-opacity-50 rounded-3 p-3 border border-secondary">
                       <span className="text-secondary small d-block">
-                        <i className="bi bi-person-vcard me-1"></i>
-                        Aadhar Number
+                        <i className="bi bi-person-vcard me-1"></i> Aadhar Number
                       </span>
                       <strong className="text-white">{account.customer.aadhar}</strong>
                     </div>
@@ -181,18 +174,23 @@ export default function Withdraw() {
                   <div className="col-md-6">
                     <div className="bg-dark bg-opacity-50 rounded-3 p-3 border border-secondary">
                       <span className="text-secondary small d-block">
-                        <i className="bi bi-credit-card me-1"></i>
-                        Account Number
+                        <i className="bi bi-credit-card me-1"></i> Account Number
                       </span>
                       <strong className="text-white">{account.accountNumber}</strong>
                     </div>
                   </div>
                 </div>
+
+                {/* ✅ Password Required Status */}
+                <div className="mt-3">
+                  <span className={`badge ${account.hasPassword ? "bg-warning" : "bg-secondary"}`}>
+                    {account.hasPassword ? "🔒 Password Protected" : "No Password Set"}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Balance */}
           <div className="col-md-4">
             <div className="card bg-dark border-secondary h-100">
               <div className="card-body d-flex align-items-center gap-3">
@@ -224,6 +222,35 @@ export default function Withdraw() {
               </div>
             </div>
 
+            {/* ✅ Password Field - Only if account has password */}
+            {account?.hasPassword && (
+              <div className="mb-3">
+                <label className="text-secondary small mb-1 d-block">
+                  <i className="bi bi-lock me-1"></i>
+                  Account Password <span className="text-danger">*</span>
+                </label>
+                <div className="d-flex gap-2">
+                  <div className="position-relative flex-grow-1">
+                    <i className="bi bi-key position-absolute text-secondary" style={{ left: "14px", top: "12px" }}></i>
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className="form-control bg-dark text-white border-secondary ps-5"
+                      placeholder="Enter account password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    <i className={showPassword ? "bi bi-eye-slash" : "bi bi-eye"}></i>
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div className="d-flex gap-3 flex-wrap align-items-end">
               <div className="flex-grow-1">
                 <label className="text-secondary small mb-1 d-block">Amount (₹)</label>
@@ -244,20 +271,13 @@ export default function Withdraw() {
                 disabled={loading}
               >
                 {loading ? (
-                  <>
-                    <span className="spinner-border spinner-border-sm" role="status"></span>
-                    Processing...
-                  </>
+                  <><span className="spinner-border spinner-border-sm" role="status"></span> Processing...</>
                 ) : (
-                  <>
-                    <i className="bi bi-check-circle"></i>
-                    Withdraw Now
-                  </>
+                  <><i className="bi bi-check-circle"></i> Withdraw Now</>
                 )}
               </button>
             </div>
 
-            {/* Note */}
             <div className="mt-3 d-flex align-items-center gap-2 text-secondary small bg-dark bg-opacity-50 rounded-3 p-2 border border-secondary">
               <i className="bi bi-info-circle text-primary"></i>
               <span>After the withdrawal, the updated account balance will automatically refresh.</span>
@@ -279,21 +299,11 @@ export default function Withdraw() {
 
       {/* ===== CUSTOM CSS ===== */}
       <style>{`
-        .form-control:focus {
-          border-color: #0d6efd;
-          box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-        }
-        .bg-dark.bg-opacity-50 {
-          background-color: rgba(33, 37, 41, 0.5);
-        }
+        .form-control:focus { border-color: #0d6efd; box-shadow: 0 0 0 0.25rem rgba(13,110,253,0.25); }
+        .bg-dark.bg-opacity-50 { background-color: rgba(33,37,41,0.5); }
         input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
-        }
-        input[type="number"] {
-          -moz-appearance: textfield;
-        }
+        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type="number"] { -moz-appearance: textfield; }
       `}</style>
 
     </div>
