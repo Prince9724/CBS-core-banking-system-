@@ -137,6 +137,7 @@
 //     </div>
 //   );
 // }
+
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -152,6 +153,7 @@ export default function Login() {
 
   // Login mode
   const [loginType, setLoginType] = useState("branch");
+  const [loginError, setLoginError] = useState("");
 
   // refs
   const useridRef = useRef("");
@@ -174,7 +176,13 @@ export default function Login() {
       navigate(`/teller/${loggedinUser.branchcode}`);
     }
   }, [loggedinUser, navigate]);
-  // login
+
+  // ✅ Clear error on input change
+  const handleInputChange = () => {
+    if (loginError) setLoginError("");
+  };
+
+  // ✅ Login
   const handleLoginAuth = async () => {
     const loginData = {
       userid: useridRef.current.value.trim(),
@@ -185,11 +193,28 @@ export default function Login() {
           : branchCodeRef.current.value.trim(),
     };
 
+    // ✅ Validation
+    if (!loginData.userid || !loginData.password) {
+      setLoginError("Please enter User ID and Password");
+      return;
+    }
+
+    if (loginType === "branch" && !loginData.branchcode) {
+      setLoginError("Please enter Branch Code");
+      return;
+    }
+
     try {
-      await dispatch(loginUser(loginData)).unwrap();
-      alert("Login successful");
+      setLoginError("");
+      const result = await dispatch(loginUser(loginData)).unwrap();
+      
+      // ✅ Success message (optional)
+      if (result.status) {
+        // Redirect will happen via useEffect
+      }
     } catch (err) {
-      alert(err);
+      // ✅ Display error from backend
+      setLoginError(err || "Login failed. Please try again.");
     }
   };
 
@@ -216,7 +241,9 @@ export default function Login() {
               <div className="card-body p-5">
                 {/* Logo */}
                 <div className="text-center mb-4">
-                  <div style={{ fontSize: "52px" }}>🏦</div>
+                  <div style={{ fontSize: "52px" }}>
+                    <i className="bi bi-bank fs-1 text-primary"></i>
+                  </div>
                   <h2 className="fw-bold mt-2 mb-1">CBS Banking</h2>
                   <p className="text-secondary mb-0">
                     Secure Core Banking System Login
@@ -227,24 +254,34 @@ export default function Login() {
                 <div className="d-flex bg-dark rounded-pill p-1 mb-4">
                   <button
                     type="button"
-                    className={`btn flex-fill rounded-pill ${loginType === "admin"
+                    className={`btn flex-fill rounded-pill ${
+                      loginType === "admin"
                         ? "btn-primary"
                         : "btn-dark text-white"
-                      }`}
-                    onClick={() => setLoginType("admin")}
+                    }`}
+                    onClick={() => {
+                      setLoginType("admin");
+                      setLoginError("");
+                    }}
                   >
-                    👨‍💼 Admin Login
+                    <i className="bi bi-person-badge me-1"></i>
+                    Admin Login
                   </button>
 
                   <button
                     type="button"
-                    className={`btn flex-fill rounded-pill ${loginType === "branch"
+                    className={`btn flex-fill rounded-pill ${
+                      loginType === "branch"
                         ? "btn-primary"
                         : "btn-dark text-white"
-                      }`}
-                    onClick={() => setLoginType("branch")}
+                    }`}
+                    onClick={() => {
+                      setLoginType("branch");
+                      setLoginError("");
+                    }}
                   >
-                    🏢 Branch Login
+                    <i className="bi bi-building me-1"></i>
+                    Branch Login
                   </button>
                 </div>
 
@@ -262,9 +299,11 @@ export default function Login() {
                     className="form-control bg-dark text-white border-secondary"
                     id="userid"
                     placeholder="User ID"
+                    onChange={handleInputChange}
                   />
                   <label htmlFor="userid" className="text-secondary">
-                    👤 User ID
+                    <i className="bi bi-person me-1"></i>
+                    User ID
                   </label>
                 </div>
 
@@ -276,9 +315,11 @@ export default function Login() {
                     className="form-control bg-dark text-white border-secondary"
                     id="password"
                     placeholder="Password"
+                    onChange={handleInputChange}
                   />
                   <label htmlFor="password" className="text-secondary">
-                    🔒 Password
+                    <i className="bi bi-lock me-1"></i>
+                    Password
                   </label>
                 </div>
 
@@ -291,19 +332,32 @@ export default function Login() {
                       className="form-control bg-dark text-white border-secondary"
                       id="branchcode"
                       placeholder="Branch Code"
+                      onChange={handleInputChange}
                     />
                     <label
                       htmlFor="branchcode"
                       className="text-secondary"
                     >
-                      🏢 Branch Code
+                      <i className="bi bi-building me-1"></i>
+                      Branch Code
                     </label>
                   </div>
                 )}
 
-                {/* Error */}
-                {error && (
-                  <div className="alert alert-danger py-2 small">{error}</div>
+                {/* ✅ ERROR DISPLAY - Shows branch inactive error */}
+                {(loginError || error) && (
+                  <div className="alert alert-danger py-2 small d-flex align-items-center gap-2">
+                    <i className="bi bi-exclamation-triangle-fill"></i>
+                    <span>{loginError || error}</span>
+                  </div>
+                )}
+
+                {/* ✅ SUCCESS MESSAGE (Optional) */}
+                {!loginError && !error && (
+                  <div className="alert alert-success py-2 small d-flex align-items-center gap-2">
+                    <i className="bi bi-check-circle-fill"></i>
+                    <span>Enter your credentials to login</span>
+                  </div>
                 )}
 
                 {/* Login Button */}
@@ -312,16 +366,28 @@ export default function Login() {
                   className="btn btn-primary w-100 py-3 fw-semibold rounded-3 shadow-sm"
                   disabled={loader}
                 >
-                  {loader
-                    ? "Logging in..."
-                    : loginType === "admin"
-                      ? "Login as Admin"
-                      : "Login to Branch"}
+                  {loader ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2"></span>
+                      Logging in...
+                    </>
+                  ) : loginType === "admin" ? (
+                    <>
+                      <i className="bi bi-box-arrow-in-right me-2"></i>
+                      Login as Admin
+                    </>
+                  ) : (
+                    <>
+                      <i className="bi bi-box-arrow-in-right me-2"></i>
+                      Login to Branch
+                    </>
+                  )}
                 </button>
 
                 <div className="text-center mt-4">
                   <small className="text-secondary">
-                    🔐 Protected by CBS Banking Security Layer
+                    <i className="bi bi-shield-check me-1 text-success"></i>
+                    Protected by CBS Banking Security Layer
                   </small>
                 </div>
               </div>
@@ -329,6 +395,52 @@ export default function Login() {
           </div>
         </div>
       </div>
+
+      {/* ===== CUSTOM STYLES ===== */}
+      <style>{`
+        .form-floating > .form-control:focus {
+          border-color: #0d6efd;
+          box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        .form-floating > .form-control::placeholder {
+          color: transparent;
+        }
+        .form-floating > .form-control {
+          height: 58px;
+          padding-top: 1.5rem;
+          padding-bottom: 0.5rem;
+        }
+        .form-floating > label {
+          padding: 1rem 0.75rem;
+        }
+        .form-control.bg-dark {
+          background-color: #1a2a42 !important;
+        }
+        .form-control.bg-dark:focus {
+          background-color: #1a2a42 !important;
+        }
+        .alert {
+          border-radius: 10px;
+        }
+        .btn-primary {
+          background: linear-gradient(135deg, #3B82F6, #2563EB);
+          border: none;
+          transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+        .btn-primary:disabled {
+          transform: none;
+        }
+        .btn-dark.text-white {
+          color: #e8ecf1 !important;
+        }
+        .btn-dark.text-white:hover {
+          background: #2a3f5a !important;
+        }
+      `}</style>
     </div>
   );
 }

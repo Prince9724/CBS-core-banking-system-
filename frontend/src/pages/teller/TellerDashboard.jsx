@@ -97,7 +97,7 @@ export default function TellerDashboard() {
             <i className="bi bi-bank text-primary"></i>
             <div>
               <small className="text-secondary d-block lh-1">Branch</small>
-              <strong>{loggedinUser?.branchname || branchcode}</strong>
+              <strong className="text-dark">{loggedinUser?.branchname || branchcode}</strong>
             </div>
           </div>
 
@@ -105,7 +105,7 @@ export default function TellerDashboard() {
             <i className="bi bi-person-circle text-primary"></i>
             <div>
               <small className="text-secondary d-block lh-1">Welcome</small>
-              <strong>{loggedinUser?.name || "Teller"}</strong>
+              <strong className="text-dark">{loggedinUser?.name || "Teller"}</strong>
             </div>
           </div>
 
