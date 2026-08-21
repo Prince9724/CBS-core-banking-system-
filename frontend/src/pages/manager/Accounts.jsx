@@ -57,14 +57,13 @@ export default function ManagerAccounts() {
     return () => clearTimeout(timer);
   }, [search]);
 
-  // 📋 Fetch Accounts - ✅ NEW ACCOUNTS FIRST
+  // 📋 Fetch Accounts - NEW ACCOUNTS FIRST
   const fetchAccounts = async () => {
     try {
       const res = await axios.get(
         "http://localhost:5003/cbs/customer/accounts",
         { withCredentials: true }
       );
-      // ✅ Sort by createdAt descending (newest first)
       const sortedAccounts = (res.data.data || []).sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
@@ -139,10 +138,32 @@ export default function ManagerAccounts() {
       setOpeningBalance(1000);
       setAccountPassword("");
       setShowPasswordField(false);
-      fetchAccounts(); // ✅ Refresh list - new account will be first
+      fetchAccounts();
 
     } catch (err) {
       alert(err.response?.data?.message || "Failed to open account");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ DELETE ACCOUNT - NEW FUNCTION
+  const handleDeleteAccount = async (accountId, accountNumber) => {
+    if (!window.confirm(`Are you sure you want to delete account ${accountNumber}?`)) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await axios.delete(
+        `http://localhost:5003/cbs/customer/account/${accountId}`,
+        { withCredentials: true }
+      );
+      
+      alert(`✅ Account ${accountNumber} deleted successfully!`);
+      fetchAccounts(); // Refresh list
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to delete account");
     } finally {
       setLoading(false);
     }
@@ -199,13 +220,6 @@ export default function ManagerAccounts() {
                 <p className="text-secondary small mb-0">Find a customer by name, email or Aadhar number</p>
               </div>
             </div>
-            <button
-              className="btn btn-outline-primary btn-sm"
-              onClick={() => setShowCustomerForm(!showCustomerForm)}
-            >
-              <i className="bi bi-person-plus-fill me-1"></i>
-              {showCustomerForm ? "Close" : "Add Customer"}
-            </button>
           </div>
 
           <div className="d-flex gap-3 flex-wrap">
@@ -467,12 +481,13 @@ export default function ManagerAccounts() {
                   <th>Type</th>
                   <th>Balance</th>
                   <th>Password</th>
+                  <th className="text-center">Action</th> {/* ✅ NEW COLUMN */}
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="6" className="text-center py-4">
+                    <td colSpan="7" className="text-center py-4">
                       <div className="spinner-border text-primary" role="status">
                         <span className="visually-hidden">Loading...</span>
                       </div>
@@ -480,7 +495,7 @@ export default function ManagerAccounts() {
                   </tr>
                 ) : currentAccounts.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="text-center py-5 text-secondary">
+                    <td colSpan="7" className="text-center py-5 text-secondary">
                       <i className="bi bi-wallet2 fs-1 d-block mb-3"></i>
                       <h5>No accounts found</h5>
                       <p className="small">Open an account for a customer</p>
@@ -516,6 +531,17 @@ export default function ManagerAccounts() {
                         <span className={`badge ${acc.accountPassword ? "bg-warning bg-opacity-10 text-warning" : "bg-secondary bg-opacity-10 text-secondary"}`}>
                           {acc.accountPassword ? "🔒 Yes" : "No"}
                         </span>
+                      </td>
+                      <td className="text-center">
+                        <button
+                          className="btn btn-danger btn-sm d-flex align-items-center gap-1 mx-auto"
+                          onClick={() => handleDeleteAccount(acc._id, acc.accountNumber)}
+                          disabled={loading}
+                          title="Delete Account"
+                        >
+                          <i className="bi bi-trash3"></i>
+                         
+                        </button>
                       </td>
                     </tr>
                   ))
@@ -573,8 +599,12 @@ export default function ManagerAccounts() {
         .badge.bg-success.bg-opacity-10 { background: rgba(34,197,94,0.15) !important; color: #22c55e !important; }
         .badge.bg-warning.bg-opacity-10 { background: rgba(245,158,11,0.15) !important; color: #f59e0b !important; }
         .badge.bg-secondary.bg-opacity-10 { background: rgba(108,117,125,0.15) !important; color: #adb5bd !important; }
+        .btn-danger.btn-sm {
+          padding: 4px 10px;
+          font-size: 12px;
+        }
       `}</style>
 
     </div>
   );
-}
+} 
