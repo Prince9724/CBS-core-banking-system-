@@ -49,7 +49,7 @@ export default function Admin_Sidebar() {
             <li className="nav-item">
               <Link
                 to={"/admin"}
-                className={`nav-link text-white ${isActive === "dashboard" ? "active" : ""}`}
+                className={`nav-link text-white mt-2 ${isActive === "dashboard" ? "active" : ""}`}
                 aria-current="page"
                 onClick={() => setActive("dashboard")}
               >

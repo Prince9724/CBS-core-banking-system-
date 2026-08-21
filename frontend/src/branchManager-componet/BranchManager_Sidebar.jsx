@@ -266,7 +266,7 @@ export default function BranchManager() {
             <Link
               // ✅ Dynamic branchcode
               to={`/manager/${branchcode}`}
-              className={`nav-link text-white ${isActive === "dashboard" ? "active" : ""}`}
+              className={`nav-link text-white mt-3 ${isActive === "dashboard" ? "active" : ""}`}
               aria-current="page"
               onClick={() => setActive("dashboard")}
             >
