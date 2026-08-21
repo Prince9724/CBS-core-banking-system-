@@ -9,6 +9,7 @@ import {
   BsTrash,
   BsChevronLeft,
   BsChevronRight,
+  BsX,
 } from "react-icons/bs";
 import { HiOutlineUsers, HiOutlineUserGroup } from "react-icons/hi2";
 import { PiUserSwitchDuotone } from "react-icons/pi";
@@ -30,6 +31,10 @@ export default function UsersRoles() {
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("All Roles");
   const [statusFilter, setStatusFilter] = useState("All Statuses");
+  
+  // ✅ New state for viewing user details
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   // ✅ Stats - Real data se update hoga
   const [stats, setStats] = useState([
@@ -72,12 +77,6 @@ export default function UsersRoles() {
 
   // ✅ Role Overview
   const [roleOverview, setRoleOverview] = useState([
-    // {
-    //   name: "Super Admin",
-    //   count: " Users",
-    //   icon: <RiShieldUserLine />,
-    //   accent: "ur-accent-blue",
-    // },
     {
       name: "Branch Manager",
       count: "0 Users",
@@ -127,7 +126,6 @@ export default function UsersRoles() {
       setLoading(true);
       setError("");
 
-      // ✅ Promise.all - Ek saath teeno API calls
       const [usersRes, branchesRes, accountsRes] = await Promise.all([
         axios.get("http://localhost:5003/cbs/getusers", { withCredentials: true }),
         axios.get("http://localhost:5003/cbs/getbranch", { withCredentials: true }),
@@ -146,7 +144,6 @@ export default function UsersRoles() {
       setBranches(branchData);
       setAccounts(accountData);
 
-      // ✅ Ek baar stats update karo (sab data milne ke baad)
       updateStats(userData, branchData, accountData);
 
     } catch (err) {
@@ -306,7 +303,7 @@ export default function UsersRoles() {
         branchcode: "",
       });
 
-      fetchAllData(); // ✅ Refresh all data
+      fetchAllData();
     } catch (err) {
       console.log(err.response?.data);
       alert(err.response?.data?.message || "Failed to save user");
@@ -322,10 +319,16 @@ export default function UsersRoles() {
         withCredentials: true,
       });
       alert("User deleted successfully");
-      fetchAllData(); // ✅ Refresh all data
+      fetchAllData();
     } catch (err) {
       alert(err.response?.data?.message || "Failed to delete user");
     }
+  };
+
+  // ========== ✅ VIEW USER DETAILS ==========
+  const handleViewUser = (user) => {
+    setSelectedUser(user);
+    setShowDetailsModal(true);
   };
 
   return (
@@ -508,6 +511,7 @@ export default function UsersRoles() {
                         <button
                           className="ur-action-btn ur-action-view"
                           title="View"
+                          onClick={() => handleViewUser(u)}
                         >
                           <BsEye />
                         </button>
@@ -602,7 +606,7 @@ export default function UsersRoles() {
         </div>
       </div>
 
-      {/* ===== MODAL ===== */}
+      {/* ===== ADD/EDIT MODAL ===== */}
       {showModal && (
         <div className="modal d-block" style={{ background: "rgba(0,0,0,0.5)" }}>
           <div className="modal-dialog">
@@ -715,6 +719,147 @@ export default function UsersRoles() {
 
                 <button className="btn btn-primary" onClick={handleAddUser}>
                   {editId ? "Update" : "Save"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== USER DETAILS VIEW MODAL ===== */}
+      {showDetailsModal && selectedUser && (
+        <div className="modal d-block" style={{ background: "rgba(0,0,0,0.6)" }}>
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content bg-white text-dark">
+              <div className="modal-header border-secondary">
+                <h5 className="modal-title d-flex align-items-center gap-2">
+                  <BsEye className="text-primary" />
+                  User Details
+                </h5>
+                <button
+                  className="btn-close btn-close-white"
+                  onClick={() => {
+                    setShowDetailsModal(false);
+                    setSelectedUser(null);
+                  }}
+                />
+              </div>
+
+              <div className="modal-body">
+                <div className="row g-3">
+                  {/* User Avatar & Basic Info */}
+                  <div className="col-md-12 text-center mb-3">
+                    <div 
+                      className="ur-avatar-lg mx-auto mb-2"
+                      style={{
+                        width: "80px",
+                        height: "80px",
+                        borderRadius: "50%",
+                        backgroundColor: "#0d6efd",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "32px",
+                        fontWeight: "bold",
+                        color: "white",
+                        margin: "0 auto"
+                      }}
+                    >
+                      {selectedUser.name?.charAt(0) || "U"}
+                    </div>
+                    <h4 className="mb-1">{selectedUser.name}</h4>
+                    <span className={`ur-role-badge ${
+                      selectedUser.role === "manager"
+                        ? "ur-role-manager"
+                        : selectedUser.role === "admin"
+                        ? "ur-role-admin"
+                        : "ur-role-teller"
+                    }`}>
+                      {selectedUser.role}
+                    </span>
+                  </div>
+
+                  {/* User Details Grid */}
+                  <div className="col-md-6">
+                    <div className="bg-secondary bg-opacity-10 p-3 rounded">
+                      <small className="text-muted d-block">User ID</small>
+                      <strong>{selectedUser.userid}</strong>
+                    </div>
+                  </div>
+
+                  <div className="col-md-6">
+                    <div className="bg-secondary bg-opacity-10 p-3 rounded">
+                      <small className="text-muted d-block">Email</small>
+                      <strong>{selectedUser.email}</strong>
+                    </div>
+                  </div>
+
+                  <div className="col-md-6">
+                    <div className="bg-secondary bg-opacity-10 p-3 rounded">
+                      <small className="text-muted d-block">Contact</small>
+                      <strong>{selectedUser.contact}</strong>
+                    </div>
+                  </div>
+
+                  <div className="col-md-6">
+                    <div className="bg-secondary bg-opacity-10 p-3 rounded">
+                      <small className="text-muted d-block">Branch</small>
+                      <strong>{selectedUser.branchname || "N/A"}</strong>
+                    </div>
+                  </div>
+
+                  <div className="col-md-6">
+                    <div className="bg-secondary bg-opacity-10 p-3 rounded">
+                      <small className="text-muted d-block">Branch Code</small>
+                      <strong>{selectedUser.branchcode || "N/A"}</strong>
+                    </div>
+                  </div>
+
+                  <div className="col-md-6">
+                    <div className="bg-secondary bg-opacity-10 p-3 rounded">
+                      <small className="text-muted d-block">Status</small>
+                      <span className={`badge ${
+                        selectedUser.status === "Active" || !selectedUser.status
+                          ? "bg-success"
+                          : "bg-secondary"
+                      }`}>
+                        {selectedUser.status || "Active"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="modal-footer border-secondary">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => {
+                    setShowDetailsModal(false);
+                    setSelectedUser(null);
+                  }}
+                >
+                  Close
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    setShowDetailsModal(false);
+                    setEditId(selectedUser._id);
+                    setFormData({
+                      name: selectedUser.name,
+                      userid: selectedUser.userid,
+                      email: selectedUser.email,
+                      contact: selectedUser.contact,
+                      password: "",
+                      role: selectedUser.role || "manager",
+                      branchname: selectedUser.branchname || "",
+                      branchcode: selectedUser.branchcode || "",
+                    });
+                    setShowModal(true);
+                  }}
+                >
+                  <BsPencil className="me-1" />
+                  Edit User
                 </button>
               </div>
             </div>
