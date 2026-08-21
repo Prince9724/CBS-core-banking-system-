@@ -1,143 +1,3 @@
-// import { useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { useRef } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { loginUser, fetchUsers } from "../App/features/authSlice";
-
-// export default function Login() {
-//   const navigate = useNavigate();
-//   const { users, loggedinUser } = useSelector((state) => state.auth);
-//   // console.log(users)
-//   // console.log(loggedinUser);
-//   // console.log(users); //this is still giving me undefined ???
-//   const dispatch = useDispatch();
-//   useEffect(() => {
-//     dispatch(fetchUsers());
-//   }, [dispatch]);
-
-//   useEffect(() => {
-//     if (!loggedinUser) {
-//       return; //is loggedinuser is null so this line never go down this will be return and if not null and then this going down
-//     }
-//     if (loggedinUser.role === "owner") {
-//       navigate("/admin");
-//     } else if (loggedinUser.role === "branch manager") {
-//       navigate("/branch-manager");
-//     }
-//   }, [loggedinUser, navigate]);
-
-//   // const handleLogin = () => { instead of we using in useEffect you can see
-//   //   if (loggedinUser.role === "owner") {
-//   //     navigate("/admin");
-//   //   } else if (loggedinUser.role === "branch manager") {
-//   //     navigate("/branch-manager");
-//   //   } else {
-//   //     alert("not found!");
-//   //   }
-//   // };
-//   const roleRef = useRef("");
-//   const emailRef = useRef("");
-//   const passwordRef = useRef("");
-
-//   const handleLoginAuth = () => {
-//     // const fields = [
-//     //   { ref: roleRef.current.value, label: "role" },
-//     //   { ref: emailRef.current.value, label: "email" },
-//     //   { ref: passwordRef.current.value, label: "password" },
-//     // ];
-//     const loginData = {
-//       role: roleRef.current.value,
-//       email: emailRef.current.value,
-//       password: passwordRef.current.value,
-//     };
-//     // console.log(loginData)
-//     dispatch(loginUser(loginData));
-//   };
-
-//   return (
-//     <div className="container-fluid bg-dark" style={{height:"100vh"}}>
-//       <div className="container py-5">
-//         <div className="row justify-content-center">
-//           <div className="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
-//             <div className="border rounded border-secondary p-4 p-md-5">
-//               <h4 className="mb-4 text-center text-md-start">
-//                 <i className="bi bi-person-lines-fill fs-2 text-primary"></i>
-//                 <span className="ms-2">Login into your account</span>
-//               </h4>
-
-//               <div className="form-floating mb-3">
-//                 <select
-//                   ref={roleRef}
-//                   className="form-select bg-dark text-white border-secondary"
-//                   id="role"
-//                 >
-//                   <option value="">Select Role</option>
-//                   <option value="owner">Owner</option>
-//                   <option value="branch manager">Branch Manager</option>
-//                   {/* <option value="branchmanager02">Branch Manager - Adajan</option> */}
-//                 </select>
-//                 <label
-//                   style={{ background: "transparent" }}
-//                   htmlFor="floatingInput role"
-//                 >
-//                   Select Role
-//                 </label>
-//               </div>
-
-//               <div className="form-floating mb-3">
-//                 <input
-//                   ref={emailRef}
-//                   type="email"
-//                   className="form-control bg-dark text-white border-secondary"
-//                   id="floatingInput"
-//                   placeholder="Enter your email"
-//                 />
-//                 <label
-//                   htmlFor="floatingInput"
-//                   className="text-white"
-//                   style={{ background: "transparent" }}
-//                 >
-//                   Email Address
-//                 </label>
-//               </div>
-
-//               <div className="form-floating mb-3">
-//                 <input
-//                   ref={passwordRef}
-//                   type="password"
-//                   className="form-control bg-dark text-white border-secondary"
-//                   id="floatingPassword"
-//                   placeholder="********"
-//                 />
-//                 <label
-//                   htmlFor="floatingPassword"
-//                   className="text-white"
-//                   style={{ background: "transparent" }}
-//                 >
-//                   Password
-//                 </label>
-//               </div>
-
-//               <div className="text-end mb-3">
-//                 <a href="#" className="text-decoration-none">
-//                   Forgot Password?
-//                 </a>
-//               </div>
-
-//               <button
-//                 onClick={() => handleLoginAuth()}
-//                 className="btn btn-primary w-100"
-//               >
-//                 Login
-//               </button>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -208,12 +68,10 @@ export default function Login() {
       setLoginError("");
       const result = await dispatch(loginUser(loginData)).unwrap();
       
-      // ✅ Success message (optional)
       if (result.status) {
         // Redirect will happen via useEffect
       }
     } catch (err) {
-      // ✅ Display error from backend
       setLoginError(err || "Login failed. Please try again.");
     }
   };
@@ -225,74 +83,79 @@ export default function Login() {
         minHeight: "100vh",
         background:
           "linear-gradient(135deg, #0f172a 0%, #111827 50%, #1e293b 100%)",
+        padding: "20px",
       }}
     >
-      <div className="container">
+      <div className="container py-2">
         <div className="row justify-content-center">
-          <div className="col-lg-5 col-md-7">
+          <div className="col-lg-5 col-md-7 col-sm-9">
             <div
               className="card border-0 shadow-lg text-white"
               style={{
                 background: "rgba(17, 24, 39, 0.92)",
                 backdropFilter: "blur(12px)",
-                borderRadius: "24px",
+                borderRadius: "20px",
+                maxWidth: "480px",
+                margin: "0 auto",
               }}
             >
-              <div className="card-body p-5">
+              <div className="card-body p-4 p-sm-5">
                 {/* Logo */}
-                <div className="text-center mb-4">
-                  <div style={{ fontSize: "52px" }}>
+                <div className="text-center mb-3">
+                  <div style={{ fontSize: "40px" }}>
                     <i className="bi bi-bank fs-1 text-primary"></i>
                   </div>
-                  <h2 className="fw-bold mt-2 mb-1">CBS Banking</h2>
-                  <p className="text-secondary mb-0">
+                  <h4 className="fw-bold mt-1 mb-0">CBS Banking</h4>
+                  <p className="text-secondary small mb-0">
                     Secure Core Banking System Login
                   </p>
                 </div>
 
                 {/* Toggle */}
-                <div className="d-flex bg-dark rounded-pill p-1 mb-4">
+                <div className="d-flex bg-dark rounded-pill p-1 mb-3">
                   <button
                     type="button"
-                    className={`btn flex-fill rounded-pill ${
+                    className={`btn flex-fill rounded-pill py-1 ${
                       loginType === "admin"
                         ? "btn-primary"
                         : "btn-dark text-white"
                     }`}
+                    style={{ fontSize: "14px" }}
                     onClick={() => {
                       setLoginType("admin");
                       setLoginError("");
                     }}
                   >
                     <i className="bi bi-person-badge me-1"></i>
-                    Admin Login
+                    Admin
                   </button>
 
                   <button
                     type="button"
-                    className={`btn flex-fill rounded-pill ${
+                    className={`btn flex-fill rounded-pill py-1 ${
                       loginType === "branch"
                         ? "btn-primary"
                         : "btn-dark text-white"
                     }`}
+                    style={{ fontSize: "14px" }}
                     onClick={() => {
                       setLoginType("branch");
                       setLoginError("");
                     }}
                   >
                     <i className="bi bi-building me-1"></i>
-                    Branch Login
+                    Branch
                   </button>
                 </div>
 
-                <h5 className="text-center fw-semibold mb-4">
+                <h6 className="text-center fw-semibold mb-3 text-secondary">
                   {loginType === "admin"
                     ? "Administrator Access"
                     : "Manager / Teller Access"}
-                </h5>
+                </h6>
 
                 {/* User ID */}
-                <div className="form-floating mb-3">
+                <div className="form-floating mb-2">
                   <input
                     ref={useridRef}
                     type="text"
@@ -300,15 +163,16 @@ export default function Login() {
                     id="userid"
                     placeholder="User ID"
                     onChange={handleInputChange}
+                    style={{ height: "48px", fontSize: "14px" }}
                   />
-                  <label htmlFor="userid" className="text-secondary">
+                  <label htmlFor="userid" className="text-secondary" style={{ fontSize: "13px" }}>
                     <i className="bi bi-person me-1"></i>
                     User ID
                   </label>
                 </div>
 
                 {/* Password */}
-                <div className="form-floating mb-3">
+                <div className="form-floating mb-2">
                   <input
                     ref={passwordRef}
                     type="password"
@@ -316,8 +180,9 @@ export default function Login() {
                     id="password"
                     placeholder="Password"
                     onChange={handleInputChange}
+                    style={{ height: "48px", fontSize: "14px" }}
                   />
-                  <label htmlFor="password" className="text-secondary">
+                  <label htmlFor="password" className="text-secondary" style={{ fontSize: "13px" }}>
                     <i className="bi bi-lock me-1"></i>
                     Password
                   </label>
@@ -325,7 +190,7 @@ export default function Login() {
 
                 {/* Branch Code */}
                 {loginType === "branch" && (
-                  <div className="form-floating mb-3">
+                  <div className="form-floating mb-2">
                     <input
                       ref={branchCodeRef}
                       type="text"
@@ -333,10 +198,12 @@ export default function Login() {
                       id="branchcode"
                       placeholder="Branch Code"
                       onChange={handleInputChange}
+                      style={{ height: "48px", fontSize: "14px" }}
                     />
                     <label
                       htmlFor="branchcode"
                       className="text-secondary"
+                      style={{ fontSize: "13px" }}
                     >
                       <i className="bi bi-building me-1"></i>
                       Branch Code
@@ -344,27 +211,20 @@ export default function Login() {
                   </div>
                 )}
 
-                {/* ✅ ERROR DISPLAY - Shows branch inactive error */}
+                {/* ✅ ERROR DISPLAY */}
                 {(loginError || error) && (
-                  <div className="alert alert-danger py-2 small d-flex align-items-center gap-2">
+                  <div className="alert alert-danger py-1 small d-flex align-items-center gap-2 mb-2" style={{ fontSize: "13px" }}>
                     <i className="bi bi-exclamation-triangle-fill"></i>
                     <span>{loginError || error}</span>
-                  </div>
-                )}
-
-                {/* ✅ SUCCESS MESSAGE (Optional) */}
-                {!loginError && !error && (
-                  <div className="alert alert-success py-2 small d-flex align-items-center gap-2">
-                    <i className="bi bi-check-circle-fill"></i>
-                    <span>Enter your credentials to login</span>
                   </div>
                 )}
 
                 {/* Login Button */}
                 <button
                   onClick={handleLoginAuth}
-                  className="btn btn-primary w-100 py-3 fw-semibold rounded-3 shadow-sm"
+                  className="btn btn-primary w-100 py-2 fw-semibold rounded-3 shadow-sm mt-2"
                   disabled={loader}
+                  style={{ fontSize: "15px" }}
                 >
                   {loader ? (
                     <>
@@ -384,8 +244,8 @@ export default function Login() {
                   )}
                 </button>
 
-                <div className="text-center mt-4">
-                  <small className="text-secondary">
+                <div className="text-center mt-3">
+                  <small className="text-secondary" style={{ fontSize: "11px" }}>
                     <i className="bi bi-shield-check me-1 text-success"></i>
                     Protected by CBS Banking Security Layer
                   </small>
@@ -406,12 +266,11 @@ export default function Login() {
           color: transparent;
         }
         .form-floating > .form-control {
-          height: 58px;
-          padding-top: 1.5rem;
-          padding-bottom: 0.5rem;
+          padding-top: 1.2rem;
+          padding-bottom: 0.3rem;
         }
         .form-floating > label {
-          padding: 1rem 0.75rem;
+          padding: 0.7rem 0.75rem;
         }
         .form-control.bg-dark {
           background-color: #1a2a42 !important;
@@ -420,7 +279,7 @@ export default function Login() {
           background-color: #1a2a42 !important;
         }
         .alert {
-          border-radius: 10px;
+          border-radius: 8px;
         }
         .btn-primary {
           background: linear-gradient(135deg, #3B82F6, #2563EB);
@@ -439,6 +298,13 @@ export default function Login() {
         }
         .btn-dark.text-white:hover {
           background: #2a3f5a !important;
+        }
+        .card {
+          max-height: 95vh;
+          overflow: hidden;
+        }
+        body {
+          overflow: hidden;
         }
       `}</style>
     </div>

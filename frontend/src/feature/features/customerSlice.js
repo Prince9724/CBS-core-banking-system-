@@ -11,7 +11,9 @@ export const fetchCustomers = createAsyncThunk(
             withCredentials: true,
         });
 
-        return res.data.data;
+        // ✅ Server se aane wale data ko reverse karo (naya pehle)
+        const data = res.data.data || [];
+        return data.reverse(); // ← YEH CHANGE
     }
 );
 
@@ -61,12 +63,28 @@ const customerSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(fetchCustomers.pending, (state) => {
+                state.loading = true;
+            })
             .addCase(fetchCustomers.fulfilled, (state, action) => {
-                state.customers = action.payload;
+                state.loading = false;
+                state.customers = action.payload; // ✅ Already reversed
+            })
+            .addCase(fetchCustomers.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
             })
 
+            .addCase(addCustomer.pending, (state) => {
+                state.loading = true;
+            })
             .addCase(addCustomer.fulfilled, (state, action) => {
-                state.customers.unshift(action.payload);
+                state.loading = false;
+                state.customers.unshift(action.payload); // ✅ Top pe add
+            })
+            .addCase(addCustomer.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
             })
 
             .addCase(updateCustomer.fulfilled, (state, action) => {
