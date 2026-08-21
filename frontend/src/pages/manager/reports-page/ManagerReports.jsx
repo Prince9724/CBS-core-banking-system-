@@ -21,15 +21,7 @@ import {
 } from "recharts";
 import "./ManagerReports.css";
 
-// =====================================================
-// COLORS
-// =====================================================
-
 const COLORS = ["#3b82f6", "#22c55e"];
-
-// =====================================================
-// CUSTOM TOOLTIP
-// =====================================================
 
 function ChartTooltip({ active, payload, label }) {
   if (!active || !payload || !payload.length) return null;
@@ -50,10 +42,6 @@ function ChartTooltip({ active, payload, label }) {
     </div>
   );
 }
-
-// =====================================================
-// MAIN COMPONENT
-// =====================================================
 
 export default function ManagerReports() {
   const { branchcode: urlBranchcode } = useParams();
@@ -93,101 +81,102 @@ export default function ManagerReports() {
     try {
       setLoading(true);
 
-      // ✅ Get all transactions
-      const todayRes = await api.get(
-        `/cbs/customer/today-transactions?branchcode=${branchcode}`
-      );
-      const allTxns = todayRes.data.data || [];
-
       // ✅ Get dashboard data
       const dashboardRes = await api.get(
         `/cbs/customer/manager-dashboard/${branchcode}`
       );
       const data = dashboardRes.data.data;
 
-      console.log("📊 Report Data:", data);
-      console.log("📊 Transactions:", allTxns.length);
+      console.log("📊 Dashboard Data:", data);
 
       if (data) {
         // ✅ Summary Stats
-        const totalDeposits = data.todayDeposit || 0;
-        const totalWithdrawals = data.todayWithdraw || 0;
         const totalCustomers = data.totalCustomers || 0;
         const branchBalance = data.totalBranchBalance || 0;
-        const totalTransactions = allTxns.length || 0;
-        const activeCustomers = data.totalCustomers || 0;
         const totalTellers = data.tellers || 0;
 
-        // ✅ Transaction Trend (Last 7 days from real data)
+        // ✅ TODAY'S DATA (For summary cards)
+        const todayDeposits = data.todayDeposit || 0;
+        const todayWithdrawals = data.todayWithdraw || 0;
+        const todayTransactions = data.todayTransactionsCount || 0;
+
+        // =====================================================
+        // ✅ WEEKLY DATA - LAST 7 DAYS (From API)
+        // =====================================================
+        
+        // Get last 7 days dates
         const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
         const today = new Date();
-        const dayOfWeek = today.getDay();
+        const dayOfWeek = today.getDay(); // 0=Sun, 1=Mon...
+        
+        // ✅ For each day, fetch transactions
+        const weeklyData = [];
+        let weeklyTotalDeposits = 0;
+        let weeklyTotalWithdrawals = 0;
+        let weeklyTotalTxns = 0;
 
-        const transactionTrend = weekDays.map((day, index) => {
+        for (let i = 0; i < 7; i++) {
+          // Calculate date
           const date = new Date(today);
           const dayOffset = (dayOfWeek + 6) % 7;
-          const diff = (dayOffset - index + 7) % 7;
+          const diff = (dayOffset - i + 7) % 7;
           date.setDate(date.getDate() - diff);
-          date.setHours(0, 0, 0, 0);
-
-          const dateEnd = new Date(date);
-          dateEnd.setHours(23, 59, 59, 999);
-
-          const dayTxns = allTxns.filter((t) => {
-            const tDate = new Date(t.createdAt);
-            return tDate >= date && tDate <= dateEnd;
-          });
-
+          
+          const dateStr = date.toISOString().split("T")[0];
+          
+          // Fetch transactions for this date
+          const dayRes = await api.get(
+            `/cbs/customer/today-transactions?branchcode=${branchcode}&date=${dateStr}`
+          );
+          const dayTxns = dayRes.data.data || [];
+          
           const deposits = dayTxns
             .filter((t) => t.type === "Deposit")
             .reduce((sum, t) => sum + (t.amount || 0), 0);
-
+            
           const withdrawals = dayTxns
             .filter((t) => t.type === "Withdraw")
             .reduce((sum, t) => sum + (t.amount || 0), 0);
 
-          return { day, deposits, withdrawals, transactions: dayTxns.length };
-        });
+          weeklyTotalDeposits += deposits;
+          weeklyTotalWithdrawals += withdrawals;
+          weeklyTotalTxns += dayTxns.length;
 
-        // ✅ ✅ ✅ FIX: Current month se start hone wale months
+          weeklyData.push({
+            day: weekDays[i],
+            deposits: deposits,
+            withdrawals: withdrawals,
+            transactions: dayTxns.length,
+          });
+        }
+
+        // ✅ Monthly Growth - Last 6 months
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        
-        // ✅ Last 6 months including current
-        const getLast6Months = () => {
-          const today = new Date();
-          const months = [];
-          for (let i = 5; i >= 0; i--) {
-            const d = new Date(today);
-            d.setMonth(d.getMonth() - i);
-            months.push(monthNames[d.getMonth()]);
-          }
-          return months;
-        };
+        const months = [];
+        for (let i = 5; i >= 0; i--) {
+          const d = new Date(today);
+          d.setMonth(d.getMonth() - i);
+          months.push(monthNames[d.getMonth()]);
+        }
 
-        const months = getLast6Months();
-
-        // ✅ Monthly Growth - Sirf Customers (Current month se start)
         const monthlyGrowth = months.map((month, i) => ({
           month,
           customers: Math.round(totalCustomers * (0.5 + (i * 0.1))) || 1,
         }));
 
-        // ✅ Account Distribution - Sirf Savings + Current
+        // ✅ Account Distribution
         const accountDistribution = [
           { name: "Savings", value: Math.round(totalCustomers * 0.65) || 1 },
           { name: "Current", value: Math.round(totalCustomers * 0.35) || 1 },
         ];
 
-        // ✅ Teller Performance - Real tellers se
+        // ✅ Teller Performance
         let tellerPerformance = [];
-
-        // ✅ Try to get teller performance from API
         try {
           const tellerRes = await api.get(
             `/cbs/customer/teller-performance/${branchcode}`
           );
           const tellerData = tellerRes.data.data || [];
-
           if (tellerData.length > 0) {
             tellerPerformance = tellerData.map((teller) => ({
               name: teller.name || teller.userid || "Teller",
@@ -196,14 +185,13 @@ export default function ManagerReports() {
             }));
           }
         } catch (e) {
-          console.log("Teller performance API not available, using fallback");
+          console.log("Teller performance API not available");
         }
 
-        // ✅ Fallback: Agar teller data nahi mila
         if (tellerPerformance.length === 0) {
           if (totalTellers > 0) {
-            const perTellerDeposit = Math.round(totalDeposits / totalTellers);
-            const perTellerWithdrawal = Math.round(totalWithdrawals / totalTellers);
+            const perTellerDeposit = Math.round(weeklyTotalDeposits / totalTellers);
+            const perTellerWithdrawal = Math.round(weeklyTotalWithdrawals / totalTellers);
             const tellerNames = ["Teller 1", "Teller 2", "Teller 3", "Teller 4"];
             for (let i = 0; i < Math.min(totalTellers, 4); i++) {
               tellerPerformance.push({
@@ -215,36 +203,36 @@ export default function ManagerReports() {
           } else {
             tellerPerformance.push({
               name: "Teller",
-              deposits: totalDeposits || 0,
-              withdrawals: totalWithdrawals || 0,
+              deposits: weeklyTotalDeposits || 0,
+              withdrawals: weeklyTotalWithdrawals || 0,
             });
           }
         }
 
-        // ✅ Balance Trend - Same months (Current month se start)
+        // ✅ Balance Trend
         const balanceTrend = months.map((month, i) => ({
           month,
           balance: Math.round(branchBalance * (0.5 + (i * 0.1))) || 1000,
         }));
 
         // ✅ Averages
-        const averageDailyDeposit = Math.round(totalDeposits / 7) || 0;
-        const averageDailyWithdrawal = Math.round(totalWithdrawals / 7) || 0;
+        const averageDailyDeposit = Math.round(weeklyTotalDeposits / 7) || 0;
+        const averageDailyWithdrawal = Math.round(weeklyTotalWithdrawals / 7) || 0;
 
         setReportData({
-          totalDeposits,
-          totalWithdrawals,
+          totalDeposits: weeklyTotalDeposits,
+          totalWithdrawals: weeklyTotalWithdrawals,
           totalCustomers,
           branchBalance,
-          transactionTrend,
+          transactionTrend: weeklyData,
           monthlyGrowth,
           accountDistribution,
           tellerPerformance,
           balanceTrend,
           averageDailyDeposit,
           averageDailyWithdrawal,
-          totalTransactions,
-          activeCustomers,
+          totalTransactions: weeklyTotalTxns,
+          activeCustomers: totalCustomers,
           totalTellers,
         });
       }
@@ -447,7 +435,7 @@ export default function ManagerReports() {
           </div>
         </div>
 
-        {/* <div className="col-xl-7">
+        <div className="col-xl-7">
           <div className="card bg-dark border-secondary h-100">
             <div className="card-body">
               <h5 className="text-white mb-3">
@@ -467,12 +455,40 @@ export default function ManagerReports() {
               </div>
             </div>
           </div>
-        </div> */}
-        
+        </div>
       </div>
 
       {/* ===== BRANCH BALANCE TREND ===== */}
-      
+      <div className="card bg-dark border-secondary mb-4">
+        <div className="card-body">
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h5 className="text-white mb-0">
+                <i className="bi bi-wallet2 me-2 text-success"></i>
+                Branch Balance Trend
+              </h5>
+              <p className="text-secondary small mb-0">Monthly balance progression</p>
+            </div>
+            <strong className="text-success fs-5">₹{reportData.branchBalance.toLocaleString()}</strong>
+          </div>
+          <div style={{ height: "180px" }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={reportData.balanceTrend}>
+                <defs>
+                  <linearGradient id="balanceGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.25} />
+                    <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="month" tick={{ fill: "#718096", fontSize: 10 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: "#718096", fontSize: 9 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${v / 1000}K`} />
+                <Tooltip content={<ChartTooltip />} />
+                <Area type="monotone" dataKey="balance" name="Balance" stroke="#3b82f6" strokeWidth={2} fill="url(#balanceGradient)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
 
       {/* ===== TELLER PERFORMANCE ===== */}
       <div className="card bg-dark border-secondary mb-4">
@@ -595,7 +611,7 @@ export default function ManagerReports() {
         }
         .manager-tooltip-row {
           display: flex;
-          justify-content: between;
+          justify-content: space-between;
           gap: 20px;
           padding: 2px 0;
         }
