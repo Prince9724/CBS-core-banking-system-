@@ -23,7 +23,7 @@ import ManagerTransactions from "./pages/manager/ManagerTransactions";
 import CashVault from "./pages/manager/CashVault";
 import LoanRequests from "./pages/manager/LoanRequests";
 import BranchStaff from "./pages/manager/branch-staff-page/BranchStaff";
-import Attendance from "./pages/manager/attendance-page/Attendance";
+// import Attendance from "./pages/manager/attendance-page/Attendance";
 
 // Teller
 import TellerDashboard from "./pages/teller/TellerDashboard";
@@ -60,7 +60,7 @@ export default function App() {
         <Route path="transaction" element={<Transactions />} />
         <Route path="reports" element={<Reports />} />
         <Route path="/admin/transaction/:id" element={<TransactionDetail />} />
-        
+        {/* <Route path="settings" element ={} */}
       </Route>
 
       {/* ================= MANAGER ================= */}
@@ -79,7 +79,7 @@ export default function App() {
         <Route path="cash-vault" element={<CashVault/>}/>
         <Route path="loan-request" element={<LoanRequests/>}/>
         <Route path="branch-staff" element={<BranchStaff/>}/>
-        <Route path="attendance" element={<Attendance/>}/>
+        {/* <Route path="attendance" element={<Attendance/>}/> */}
         <Route path="reports" element={<ManagerReports/>}/>
         <Route path="settings" element={<ManagerSettings/>}/>
       </Route>

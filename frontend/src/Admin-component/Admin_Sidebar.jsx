@@ -118,22 +118,22 @@ export default function Admin_Sidebar() {
               </Link>
             </li>
             <li>
-              <Link
+              {/* <Link
                 onClick={() => setActive("revenue")}
                 className={`nav-link text-white ${isActive === "revenue" ? "active" : ""}`}
               >
                 <i className="bi bi-graph-up-arrow"></i>
                 <span className="ms-2">Revenue & PL</span>
-              </Link>
+              </Link> */}
             </li>
             <li>
-              <Link
+              {/* <Link
                 onClick={() => setActive("audit")}
                 className={`nav-link text-white ${isActive === "audit" ? "active" : ""}`}
               >
                 <i className="bi bi-clipboard2-data-fill"></i>
                 <span className="ms-2">Audit Logs</span>
-              </Link>
+              </Link> */}
             </li>
             <li>
               <Link
@@ -145,14 +145,14 @@ export default function Admin_Sidebar() {
               </Link>
             </li>
             <li>
-              <Link
+              {/* <Link
                 to="/admin/profile"
                 onClick={() => setActive("profile")}
                 className={`nav-link text-white ${isActive === "profile" ? "active" : ""}`}
               >
                 <i className="bi bi-person-fill"></i>
                 <span className="ms-2">Profile</span>
-              </Link>
+              </Link> */}
             </li>
           </ul>
           <hr />

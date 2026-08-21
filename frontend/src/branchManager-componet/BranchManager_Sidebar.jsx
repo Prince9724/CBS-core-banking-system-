@@ -315,34 +315,34 @@ export default function BranchManager() {
             </Link>
           </li>
           <li>
-            <Link
+            {/* <Link
               to={`/manager/${branchcode}/loan-request`}
               onClick={() => setActive("Loan-requests")}
               className={`nav-link text-white ${isActive === "Loan-requests" ? "active" : ""}`}
             >
               <i className="bi bi-piggy-bank-fill"></i>
               <span className="ms-2">Loan requests</span>
-            </Link>
+            </Link> */}
           </li>
           <li>
-            <Link
+            {/* <Link
               to={`/manager/${branchcode}/branch-staff`}
               onClick={() => setActive("branch-staff")}
               className={`nav-link text-white ${isActive === "branch-staff" ? "active" : ""}`}
             >
               <i className="bi bi-people-fill"></i>
               <span className="ms-2">Branch staff</span>
-            </Link>
+            </Link> */}
           </li>
           <li>
-            <Link
+            {/* <Link
               to={`/manager/${branchcode}/attendance`}
               onClick={() => setActive("setting")}
               className={`nav-link text-white ${isActive === "setting" ? "active" : ""}`}
             >
               <i className="bi bi-calendar3"></i>
               <span className="ms-2">Attendance</span>
-            </Link>
+            </Link> */}
           </li>
           <li>
             <Link
