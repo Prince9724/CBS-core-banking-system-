@@ -387,14 +387,14 @@ export default function BranchManager() {
           </Link>
           <ul className="dropdown-menu dropdown-menu-dark text-small shadow">
             <li>
-              <Link to="/admin/profile" className="dropdown-item">
+              {/* <Link to="/admin/profile" className="dropdown-item">
                 👤 Profile
-              </Link>
+              </Link> */}
             </li>
             <li>
-              <Link to="/admin/settings" className="dropdown-item">
+              {/* <Link to="/admin/settings" className="dropdown-item">
                 ⚙️ Settings
-              </Link>
+              </Link> */}
             </li>
             <li>
               <hr className="dropdown-divider" />
